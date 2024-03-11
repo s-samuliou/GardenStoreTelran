@@ -10,7 +10,7 @@ import org.hibernate.validator.constraints.Length;
 
 
 @Entity
-@Table(name = "user_account")
+@Table(name = "user")
 @Data
 @NoArgsConstructor
 public class UserEntity {
@@ -34,7 +34,7 @@ public class UserEntity {
 
     @NotBlank(message = "Phone number is required")
     @Length(max = 255, message = "Dont be more then 255")
-    @Column(name = "phoneNumber")
+    @Column(name = "phone_number")
     private String phoneNumber;
 
     @Enumerated(EnumType.STRING)
