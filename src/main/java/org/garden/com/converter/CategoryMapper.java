@@ -10,14 +10,14 @@ import org.mapstruct.Mapping;
 public interface CategoryMapper {
 
     @Mapping(source = "id", target = "id")
-//    @Mapping(source = "name", target = "name")
+    @Mapping(source = "name", target = "name")
     CategoryDto categoryToCategoryDto(Category category);
 
     CategoryCreateDto categoryToCreateCategoryDto(Category category);
 
     Category categoryDtoToCategory(CategoryDto categoryDto);
 
-    //    @Mapping(source = "name", target = "name")
+    @Mapping(source = "name", target = "name")
     Category createCategoryDtoToCategory(CategoryCreateDto categoryCreateDto);
 
 }

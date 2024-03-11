@@ -17,12 +17,11 @@ public class CategoryServiceImpl implements CategoryService {
     private CategoryJpaRepository repository;
 
     @Override
-    public Category create(Category category) {
+    public Category createCategory(Category category) {
         return repository.save(category);
     }
 
-    @Override
-    public List<Category> getAll() {
+    public List<Category> getAllCategories() {
         return repository.findAll();
     }
 }

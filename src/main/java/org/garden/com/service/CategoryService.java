@@ -5,7 +5,7 @@ import org.garden.com.entity.Category;
 import java.util.List;
 
 public interface CategoryService {
-    Category create(Category category);
+    Category createCategory(Category category);
 
-    List<Category> getAll();
+    List<Category> getAllCategories();
 }

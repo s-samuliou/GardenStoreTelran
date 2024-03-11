@@ -23,13 +23,13 @@ public class CategoryController {
 
     @GetMapping
     public List<CategoryDto> getAll() {
-        return categoryService.getAll().stream().map(mapper::categoryToCategoryDto).collect(Collectors.toList());
+        return categoryService.getAllCategories().stream().map(mapper::categoryToCategoryDto).collect(Collectors.toList());
     }
 
     @PostMapping
     public CategoryCreateDto createCategory(@RequestBody CategoryCreateDto dto) {
         Category category = mapper.createCategoryDtoToCategory(dto);
-        categoryService.create(category);
+        categoryService.createCategory(category);
 
         return mapper.categoryToCreateCategoryDto(category);
 
