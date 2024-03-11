@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="dataSourceStorageLocal" created-in="IU-233.14475.28">
+    <data-source name="MySQL" uuid="07795972-0b84-4801-8ec3-da5053cfe3d1">
+      <database-info product="" version="" jdbc-version="" driver-name="" driver-version="" dbms="SQLITE" />
+      <secret-storage>master_key</secret-storage>
+      <auth-provider>no-auth</auth-provider>
+      <schema-mapping />
+    </data-source>
+    <data-source name="gardenstore@localhost" uuid="27994594-fa53-4b96-bea7-735db17cd9ac">
+      <database-info product="" version="" jdbc-version="" driver-name="" driver-version="" dbms="MYSQL" />
+      <user-name>root</user-name>
+      <schema-mapping />
+    </data-source>
+  </component>
+</project>
