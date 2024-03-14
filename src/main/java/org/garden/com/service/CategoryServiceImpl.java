@@ -10,7 +10,6 @@ import java.util.List;
 
 
 @Service
-@RequiredArgsConstructor
 public class CategoryServiceImpl implements CategoryService {
 
     @Autowired
@@ -21,6 +20,7 @@ public class CategoryServiceImpl implements CategoryService {
         return repository.save(category);
     }
 
+    @Override
     public List<Category> getAllCategories() {
         return repository.findAll();
     }

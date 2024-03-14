@@ -1,8 +1,7 @@
 package org.garden.com.entity;
 
+import jakarta.persistence.*;
 import org.hibernate.validator.constraints.Length;
-
-import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 
 @Entity
@@ -11,7 +10,7 @@ public class Category {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "category_id")
+    @Column(name = "id")
     private long id;
 
     @NotBlank(message = "Name is required")

@@ -7,8 +7,6 @@ import org.garden.com.enums.OrderStatus;
 
 import java.time.LocalDateTime;
 
-@Setter
-@Getter
 public class OrderDto {
 
     private Long id;
@@ -37,6 +35,70 @@ public class OrderDto {
         this.contactPhone = contactPhone;
         this.deliveryMethod = deliveryMethod;
         this.status = status;
+        this.updatedAt = updatedAt;
+    }
+
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
+    }
+
+    public long getUserId() {
+        return userId;
+    }
+
+    public void setUserId(long userId) {
+        this.userId = userId;
+    }
+
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(LocalDateTime createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public String getDeliveryAddress() {
+        return deliveryAddress;
+    }
+
+    public void setDeliveryAddress(String deliveryAddress) {
+        this.deliveryAddress = deliveryAddress;
+    }
+
+    public String getContactPhone() {
+        return contactPhone;
+    }
+
+    public void setContactPhone(String contactPhone) {
+        this.contactPhone = contactPhone;
+    }
+
+    public DeliveryType getDeliveryMethod() {
+        return deliveryMethod;
+    }
+
+    public void setDeliveryMethod(DeliveryType deliveryMethod) {
+        this.deliveryMethod = deliveryMethod;
+    }
+
+    public OrderStatus getStatus() {
+        return status;
+    }
+
+    public void setStatus(OrderStatus status) {
+        this.status = status;
+    }
+
+    public LocalDateTime getUpdatedAt() {
+        return updatedAt;
+    }
+
+    public void setUpdatedAt(LocalDateTime updatedAt) {
         this.updatedAt = updatedAt;
     }
 }

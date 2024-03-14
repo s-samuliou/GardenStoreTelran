@@ -11,6 +11,4 @@ public interface OrderService {
     Order create(Order order);
 
     List<Order> getAll();
-
-    Order getStatus(Order order, OrderStatus status);
 }

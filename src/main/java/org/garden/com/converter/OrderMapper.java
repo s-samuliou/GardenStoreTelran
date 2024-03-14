@@ -10,11 +10,24 @@ import org.mapstruct.Mapping;
 public interface OrderMapper {
 
     @Mapping(source = "id", target = "id")
+    @Mapping(source = "userId", target = "userId")
+    @Mapping(source = "createdAt", target = "createdAt")
+    @Mapping(source = "deliveryAddress", target = "deliveryAddress")
+    @Mapping(source = "contactPhone", target = "contactPhone")
+    @Mapping(source = "deliveryMethod", target = "deliveryMethod")
+    @Mapping(source = "status", target = "status")
+    @Mapping(source = "updatedAt", target = "updatedAt")
     OrderDto orderToOrderDto(Order order);
 
     OrderCreateDto orderToOrderCreateDto(Order order);
 
     Order orderDtoToOrder(OrderDto orderDto);
 
+    @Mapping(source = "createdAt", target = "createdAt")
+    @Mapping(source = "deliveryAddress", target = "deliveryAddress")
+    @Mapping(source = "contactPhone", target = "contactPhone")
+    @Mapping(source = "deliveryMethod", target = "deliveryMethod")
+    @Mapping(source = "status", target = "status")
+    @Mapping(source = "updatedAt", target = "updatedAt")
     Order createOrderDtoToOrder(OrderCreateDto orderCreateDto);
 }

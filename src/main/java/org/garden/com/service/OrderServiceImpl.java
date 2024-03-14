@@ -10,7 +10,6 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
-@RequiredArgsConstructor
 public class OrderServiceImpl implements OrderService {
 
     @Autowired
@@ -24,10 +23,5 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public List<Order> getAll() {
         return repository.findAll();
-    }
-
-    @Override
-    public Order getStatus(Order order, OrderStatus status) {
-        return repository.getReferenceById(order.getId());
     }
 }

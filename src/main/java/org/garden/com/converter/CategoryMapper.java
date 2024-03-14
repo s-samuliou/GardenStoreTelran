@@ -19,5 +19,4 @@ public interface CategoryMapper {
 
     @Mapping(source = "name", target = "name")
     Category createCategoryDtoToCategory(CategoryCreateDto categoryCreateDto);
-
 }
