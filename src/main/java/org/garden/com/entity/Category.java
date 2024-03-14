@@ -1,8 +1,8 @@
 package org.garden.com.entity;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
 import org.hibernate.validator.constraints.Length;
-import javax.validation.constraints.NotBlank;
 
 @Entity
 @Table(name = "category")
