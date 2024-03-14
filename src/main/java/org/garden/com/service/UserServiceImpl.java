@@ -1,30 +1,25 @@
 package org.garden.com.service;
 
-import lombok.RequiredArgsConstructor;
-import org.garden.com.entity.UserEntity;
-import org.garden.com.exceptions.UserNotFoundException;
+import org.garden.com.entity.User;
 import org.garden.com.repository.UserJpaRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
-@RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
 
- private final UserJpaRepository repository;
+    @Autowired
+    private UserJpaRepository repository;
+
     @Override
-    public UserEntity create(UserEntity userEntity) {
-        return null;
+    public User create(User user) {
+        return repository.save(user);
     }
 
-//    @Override
-//    public UserEntity getByName(String name) {
-//        return repository.findAllByName(name).orElseThrow(()-> new UserNotFoundException("User with name " + name + " not found"));
-//    }
-
     @Override
-    public List<UserEntity> getAll() {
+    public List<User> getAllUsers() {
         return repository.findAll();
     }
 }

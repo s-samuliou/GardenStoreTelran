@@ -1,16 +1,16 @@
 package org.garden.com.dto;
 
-
-public class UserDto {
+public class CreateUserDto {
 
     private String name;
     private String email;
+    private String password;
     private String phoneNumber;
-//    private String role;
 
-    public UserDto(long id, String name, String email, String phoneNumber) {
+    public CreateUserDto(String name, String email, String password, String phoneNumber) {
         this.name = name;
         this.email = email;
+        this.password = password;
         this.phoneNumber = phoneNumber;
     }
 
@@ -28,6 +28,14 @@ public class UserDto {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 
     public String getPhoneNumber() {

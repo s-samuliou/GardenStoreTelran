@@ -1,8 +1,6 @@
 package org.garden.com.service;
 
-import lombok.RequiredArgsConstructor;
 import org.garden.com.entity.Order;
-import org.garden.com.enums.OrderStatus;
 import org.garden.com.repository.OrderJpaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

@@ -1,7 +1,5 @@
 package org.garden.com.dto;
 
-import lombok.Getter;
-import lombok.Setter;
 import org.garden.com.enums.DeliveryType;
 import org.garden.com.enums.OrderStatus;
 

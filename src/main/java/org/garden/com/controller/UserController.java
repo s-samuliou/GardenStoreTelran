@@ -1,10 +1,14 @@
 package org.garden.com.controller;
 
-import lombok.RequiredArgsConstructor;
-import org.garden.com.converter.Converter;
+import org.garden.com.converter.UserMapper;
+import org.garden.com.dto.CreateUserDto;
 import org.garden.com.dto.UserDto;
-import org.garden.com.entity.UserEntity;
-import org.garden.com.service.UserService;
+import org.garden.com.entity.User;
+import org.garden.com.exceptions.UserNotFoundException;
+import org.garden.com.service.UserServiceImpl;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -12,21 +16,37 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/v1/users")
-@RequiredArgsConstructor
 public class UserController {
 
-    private final UserService userService;
+    @Autowired
+    UserServiceImpl service;
 
-    private final Converter<UserEntity, UserDto> converter;
+    @Autowired
+    UserMapper mapper;
 
-    @GetMapping
-    public List<UserDto> list() {
-        return userService.getAll().stream().map(converter::toDto)
-                .collect(Collectors.toList());
+    @PostMapping()
+    public ResponseEntity<CreateUserDto> createUser(@RequestBody CreateUserDto createUserDto) {
+        try {
+            User user = mapper.createUserDtoToUser(createUserDto);
+            User createdUser = service.create(user);
+            CreateUserDto createdUserDto = mapper.userToCreateUserDto(createdUser);
+            return ResponseEntity.status(HttpStatus.CREATED).body(createdUserDto);
+
+        } catch (UserNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
     }
 
-    @PostMapping
-    public UserDto create(@RequestBody UserDto dto) {
-        return converter.toDto(userService.create(converter.toEntity(dto)));
+    @GetMapping()
+    public ResponseEntity<List<UserDto>> getAllUsers() {
+        try {
+            List<User> users = service.getAllUsers();
+            List<UserDto> userDtos = users.stream()
+                    .map(user -> mapper.userToUserDto(user))
+                    .collect(Collectors.toList());
+            return ResponseEntity.status(HttpStatus.OK).body(userDtos);
+        } catch (UserNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
     }
 }
