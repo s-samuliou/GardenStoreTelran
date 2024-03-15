@@ -2,6 +2,7 @@ package org.garden.com.converter;
 
 import org.garden.com.dto.CategoryCreateDto;
 import org.garden.com.dto.CategoryDto;
+import org.garden.com.dto.EditCategoryDto;
 import org.garden.com.entity.Category;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -19,4 +20,10 @@ public interface CategoryMapper {
 
     @Mapping(source = "name", target = "name")
     Category createCategoryDtoToCategory(CategoryCreateDto categoryCreateDto);
+
+    @Mapping(source = "id", target = "id")
+    @Mapping(source = "name", target = "name")
+    Category editCategoryDtoToCategory(EditCategoryDto editCategoryDto);
+
+    EditCategoryDto categoryToEditCategoryDto(Category category);
 }

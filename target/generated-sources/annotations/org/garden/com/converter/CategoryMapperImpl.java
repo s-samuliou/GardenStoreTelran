@@ -3,13 +3,14 @@ package org.garden.com.converter;
 import javax.annotation.processing.Generated;
 import org.garden.com.dto.CategoryCreateDto;
 import org.garden.com.dto.CategoryDto;
+import org.garden.com.dto.EditCategoryDto;
 import org.garden.com.entity.Category;
 import org.springframework.stereotype.Component;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2024-03-11T16:19:03+0100",
-    comments = "version: 1.5.5.Final, compiler: javac, environment: Java 21.0.1 (Oracle Corporation)"
+    date = "2024-03-15T14:09:41+0100",
+    comments = "version: 1.5.5.Final, compiler: javac, environment: Java 21.0.2 (Oracle Corporation)"
 )
 @Component
 public class CategoryMapperImpl implements CategoryMapper {
@@ -74,5 +75,33 @@ public class CategoryMapperImpl implements CategoryMapper {
         category.setId( categoryCreateDto.getId() );
 
         return category;
+    }
+
+    @Override
+    public Category editCategoryDtoToCategory(EditCategoryDto editCategoryDto) {
+        if ( editCategoryDto == null ) {
+            return null;
+        }
+
+        Category category = new Category();
+
+        category.setId( editCategoryDto.getId() );
+        category.setName( editCategoryDto.getName() );
+
+        return category;
+    }
+
+    @Override
+    public EditCategoryDto categoryToEditCategoryDto(Category category) {
+        if ( category == null ) {
+            return null;
+        }
+
+        EditCategoryDto editCategoryDto = new EditCategoryDto();
+
+        editCategoryDto.setId( category.getId() );
+        editCategoryDto.setName( category.getName() );
+
+        return editCategoryDto;
     }
 }
