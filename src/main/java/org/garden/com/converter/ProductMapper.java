@@ -1,6 +1,7 @@
 package org.garden.com.converter;
 
 import org.garden.com.dto.CreateProductDto;
+import org.garden.com.dto.EditProductDto;
 import org.garden.com.dto.ProductDto;
 import org.garden.com.entity.Product;
 import org.mapstruct.Mapper;
@@ -27,4 +28,8 @@ public interface ProductMapper {
     @Mapping(source = "categoryId", target = "categoryId")
     @Mapping(source = "imageUrl", target = "imageUrl")
     Product createProductDtoToProduct(CreateProductDto createProductDto);
+
+    EditProductDto productToEditProductDto(Product product);
+
+    Product editProductDtoToProduct(EditProductDto editProductDto);
 }

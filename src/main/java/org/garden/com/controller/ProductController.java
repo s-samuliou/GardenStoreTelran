@@ -2,6 +2,7 @@ package org.garden.com.controller;
 
 import org.garden.com.converter.ProductMapper;
 import org.garden.com.dto.CreateProductDto;
+import org.garden.com.dto.EditProductDto;
 import org.garden.com.dto.ProductDto;
 import org.garden.com.entity.Product;
 import org.garden.com.exceptions.InvalidProductException;
@@ -12,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
 
 @RestController
@@ -44,8 +46,37 @@ public class ProductController {
                     .map(product -> mapper.productToProductDto(product))
                     .collect(Collectors.toList());
             return ResponseEntity.status(HttpStatus.OK).body(productDtos);
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        } catch (NoSuchElementException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<EditProductDto> updateProductById(@PathVariable("id") long id, @RequestBody EditProductDto editProductDto) {
+        try {
+            Product product = mapper.editProductDtoToProduct(editProductDto);
+            service.editProduct(id, product);
+            return ResponseEntity.status(HttpStatus.OK).body(mapper.productToEditProductDto(product));
+        } catch (InvalidProductException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        } catch (NoSuchElementException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<ProductDto> getProductById(@PathVariable("id") long id) {
+        try {
+            Product product = service.findProductById(id);
+            mapper.productToProductDto(product);
+            return ResponseEntity.status(HttpStatus.OK).body(mapper.productToProductDto(product));
+        } catch (NoSuchElementException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteProductById(@PathVariable("id") long id) {
+        return service.deleteProduct(id);
     }
 }
