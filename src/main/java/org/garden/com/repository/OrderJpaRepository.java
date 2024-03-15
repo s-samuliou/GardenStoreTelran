@@ -6,4 +6,6 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface OrderJpaRepository extends JpaRepository<Order, Long> {
+
+    Order deleteById(long id);
 }
