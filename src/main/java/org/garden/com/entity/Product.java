@@ -39,7 +39,7 @@ public class Product {
     private String imageUrl;
 
     @DecimalMin(value = "0.0", message = "Price must be greatest then 0")
-    @Column(name = "discaunt_price")
+    @Column(name = "discount_price")
     private double discountPrice;
 
     @NotNull(message = "Created at timestamp is required")
