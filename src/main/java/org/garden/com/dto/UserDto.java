@@ -1,12 +1,10 @@
 package org.garden.com.dto;
 
-
 public class UserDto {
 
     private String name;
     private String email;
     private String phoneNumber;
-//    private String role;
 
     public UserDto(long id, String name, String email, String phoneNumber) {
         this.name = name;
