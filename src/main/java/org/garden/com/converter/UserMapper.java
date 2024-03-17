@@ -1,6 +1,7 @@
 package org.garden.com.converter;
 
 import org.garden.com.dto.CreateUserDto;
+import org.garden.com.dto.EditUserDto;
 import org.garden.com.dto.UserDto;
 import org.garden.com.entity.User;
 import org.mapstruct.Mapper;
@@ -15,7 +16,6 @@ public interface UserMapper{
     UserDto userToUserDto(User user);
 
     CreateUserDto userToCreateUserDto(User user);
-
     User userDtoToUser(UserDto userDto);
 
     @Mapping(source = "name", target = "name")
@@ -23,4 +23,8 @@ public interface UserMapper{
     @Mapping(source = "password", target = "password")
     @Mapping(source = "phoneNumber", target = "phoneNumber")
     User createUserDtoToUser(CreateUserDto createUserDto);
+
+    EditUserDto userToEditUserDto(User user);
+
+    User editUserDtoToUser(EditUserDto editUserDto);
 }
