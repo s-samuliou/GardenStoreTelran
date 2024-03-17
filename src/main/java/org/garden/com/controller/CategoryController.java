@@ -3,6 +3,7 @@ package org.garden.com.controller;
 import org.garden.com.converter.CategoryMapper;
 import org.garden.com.dto.CategoryCreateDto;
 import org.garden.com.dto.CategoryDto;
+import org.garden.com.dto.EditCategoryDto;
 import org.garden.com.entity.Category;
 import org.garden.com.exceptions.InvalidCategoryException;
 import org.garden.com.service.CategoryServiceImpl;
@@ -37,7 +38,7 @@ public class CategoryController {
         }
     }
 
-    @PostMapping
+    @PostMapping()
     public ResponseEntity<CategoryCreateDto> createProduct(@RequestBody CategoryCreateDto categoryCreateDto) {
         try {
             Category category = mapper.createCategoryDtoToCategory(categoryCreateDto);
@@ -48,4 +49,31 @@ public class CategoryController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
     }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<EditCategoryDto> editCategory(@PathVariable(name = "id") long id, @RequestBody EditCategoryDto editCategoryDto) {
+        try {
+            Category category = mapper.editCategoryDtoToCategory(editCategoryDto);
+            Category editedCategory = categoryService.editCategory(id, category);
+            EditCategoryDto editedCategoryDto = mapper.categoryToEditCategoryDto(editedCategory);
+            return ResponseEntity.status(HttpStatus.CREATED).body(editedCategoryDto);
+        } catch (InvalidCategoryException exceptionICE) {
+            return ResponseEntity.notFound().build();
+        } catch (Exception exception) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteCategoryById(@PathVariable(name = "id") long id) {
+        try {
+            categoryService.deleteCategoryById(id);
+            return ResponseEntity.ok().build();
+        } catch (InvalidCategoryException exceptionICE) {
+            return ResponseEntity.notFound().build();
+        } catch (Exception exception) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+
 }
