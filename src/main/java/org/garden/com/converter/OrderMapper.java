@@ -10,7 +10,7 @@ import org.mapstruct.Mapping;
 public interface OrderMapper {
 
     @Mapping(source = "id", target = "id")
-    @Mapping(source = "userId", target = "userId")
+    @Mapping(source = "user.id", target = "userId")
     @Mapping(source = "createdAt", target = "createdAt")
     @Mapping(source = "deliveryAddress", target = "deliveryAddress")
     @Mapping(source = "contactPhone", target = "contactPhone")
@@ -23,6 +23,7 @@ public interface OrderMapper {
 
     Order orderDtoToOrder(OrderDto orderDto);
 
+    @Mapping(source = "userId", target = "user.id")
     @Mapping(source = "createdAt", target = "createdAt")
     @Mapping(source = "deliveryAddress", target = "deliveryAddress")
     @Mapping(source = "contactPhone", target = "contactPhone")

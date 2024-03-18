@@ -7,10 +7,9 @@ public class CreateUserDto {
     private String password;
     private String phoneNumber;
 
-    public CreateUserDto(String name, String email, String password, String phoneNumber) {
+    public CreateUserDto(String name, String email, String phoneNumber) {
         this.name = name;
         this.email = email;
-        this.password = password;
         this.phoneNumber = phoneNumber;
     }
 

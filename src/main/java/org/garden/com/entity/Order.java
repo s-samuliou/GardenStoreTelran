@@ -19,9 +19,6 @@ public class Order {
     @Column(name = "id")
     private Long id;
 
-    @Column(name = "user_id")
-    private long userId;
-
     @NotNull(message = "Created at timestamp is required")
     @Column(name = "created_at")
     private LocalDateTime createdAt;
@@ -46,21 +43,24 @@ public class Order {
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
 
+    @ManyToOne
+    @JoinColumn(name = "user_id", referencedColumnName = "id")
+    private User user;
+
     public Order() {
         this.createdAt = LocalDateTime.now();
         this.updatedAt = LocalDateTime.now();
     }
 
-    public Order(Long id, long userId, LocalDateTime createdAt, String deliveryAddress,
-                 String contactPhone, String deliveryMethod, OrderStatus status, LocalDateTime updatedAt) {
+    public Order(Long id, LocalDateTime createdAt, String deliveryAddress, String contactPhone, String deliveryMethod, OrderStatus status, LocalDateTime updatedAt, User user) {
         this.id = id;
-        this.userId = userId;
         this.createdAt = createdAt;
         this.deliveryAddress = deliveryAddress;
         this.contactPhone = contactPhone;
         this.deliveryMethod = deliveryMethod;
         this.status = status;
         this.updatedAt = updatedAt;
+        this.user = user;
     }
 
     public Long getId() {
@@ -72,11 +72,11 @@ public class Order {
     }
 
     public long getUserId() {
-        return userId;
+        return user.getId();
     }
 
     public void setUserId(long userId) {
-        this.userId = userId;
+        this.user.setId(userId);
     }
 
     public LocalDateTime getCreatedAt() {
@@ -126,5 +126,12 @@ public class Order {
     public void setUpdatedAt(LocalDateTime updatedAt) {
         this.updatedAt = updatedAt;
     }
-}
 
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+}

@@ -6,7 +6,7 @@ public class UserDto {
     private String email;
     private String phoneNumber;
 
-    public UserDto(long id, String name, String email, String phoneNumber) {
+    public UserDto( String name, String email, String phoneNumber) {
         this.name = name;
         this.email = email;
         this.phoneNumber = phoneNumber;

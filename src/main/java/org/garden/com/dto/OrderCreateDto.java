@@ -20,16 +20,25 @@ public class OrderCreateDto {
 
     private LocalDateTime updatedAt;
 
-    public OrderCreateDto(LocalDateTime createdAt,
-                          String deliveryAddress, String contactPhone, DeliveryType deliveryMethod,
-                          OrderStatus status, LocalDateTime updatedAt) {
+    private long userId;
 
+    public OrderCreateDto(LocalDateTime createdAt, String deliveryAddress, String contactPhone, DeliveryType deliveryMethod, OrderStatus status, LocalDateTime updatedAt, long userId) {
         this.createdAt = createdAt;
         this.deliveryAddress = deliveryAddress;
         this.contactPhone = contactPhone;
         this.deliveryMethod = deliveryMethod;
         this.status = status;
         this.updatedAt = updatedAt;
+        this.userId = userId;
+    }
+
+
+    public long getUserId() {
+        return userId;
+    }
+
+    public void setUserId(long userId) {
+        this.userId = userId;
     }
 
     public LocalDateTime getCreatedAt() {

@@ -6,6 +6,9 @@ import jakarta.validation.constraints.NotBlank;
 import org.garden.com.enums.Role;
 import org.hibernate.validator.constraints.Length;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Entity
 @Table(name = "user")
 public class User {
@@ -35,14 +38,16 @@ public class User {
     @Enumerated(EnumType.STRING)
     private Role role;
 
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private List<Order> orders = new ArrayList<>();
+
     public User() {
     }
 
-    public User(long id, String name, String email, String password, String phoneNumber, Role role) {
+    public User(long id, String name, String email, String phoneNumber, Role role) {
         this.id = id;
         this.name = name;
         this.email = email;
-        this.password = password;
         this.phoneNumber = phoneNumber;
         this.role = role;
     }
