@@ -4,6 +4,9 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import org.hibernate.validator.constraints.Length;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Entity
 @Table(name = "category")
 public class Category {
@@ -17,6 +20,9 @@ public class Category {
     @Length(max = 255, message = "Name must be less than 255 characters")
     @Column(name = "name")
     private String name;
+
+    @OneToMany(mappedBy = "category", cascade = CascadeType.ALL)
+    private List<Product> products = new ArrayList<>();
 
     public Category(long id, String name) {
         this.id = id;

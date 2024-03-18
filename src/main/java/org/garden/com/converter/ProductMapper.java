@@ -14,7 +14,7 @@ public interface ProductMapper {
     @Mapping(source = "name", target = "name")
     @Mapping(source = "description", target = "description")
     @Mapping(source = "price", target = "price")
-    @Mapping(source = "categoryId", target = "categoryId")
+    @Mapping(source = "category.id", target = "categoryId")
     @Mapping(source = "imageUrl", target = "imageUrl")
     ProductDto productToProductDto(Product product);
 
@@ -25,11 +25,15 @@ public interface ProductMapper {
     @Mapping(source = "name", target = "name")
     @Mapping(source = "description", target = "description")
     @Mapping(source = "price", target = "price")
-    @Mapping(source = "categoryId", target = "categoryId")
+    @Mapping(source = "categoryId", target = "category.id")
     @Mapping(source = "imageUrl", target = "imageUrl")
     Product createProductDtoToProduct(CreateProductDto createProductDto);
 
     EditProductDto productToEditProductDto(Product product);
-
+    @Mapping(source = "name", target = "name")
+    @Mapping(source = "description", target = "description")
+    @Mapping(source = "price", target = "price")
+    @Mapping(source = "categoryId", target = "category.id")
+    @Mapping(source = "imageUrl", target = "imageUrl")
     Product editProductDtoToProduct(EditProductDto editProductDto);
 }

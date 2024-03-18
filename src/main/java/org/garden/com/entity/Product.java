@@ -31,16 +31,12 @@ public class Product {
     @Column(name = "price")
     private double price;
 
-    @NotNull(message = "Category Id is required")
-    @Column(name = "category_id")
-    private long categoryId;
-
     @Column(name = "image_url")
     private String imageUrl;
 
     @DecimalMin(value = "0.0", message = "Price must be greatest then 0")
     @Column(name = "discount_price")
-    private double discountPrice;
+    private Double discountPrice;
 
     @NotNull(message = "Created at timestamp is required")
     @Column(name = "careated_at")
@@ -50,19 +46,23 @@ public class Product {
     @Column(name = "updated_at")
     private LocalDateTime updatedAt = LocalDateTime.now();
 
+    @ManyToOne
+    @JoinColumn(name = "category_Id", referencedColumnName = "id")
+    private Category category;
+
     public Product() {
     }
 
-    public Product(Long id, String name, String description, double price, long categoryId, String imageUrl, double discountPrice, LocalDateTime createdAt, LocalDateTime updatedAt) {
+    public Product(Long id, String name, String description, double price, String imageUrl, Double discountPrice, LocalDateTime createdAt, LocalDateTime updatedAt, Category category) {
         this.id = id;
         this.name = name;
         this.description = description;
         this.price = price;
-        this.categoryId = categoryId;
         this.imageUrl = imageUrl;
         this.discountPrice = discountPrice;
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
+        this.category = category;
     }
 
     public Long getId() {
@@ -97,12 +97,20 @@ public class Product {
         this.price = price;
     }
 
-    public long getCategoryId() {
-        return categoryId;
+    public Category getCategory() {
+        return category;
+    }
+
+    public void setCategory(Category category) {
+        this.category = category;
+    }
+
+        public long getCategoryId() {
+        return category.getId();
     }
 
     public void setCategoryId(long categoryId) {
-        this.categoryId = categoryId;
+        this.category.setId(categoryId);
     }
 
     public String getImageUrl() {
@@ -113,11 +121,11 @@ public class Product {
         this.imageUrl = imageUrl;
     }
 
-    public double getDiscountPrice() {
+    public Double getDiscountPrice() {
         return discountPrice;
     }
 
-    public void setDiscountPrice(double discountPrice) {
+    public void setDiscountPrice(Double discountPrice) {
         this.discountPrice = discountPrice;
     }
 
