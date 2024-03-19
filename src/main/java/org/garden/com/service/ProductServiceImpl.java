@@ -27,6 +27,11 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
+    public List<Product> getFilteredProducts(Long categoryId, Double minPrice, Double maxPrice, Boolean discount, String sort) {
+        return repository.findFilteredProducts(categoryId, minPrice, maxPrice, discount, sort);
+    }
+
+    @Override
     public Product editProduct(long id, Product product) {
         Product existingProduct = repository.findById(id).orElseThrow();
 

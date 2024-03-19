@@ -39,9 +39,12 @@ public class ProductController {
     }
 
     @GetMapping()
-    public ResponseEntity<List<ProductDto>> getAllProducts() {
+    public ResponseEntity<List<ProductDto>> getAllProducts(
+            @RequestParam(required = false) Long categoryId, @RequestParam(required = false) Double minPrice,
+            @RequestParam(required = false) Double maxPrice, @RequestParam(required = false) Boolean discount,
+            @RequestParam(required = false) String sort) {
         try {
-            List<Product> products = service.getAllProducts();
+            List<Product> products = service.getFilteredProducts(categoryId, minPrice, maxPrice, discount, sort);
             List<ProductDto> productDtos = products.stream()
                     .map(product -> mapper.productToProductDto(product))
                     .collect(Collectors.toList());
