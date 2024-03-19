@@ -11,6 +11,8 @@ public interface ProductService {
 
     List<Product> getAllProducts();
 
+    List<Product> getFilteredProducts(Long categoryId, Double minPrice, Double maxPrice, Boolean discount, String sort);
+
     Product editProduct(long id, Product product);
 
     Product findProductById(long id);

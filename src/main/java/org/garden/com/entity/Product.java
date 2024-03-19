@@ -105,7 +105,7 @@ public class Product {
         this.category = category;
     }
 
-        public long getCategoryId() {
+    public long getCategoryId() {
         return category.getId();
     }
 
