@@ -7,6 +7,64 @@
         http://www.liquibase.org/xml/ns/dbchangelog-ext
         https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
 
+    <changeSet id="1" author="s_samuliou">
+        <comment>Create products table</comment>
+        <createTable tableName="products">
+            <column name="id" autoIncrement="true" type="BIGINT">
+                <constraints primaryKey="true" nullable="false" primaryKeyName="products_pk"/>
+            </column>
+            <column name="category_id" type="BIGINT">
+                <constraints nullable="false" foreignKeyName="products_fk"/>
+            </column>
+            <column name="created_at" type="TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+            <column name="description" type="VARCHAR(510)"/>
+            <column name="discount_price" type="DECIMAL(19,2)"/>
+            <column name="image_url" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="name" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="price" type="DECIMAL(19,2)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="updated_at" type="TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
 
+        <addForeignKeyConstraint baseTableName="products"
+                                 baseColumnNames="category_id"
+                                 constraintName="products_fk"
+                                 referencedTableName="category"
+                                 referencedColumnNames="id"
+                                 onDelete="CASCADE"
+                                 onUpdate="CASCADE"/>
+    </changeSet>
 
+    <changeSet id="2" author="s_samuliou">
+        <comment>Initializing the product table</comment>
+        <insert tableName="products">
+            <column name="category_id" value="1"/>
+            <column name="created_at" value="2024-03-19T12:00:00"/>
+            <column name="description" value="Description of product"/>
+            <column name="discount_price" value="0"/>
+            <column name="image_url" value="http://example.com/table.jpg"/>
+            <column name="name" value="Table"/>
+            <column name="price" value="69.99"/>
+            <column name="updated_at" value="2024-03-19T12:00:00"/>
+        </insert>
+        <insert tableName="products">
+            <column name="category_id" value="2"/>
+            <column name="created_at" value="2024-03-20T12:00:00"/>
+            <column name="description" value="Description of product"/>
+            <column name="discount_price" value="0"/>
+            <column name="image_url" value="http://example.com/lamp.jpg"/>
+            <column name="name" value="Lamp"/>
+            <column name="price" value="29.99"/>
+            <column name="updated_at" value="2024-03-20T12:00:00"/>
+        </insert>
+    </changeSet>
 </databaseChangeLog>
