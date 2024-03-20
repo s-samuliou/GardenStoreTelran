@@ -5,7 +5,8 @@ import org.garden.com.dto.CreateProductDto;
 import org.garden.com.dto.EditProductDto;
 import org.garden.com.dto.ProductDto;
 import org.garden.com.entity.Product;
-import org.garden.com.exceptions.InvalidProductException;
+import org.garden.com.exceptions.ProductInvalidArgumentException;
+import org.garden.com.exceptions.ProductNotFoundException;
 import org.garden.com.service.ProductServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -21,65 +22,54 @@ import java.util.stream.Collectors;
 public class ProductController {
 
     @Autowired
-    ProductServiceImpl service;
+    private ProductServiceImpl service;
 
     @Autowired
-    ProductMapper mapper;
+    private ProductMapper mapper;
 
     @PostMapping()
-    public ResponseEntity<CreateProductDto> createProduct(@RequestBody CreateProductDto createProductDto) {
-        try {
-            Product product = mapper.createProductDtoToProduct(createProductDto);
-            Product createdProduct = service.createProduct(product);
-            CreateProductDto createdProductDto = mapper.productToCreateProductDto(createdProduct);
-            return ResponseEntity.status(HttpStatus.CREATED).body(createdProductDto);
-        } catch (InvalidProductException e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
-        }
+    public CreateProductDto createProduct(@RequestBody CreateProductDto createProductDto) {
+        Product product = mapper.createProductDtoToProduct(createProductDto);
+        Product createdProduct = service.createProduct(product);
+        CreateProductDto createdProductDto = mapper.productToCreateProductDto(createdProduct);
+        return createdProductDto;
     }
 
     @GetMapping()
-    public ResponseEntity<List<ProductDto>> getAllProducts(
+    public List<ProductDto> getAllProducts(
             @RequestParam(required = false) Long categoryId, @RequestParam(required = false) Double minPrice,
             @RequestParam(required = false) Double maxPrice, @RequestParam(required = false) Boolean discount,
             @RequestParam(required = false) String sort) {
-        try {
-            List<Product> products = service.getFilteredProducts(categoryId, minPrice, maxPrice, discount, sort);
-            List<ProductDto> productDtos = products.stream()
-                    .map(product -> mapper.productToProductDto(product))
-                    .collect(Collectors.toList());
-            return ResponseEntity.status(HttpStatus.OK).body(productDtos);
-        } catch (NoSuchElementException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-        }
+
+        List<Product> products = service.getFilteredProducts(categoryId, minPrice, maxPrice, discount, sort);
+        List<ProductDto> productDtos = products.stream()
+                .map(product -> mapper.productToProductDto(product))
+                .collect(Collectors.toList());
+        return productDtos;
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<EditProductDto> updateProductById(@PathVariable("id") long id, @RequestBody EditProductDto editProductDto) {
-        try {
-            Product product = mapper.editProductDtoToProduct(editProductDto);
-            service.editProduct(id, product);
-            return ResponseEntity.status(HttpStatus.OK).body(mapper.productToEditProductDto(product));
-        } catch (InvalidProductException e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
-        } catch (NoSuchElementException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-        }
+    public EditProductDto updateProductById(@PathVariable("id") long id, @RequestBody EditProductDto editProductDto) {
+        Product product = mapper.editProductDtoToProduct(editProductDto);
+        service.editProduct(id, product);
+        return mapper.productToEditProductDto(product);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<ProductDto> getProductById(@PathVariable("id") long id) {
-        try {
-            Product product = service.findProductById(id);
-            mapper.productToProductDto(product);
-            return ResponseEntity.status(HttpStatus.OK).body(mapper.productToProductDto(product));
-        } catch (NoSuchElementException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-        }
+    public ProductDto getProductById(@PathVariable("id") long id) {
+        Product product = service.findProductById(id);
+        mapper.productToProductDto(product);
+        return mapper.productToProductDto(product);
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteProductById(@PathVariable("id") long id) {
         return service.deleteProduct(id);
+    }
+
+    @ExceptionHandler({ProductInvalidArgumentException.class, ProductNotFoundException.class})
+    public ResponseEntity<String> handleProductException(Exception exception) {
+        HttpStatus status = (exception instanceof ProductInvalidArgumentException) ? HttpStatus.BAD_REQUEST : HttpStatus.NOT_FOUND;
+        return ResponseEntity.status(status).body(exception.getMessage());
     }
 }
