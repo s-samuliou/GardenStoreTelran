@@ -46,7 +46,7 @@ public class UserServiceImpl implements UserService {
             repository.deleteById(id);
             return ResponseEntity.status(HttpStatus.OK).build();
         } else {
-            throw new UserNotFoundException("Product not found with id: " + id);
+            throw new UserNotFoundException("User not found with id: " + id);
         }
     }
 }
