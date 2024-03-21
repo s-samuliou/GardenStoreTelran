@@ -1,6 +1,7 @@
 package org.garden.com.service;
 
 import org.garden.com.entity.User;
+import org.garden.com.exceptions.UserNotFoundException;
 import org.garden.com.repository.UserJpaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -16,7 +17,7 @@ public class UserServiceImpl implements UserService {
     private UserJpaRepository repository;
 
     @Override
-    public User create(User user) {
+    public User createUser(User user) {
         return repository.save(user);
     }
 
@@ -27,7 +28,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User editUser(long id, User user) {
-        User existingUser = repository.findById(id).orElseThrow();
+        User existingUser = repository.findById(id).orElseThrow(()-> new UserNotFoundException("User not found with id " + id));
 
         existingUser.setName(user.getName());
         existingUser.setPhoneNumber(user.getPhoneNumber());
@@ -37,7 +38,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User findUserById(long id) {
-        return repository.findById(id).orElseThrow();
+        return repository.findById(id).orElseThrow(()-> new UserNotFoundException("User not found with id " + id));
     }
 
     public ResponseEntity<Void> deleteUser(long id) {
@@ -45,7 +46,7 @@ public class UserServiceImpl implements UserService {
             repository.deleteById(id);
             return ResponseEntity.status(HttpStatus.OK).build();
         } else {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+            throw new UserNotFoundException("Product not found with id: " + id);
         }
     }
 }
