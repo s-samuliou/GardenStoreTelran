@@ -1,7 +1,7 @@
 package org.garden.com.service;
 
 import org.garden.com.entity.Category;
-import org.garden.com.exceptions.InvalidCategoryException;
+import org.garden.com.exceptions.CategoryNotFoundException;
 import org.garden.com.repository.CategoryJpaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -26,7 +26,7 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public Category editCategory(long id, Category category) {
-        Category newCategory = repository.findById(id).orElseThrow(() -> new InvalidCategoryException("Order with id " + id + " not found"));
+        Category newCategory = repository.findById(id).orElseThrow(() -> new CategoryNotFoundException("Category with id " + id + " not found"));
         newCategory.setName(category.getName());
         repository.save(newCategory);
         return newCategory;
@@ -34,7 +34,7 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public Category deleteCategoryById(long id) {
-        Category categoryToDelete = repository.findById(id).orElseThrow(() -> new InvalidCategoryException("Order with id " + id + " not found"));
+        Category categoryToDelete = repository.findById(id).orElseThrow(() -> new CategoryNotFoundException("Category with id " + id + " not found"));
         repository.delete(categoryToDelete);
         return categoryToDelete;
 
