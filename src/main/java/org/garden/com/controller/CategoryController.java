@@ -5,7 +5,8 @@ import org.garden.com.dto.CategoryCreateDto;
 import org.garden.com.dto.CategoryDto;
 import org.garden.com.dto.EditCategoryDto;
 import org.garden.com.entity.Category;
-import org.garden.com.exceptions.InvalidCategoryException;
+import org.garden.com.exceptions.CategoryNotFoundException;
+import org.garden.com.exceptions.InvalidCategoryArgumentException;
 import org.garden.com.service.CategoryServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -20,60 +21,48 @@ import java.util.stream.Collectors;
 public class CategoryController {
 
     @Autowired
-    CategoryServiceImpl categoryService;
+    private CategoryServiceImpl categoryService;
 
     @Autowired
-    CategoryMapper mapper;
+    private CategoryMapper mapper;
 
     @GetMapping
-    public ResponseEntity<List<CategoryDto>> getAllCategories() {
-        try {
+    public List<CategoryDto> getAllCategories() {
+
             List<Category> categories = categoryService.getAllCategories();
             List<CategoryDto> categoryDtoList = categories.stream()
                     .map(category -> mapper.categoryToCategoryDto(category))
                     .collect(Collectors.toList());
-            return ResponseEntity.status(HttpStatus.OK).body(categoryDtoList);
-        } catch (Exception exception) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-        }
+            return categoryDtoList;
+
     }
 
     @PostMapping()
-    public ResponseEntity<CategoryCreateDto> createProduct(@RequestBody CategoryCreateDto categoryCreateDto) {
-        try {
+    public CategoryCreateDto createProduct(@RequestBody CategoryCreateDto categoryCreateDto) {
+
             Category category = mapper.createCategoryDtoToCategory(categoryCreateDto);
             Category createdCategory = categoryService.createCategory(category);
             CategoryCreateDto createdCategoryDto = mapper.categoryToCreateCategoryDto(createdCategory);
-            return ResponseEntity.status(HttpStatus.CREATED).body(createdCategoryDto);
-        } catch (InvalidCategoryException exception) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
-        }
+           return createdCategoryDto;
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<EditCategoryDto> editCategory(@PathVariable(name = "id") long id, @RequestBody EditCategoryDto editCategoryDto) {
-        try {
+    public EditCategoryDto editCategory(@PathVariable(name = "id") long id, @RequestBody EditCategoryDto editCategoryDto) {
             Category category = mapper.editCategoryDtoToCategory(editCategoryDto);
             Category editedCategory = categoryService.editCategory(id, category);
             EditCategoryDto editedCategoryDto = mapper.categoryToEditCategoryDto(editedCategory);
-            return ResponseEntity.status(HttpStatus.CREATED).body(editedCategoryDto);
-        } catch (InvalidCategoryException exceptionICE) {
-            return ResponseEntity.notFound().build();
-        } catch (Exception exception) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
-        }
+            return  editedCategoryDto;
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteCategoryById(@PathVariable(name = "id") long id) {
-        try {
+    public void deleteCategoryById(@PathVariable(name = "id") long id) {
             categoryService.deleteCategoryById(id);
-            return ResponseEntity.ok().build();
-        } catch (InvalidCategoryException exceptionICE) {
-            return ResponseEntity.notFound().build();
-        } catch (Exception exception) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-        }
+    }
+
+    @ExceptionHandler({InvalidCategoryArgumentException.class, CategoryNotFoundException.class})
+    public ResponseEntity<String> handleCategoryException(Exception exception) {
+        HttpStatus status = (exception instanceof InvalidCategoryArgumentException) ? HttpStatus.BAD_REQUEST : HttpStatus.NOT_FOUND;
+        return ResponseEntity.status(status).body(exception.getMessage());
     }
 
 }

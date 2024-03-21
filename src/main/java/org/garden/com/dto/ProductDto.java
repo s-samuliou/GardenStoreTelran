@@ -1,17 +1,25 @@
 package org.garden.com.dto;
 
+import io.swagger.v3.oas.annotations.media.Schema;
+
 public class ProductDto {
 
+    @Schema(description = "The unique identifier of the product", example = "1")
     private long id;
 
+    @Schema(description = "The name of the product", example = "Table")
     private String name;
 
+    @Schema(description = "The description of the product", example = "A sturdy wooden table")
     private String description;
 
+    @Schema(description = "The price of the product", example = "99.99")
     private double price;
 
+    @Schema(description = "The ID of the category to which the product belongs", example = "1")
     private long categoryId;
 
+    @Schema(description = "The URL of the product image", example = "http://example.com/table.jpg")
     private String imageUrl;
 
     public ProductDto() {

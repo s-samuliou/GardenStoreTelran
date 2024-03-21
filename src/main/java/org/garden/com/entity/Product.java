@@ -39,7 +39,7 @@ public class Product {
     private Double discountPrice;
 
     @NotNull(message = "Created at timestamp is required")
-    @Column(name = "careated_at")
+    @Column(name = "created_at")
     private LocalDateTime createdAt = LocalDateTime.now();
 
     @NotNull(message = "Updated at timestamp is required")
