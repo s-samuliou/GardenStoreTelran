@@ -7,6 +7,29 @@
         http://www.liquibase.org/xml/ns/dbchangelog-ext
         https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
 
+    <changeSet id="1" author="AnKukl">
+        <comment>Create Category table</comment>
+        <createTable tableName="category">
+
+            <column name="id" autoIncrement="true" type="BIGINT">
+                <constraints primaryKey="true" nullable="false" primaryKeyName="categories_pk"/>
+            </column>
+            <column name="name" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+
+        </createTable>
+    </changeSet>
+
+    <changeSet id="2" author="AnKukl">
+        <comment>Initialize Category</comment>
+        <insert tableName="category">
+            <column name="name" value="Garden Tools"/>
+        </insert>
+        <insert tableName="category">
+            <column name="name" value="Garden Decor"/>
+        </insert>
+    </changeSet>
 
 
 </databaseChangeLog>
