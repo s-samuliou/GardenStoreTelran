@@ -1,15 +1,22 @@
 package org.garden.com.dto;
 
+import io.swagger.v3.oas.annotations.media.Schema;
+
 public class EditProductDto {
 
+    @Schema(description = "The updated name of the product", example = "New Table")
     private String name;
 
+    @Schema(description = "The updated description of the product", example = "A modern table with glass top")
     private String description;
 
+    @Schema(description = "The updated price of the product", example = "129.99")
     private double price;
 
+    @Schema(description = "The updated ID of the category to which the product belongs", example = "2")
     private long categoryId;
 
+    @Schema(description = "The updated URL of the product image", example = "http://example.com/new_table.jpg")
     private String imageUrl;
 
     public EditProductDto() {
