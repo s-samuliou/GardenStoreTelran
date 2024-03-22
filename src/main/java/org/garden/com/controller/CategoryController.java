@@ -1,5 +1,8 @@
 package org.garden.com.controller;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.garden.com.converter.CategoryMapper;
 import org.garden.com.dto.CategoryCreateDto;
 import org.garden.com.dto.CategoryDto;
@@ -8,6 +11,8 @@ import org.garden.com.entity.Category;
 import org.garden.com.exceptions.CategoryNotFoundException;
 import org.garden.com.exceptions.InvalidCategoryArgumentException;
 import org.garden.com.service.CategoryServiceImpl;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,6 +21,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.stream.Collectors;
 
+@Tag(name = "Category Controller", description = "Handles operations related to categories")
 @RestController
 @RequestMapping("/v1/categories")
 public class CategoryController {
@@ -26,37 +32,82 @@ public class CategoryController {
     @Autowired
     private CategoryMapper mapper;
 
+    private static final Logger log = LoggerFactory.getLogger(CategoryController.class);
+
+
+    @Operation(
+            summary = "Get all categories",
+            description = "Retrieves a list of all categories",
+            responses = {
+                    @ApiResponse(responseCode = "201", description = "Successfully retrieved categories"),
+                    @ApiResponse(responseCode = "500", description = "Internal server error")
+            }
+    )
     @GetMapping
     public List<CategoryDto> getAllCategories() {
-
-            List<Category> categories = categoryService.getAllCategories();
-            List<CategoryDto> categoryDtoList = categories.stream()
-                    .map(category -> mapper.categoryToCategoryDto(category))
-                    .collect(Collectors.toList());
-            return categoryDtoList;
+        log.info("Received request to get all categories");
+        List<Category> categories = categoryService.getAllCategories();
+        List<CategoryDto> categoryDtoList = categories.stream()
+                .map(category -> mapper.categoryToCategoryDto(category))
+                .collect(Collectors.toList());
+        log.info("Found {} categories", categories.size());
+        return categoryDtoList;
 
     }
 
+
+    @Operation(
+            summary = "Create a new category",
+            description = "Creates a new category based on the provided data",
+            responses = {
+                    @ApiResponse(responseCode = "201", description = "Successfully created category"),
+                    @ApiResponse(responseCode = "400", description = "Bad request"),
+                    @ApiResponse(responseCode = "500", description = "Internal server error"),
+            }
+    )
     @PostMapping()
-    public CategoryCreateDto createProduct(@RequestBody CategoryCreateDto categoryCreateDto) {
-
-            Category category = mapper.createCategoryDtoToCategory(categoryCreateDto);
-            Category createdCategory = categoryService.createCategory(category);
-            CategoryCreateDto createdCategoryDto = mapper.categoryToCreateCategoryDto(createdCategory);
-           return createdCategoryDto;
+    public CategoryCreateDto createCategory(@RequestBody CategoryCreateDto categoryCreateDto) {
+        log.info("Received request to create product: {}", categoryCreateDto);
+        Category category = mapper.createCategoryDtoToCategory(categoryCreateDto);
+        Category createdCategory = categoryService.createCategory(category);
+        CategoryCreateDto createdCategoryDto = mapper.categoryToCreateCategoryDto(createdCategory);
+        log.info("Category created: {}", createdCategory);
+        return createdCategoryDto;
     }
 
+    @Operation(
+            summary = "Update a category",
+            description = "Updates an existing category with the provided ID",
+            responses = {
+                    @ApiResponse(responseCode = "201", description = "Successfully updated category"),
+                    @ApiResponse(responseCode = "400", description = "Bad request"),
+                    @ApiResponse(responseCode = "404", description = "Category not found"),
+                    @ApiResponse(responseCode = "500", description = "Internal server error")
+            }
+    )
     @PutMapping("/{id}")
     public EditCategoryDto editCategory(@PathVariable(name = "id") long id, @RequestBody EditCategoryDto editCategoryDto) {
-            Category category = mapper.editCategoryDtoToCategory(editCategoryDto);
-            Category editedCategory = categoryService.editCategory(id, category);
-            EditCategoryDto editedCategoryDto = mapper.categoryToEditCategoryDto(editedCategory);
-            return  editedCategoryDto;
+        log.info("Received request to update a category with ID {}: {}", id, editCategoryDto);
+        Category category = mapper.editCategoryDtoToCategory(editCategoryDto);
+        Category editedCategory = categoryService.editCategory(id, category);
+        EditCategoryDto editedCategoryDto = mapper.categoryToEditCategoryDto(editedCategory);
+        log.info("Category updated: {}", editedCategoryDto);
+        return editedCategoryDto;
     }
 
+    @Operation(
+            summary = "Delete a category by ID",
+            description = "Deletes a category with the provided ID",
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "Successfully deleted category"),
+                    @ApiResponse(responseCode = "404", description = "Category not found"),
+                    @ApiResponse(responseCode = "500", description = "Internal server error")
+            }
+    )
     @DeleteMapping("/{id}")
     public void deleteCategoryById(@PathVariable(name = "id") long id) {
-            categoryService.deleteCategoryById(id);
+        log.info("Received request to delete category with ID: {}", id);
+        categoryService.deleteCategoryById(id);
     }
 
     @ExceptionHandler({InvalidCategoryArgumentException.class, CategoryNotFoundException.class})
