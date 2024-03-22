@@ -1,5 +1,6 @@
 package org.garden.com.dto;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import org.garden.com.enums.DeliveryType;
 import org.garden.com.enums.OrderStatus;
 
@@ -7,20 +8,28 @@ import java.time.LocalDateTime;
 
 public class OrderDto {
 
+    @Schema(description = "The unique identifier of the order", example = "1")
     private Long id;
 
+    @Schema(description = "The user ID to which the order is belongs to", example = "1")
     private long userId;
 
+    @Schema(description = "The local timestamp of creating order", example = "2024-03-21T12:55:00")
     private LocalDateTime createdAt;
 
+    @Schema(description = "The delivery address of the order", example = "Germany")
     private String deliveryAddress;
 
+    @Schema(description = "Contact phone of the user", example = "94321120")
     private String contactPhone;
 
+    @Schema(description = "Delivery type of the order", example = "COURIER")
     private DeliveryType deliveryMethod;
 
+    @Schema(description = "Order status", example = "PAID")
     private OrderStatus status;
 
+    @Schema(description = "The local timestamp of updating order", example = "2024-03-22T15:55:00")
     private LocalDateTime updatedAt;
 
     public OrderDto(Long id, long userId, LocalDateTime createdAt, String deliveryAddress,
