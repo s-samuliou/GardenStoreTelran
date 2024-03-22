@@ -66,13 +66,13 @@ public class CategoryController {
             }
     )
     @PostMapping()
-    public CategoryCreateDto createCategory(@RequestBody CategoryCreateDto categoryCreateDto) {
+    public ResponseEntity<CategoryCreateDto> createCategory(@RequestBody CategoryCreateDto categoryCreateDto) {
         log.info("Received request to create product: {}", categoryCreateDto);
         Category category = mapper.createCategoryDtoToCategory(categoryCreateDto);
         Category createdCategory = categoryService.createCategory(category);
         CategoryCreateDto createdCategoryDto = mapper.categoryToCreateCategoryDto(createdCategory);
         log.info("Category created: {}", createdCategory);
-        return createdCategoryDto;
+        return ResponseEntity.status(HttpStatus.CREATED).body(createdCategoryDto);
     }
 
     @Operation(
