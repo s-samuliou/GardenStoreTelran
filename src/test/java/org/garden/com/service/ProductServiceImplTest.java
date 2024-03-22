@@ -1,76 +1,121 @@
 package org.garden.com.service;
 
+import org.garden.com.entity.Category;
 import org.garden.com.entity.Product;
+import org.garden.com.exceptions.ProductNotFoundException;
 import org.garden.com.repository.ProductJpaRepository;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 import static junit.framework.TestCase.assertEquals;
 import static junit.framework.TestCase.assertNotNull;
-import static org.mockito.Mockito.when;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.*;
 
-@RunWith(SpringRunner.class)
 @SpringBootTest
 public class ProductServiceImplTest {
 
-    @Autowired
+    @InjectMocks
     private ProductServiceImpl productService;
 
-    @MockBean
-    private ProductJpaRepository productRepository;
+    @Mock
+    private ProductJpaRepository repository;
+
+    public ProductServiceImplTest() {
+        MockitoAnnotations.openMocks(this);
+    }
 
     @Test
-    public void testCreateProduct_Success() {
+    public void createProduct_ValidProduct_ReturnsCreatedProduct() {
         Product product = new Product();
-        product.setName("TestName");
-        product.setDescription("TestDescription");
-        product.setPrice(11.99);
-        product.setCategoryId(1);
-        product.setImageUrl("TestImageUrl");
+        product.setName("Test Product");
+        product.setDescription("Test Description");
+        product.setPrice(10.0);
+        product.setCategory(new Category());
+        product.setImageUrl("test_image_url");
 
-        when(productRepository.save(product)).thenReturn(product);
+        when(repository.save(product)).thenReturn(product);
 
         Product createdProduct = productService.createProduct(product);
 
         assertNotNull(createdProduct);
-        assertEquals(product.getName(), createdProduct.getName());
-        assertEquals(product.getDescription(), createdProduct.getDescription());
-        assertEquals(product.getPrice(), createdProduct.getPrice(), 0.01); // Указываем допустимую погрешность для сравнения чисел с плавающей точкой
-        assertEquals(product.getCategoryId(), createdProduct.getCategoryId());
-        assertEquals(product.getImageUrl(), createdProduct.getImageUrl());
+        assertEquals(product, createdProduct);
+        verify(repository, times(1)).save(product);
     }
 
     @Test
-    public void testGetAllProducts_Success() {
-        List<Product> products = new ArrayList<>();
+    public void createProduct_InvalidProduct_ThrowsException() {
+        Long categoryId = 1L;
+        Double minPrice = 10.0;
+        Double maxPrice = 100.0;
+        Boolean discount = true;
+        String sort = "name";
+        List<Product> productList = new ArrayList<>();
+        when(repository.findFilteredProducts(categoryId, minPrice, maxPrice, discount, sort)).thenReturn(productList);
 
-        for (int i = 0; i < 5; i++) {
-            Product product = new Product();
+        List<Product> filteredProducts = productService.getFilteredProducts(categoryId, minPrice, maxPrice, discount, sort);
 
-            product.setName("TestName" + i);
-            product.setDescription("TestDescription" + i);
-            product.setPrice(11.99);
-            product.setCategoryId(1);
-            product.setImageUrl("TestImageUrl" + i);
+        assertNotNull(filteredProducts);
+        assertEquals(productList, filteredProducts);
+        verify(repository, times(1)).findFilteredProducts(categoryId, minPrice, maxPrice, discount, sort);
+    }
 
-            products.add(product);
-        }
+    @Test
+    public void editProduct_ExistingProduct_ReturnsUpdatedProduct() {
+        long id = 1L;
+        Product existingProduct = new Product();
+        Product updatedProduct = new Product();
+        when(repository.findById(id)).thenReturn(Optional.of(existingProduct));
+        when(repository.save(existingProduct)).thenReturn(updatedProduct);
 
-        when(productRepository.findAll()).thenReturn(products);
+        Product result = productService.editProduct(id, existingProduct);
 
-        /*List<Product> retrievedProducts = productService.getFilteredProducts();
+        assertNotNull(result);
+        assertEquals(updatedProduct, result);
+        verify(repository, times(1)).findById(id);
+        verify(repository, times(1)).save(existingProduct);
+    }
 
-        assertEquals(products.size(), retrievedProducts.size());
+    @Test
+    public void findProductById_ExistingProduct_ReturnsProduct() {
+        long id = 1L;
+        Product product = new Product();
+        when(repository.findById(id)).thenReturn(Optional.of(product));
 
-        for (int i = 0; i < products.size(); i++) {
-            assertEquals(products.get(i), retrievedProducts.get(i));
-        }*/
+        Product result = productService.findProductById(id);
+
+        assertNotNull(result);
+        assertEquals(product, result);
+        verify(repository, times(1)).findById(id);
+    }
+
+    @Test
+    public void deleteProduct_ExistingProduct_ReturnsOkResponse() {
+        long id = 1L;
+        when(repository.existsById(id)).thenReturn(true);
+
+        ResponseEntity<Void> result = productService.deleteProduct(id);
+
+        assertNotNull(result);
+        assertEquals(ResponseEntity.status(HttpStatus.OK).build(), result);
+        verify(repository, times(1)).existsById(id);
+        verify(repository, times(1)).deleteById(id);
+    }
+
+    @Test
+    public void deleteProduct_NonExistingProduct_ThrowsProductNotFoundException() {
+        long id = 1L;
+        when(repository.existsById(id)).thenReturn(false);
+
+        assertThrows(ProductNotFoundException.class, () -> productService.deleteProduct(id));
+        verify(repository, times(1)).existsById(id);
+        verify(repository, never()).deleteById(id);
     }
 }

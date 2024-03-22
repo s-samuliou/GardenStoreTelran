@@ -44,13 +44,13 @@ public class ProductController {
             }
     )
     @PostMapping()
-    public CreateProductDto createProduct(@RequestBody CreateProductDto createProductDto) {
+    public ResponseEntity<CreateProductDto> createProduct(@RequestBody CreateProductDto createProductDto) {
         log.info("Received request to create product: {}", createProductDto);
         Product product = mapper.createProductDtoToProduct(createProductDto);
         Product createdProduct = service.createProduct(product);
         CreateProductDto createdProductDto = mapper.productToCreateProductDto(createdProduct);
         log.info("Product created: {}", createdProductDto);
-        return createdProductDto;
+        return ResponseEntity.status(HttpStatus.CREATED).body(createdProductDto);
     }
 
     @Operation(
