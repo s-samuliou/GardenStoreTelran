@@ -1,6 +1,7 @@
 package org.garden.com.service;
 
 import org.garden.com.entity.Category;
+import org.springframework.http.ResponseEntity;
 
 import java.util.List;
 
@@ -12,6 +13,6 @@ public interface CategoryService {
 
     Category editCategory(long id, Category category);
 
-    Category deleteCategoryById(long id);
+    ResponseEntity<Void> deleteCategoryById(long id);
 
 }
