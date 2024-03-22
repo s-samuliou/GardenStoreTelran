@@ -1,9 +1,13 @@
 package org.garden.com.dto;
 
-public class UserDto {
+import io.swagger.v3.oas.annotations.media.Schema;
 
+public class UserDto {
+    @Schema(description = "The name of the user", example = "Stephen")
     private String name;
+    @Schema(description = "The email of the user", example = "example@gardenshop.com")
     private String email;
+    @Schema(description = "The phone number of the user", example = "01759999999")
     private String phoneNumber;
 
     public UserDto( String name, String email, String phoneNumber) {

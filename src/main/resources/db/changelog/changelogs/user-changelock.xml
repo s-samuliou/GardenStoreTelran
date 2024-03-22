@@ -7,6 +7,59 @@
         http://www.liquibase.org/xml/ns/dbchangelog-ext
         https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
 
+    <changeSet id="1" author="Balagurchyk">
+        <comment>Create users table</comment>
+        <createTable tableName="users">
+            <column name="id" autoIncrement="true" type="BIGINT">
+                <constraints primaryKey="true" nullable="false" primaryKeyName="users_pk"/>
+            </column>
 
+            <column name="email" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="name" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="password" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="phone_number" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="role" type="VARCHAR(255)"/>
 
+        </createTable>
+    </changeSet>
+
+    <changeSet id="2" author="Balagurchyk">
+        <comment>Initializing the users table</comment>
+        <insert tableName="users">
+            <column name="name" value="Jimmy"/>
+            <column name="email" value="jimmy@yahoo.com"/>
+            <column name="password" value="123456aA"/>
+            <column name="phone_number" value="123-456"/>
+            <column name="role" value="CUSTOMER"/>
+        </insert>
+        <insert tableName="users">
+            <column name="name" value="Frank"/>
+            <column name="email" value="franky@google.com"/>
+            <column name="password" value="9876511aA"/>
+            <column name="phone_number" value="888-012"/>
+            <column name="role" value="CUSTOMER"/>
+        </insert>
+        <insert tableName="users">
+            <column name="name" value="Eddy"/>
+            <column name="email" value="eddy777@google.com"/>
+            <column name="password" value="9gdte31aA"/>
+            <column name="phone_number" value="3920449"/>
+            <column name="role" value="CUSTOMER"/>
+        </insert>
+        <insert tableName="users">
+            <column name="name" value="Bob"/>
+            <column name="email" value="bobby@google.com"/>
+            <column name="password" value="3edfrA"/>
+            <column name="phone_number" value="94321120"/>
+            <column name="role" value="ADMIN"/>
+        </insert>
+    </changeSet>
 </databaseChangeLog>
