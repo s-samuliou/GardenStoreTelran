@@ -1,8 +1,11 @@
 package org.garden.com.dto;
 
-public class EditUserDto {
+import io.swagger.v3.oas.annotations.media.Schema;
 
+public class EditUserDto {
+    @Schema(description = "The updated name of the user", example = "Stevland")
     private String name;
+    @Schema(description = "The updated phone number of the user", example = "01758888888")
     private String phoneNumber;
 
     public EditUserDto(String name, String phoneNumber) {
