@@ -1,12 +1,78 @@
-<databaseChangeLog
-        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
-        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-        xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
-        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
-        https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd
-        http://www.liquibase.org/xml/ns/dbchangelog-ext
-        https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                   https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd
+                   http://www.liquibase.org/xml/ns/dbchangelog-ext
+                   https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
 
 
-
+    <changeSet id="1" author="s_l">
+        <comment>Created Orders table</comment>
+        <createTable tableName="orders">
+            <column name="id" autoIncrement="true" type="BIGINT">
+                <constraints primaryKey="true" nullable="false" primaryKeyName="orders_pk"/>
+            </column>
+            <column name="user_id" type="BIGINT">
+                <constraints  foreignKeyName="orders_fk"/>
+            </column>
+            <column name="contact_phone" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="created_at" type="TIMESTAMP">
+            </column>
+            <column name="delivery_address" type="VARCHAR(500)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="delivery_method" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="status" type="VARCHAR(255)">
+            </column>
+            <column name="updated_at" type="TIMESTAMP"/>
+        </createTable>
+        <addForeignKeyConstraint baseTableName="orders" baseColumnNames="user_id"
+                                 constraintName="orders_fk" referencedTableName="users"
+                                 referencedColumnNames="id" onDelete="CASCADE"
+                                 onUpdate="CASCADE"/>
+    </changeSet>
+    <changeSet id="2" author="s_l">
+        <comment>Initializing the orders table</comment>
+        <insert tableName="orders">
+            <column name="user_id" value="1"/>
+            <column name="contact_phone" value="94321120"/>
+            <column name="created_at" value="2024-03-21T12:55:00"/>
+            <column name="delivery_address" value="Germany"/>
+            <column name="delivery_method" value="COURIER"/>
+            <column name="status" value="PROCESSING"/>
+            <column name="updated_at" value="2024-03-21T12:58:00"/>
+        </insert>
+        <insert tableName="orders">
+            <column name="user_id" value="2"/>
+            <column name="contact_phone" value="3920449"/>
+            <column name="created_at" value="2024-03-21T13:55:00"/>
+            <column name="delivery_address" value="France"/>
+            <column name="delivery_method" value="COURIER"/>
+            <column name="status" value="DELIVERED"/>
+            <column name="updated_at" value="2024-03-21T13:58:00"/>
+        </insert>
+        <insert tableName="orders">
+            <column name="user_id" value="3"/>
+            <column name="contact_phone" value="888-012"/>
+            <column name="created_at" value="2024-03-20T15:05:00"/>
+            <column name="delivery_address" value="Austria"/>
+            <column name="delivery_method" value="COURIER"/>
+            <column name="status" value="CREATED"/>
+            <column name="updated_at" value="2024-03-20T16:58:00"/>
+        </insert>
+        <insert tableName="orders">
+            <column name="user_id" value="4"/>
+            <column name="contact_phone" value="123-456"/>
+            <column name="created_at" value="2024-03-19T18:25:00"/>
+            <column name="delivery_address" value="Spain"/>
+            <column name="delivery_method" value="PICKUP"/>
+            <column name="status" value="PROCESSING"/>
+            <column name="updated_at" value="2024-03-20T16:18:00"/>
+        </insert>
+    </changeSet>
 </databaseChangeLog>
