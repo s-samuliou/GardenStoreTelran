@@ -1,5 +1,6 @@
 package org.garden.com.service;
 
+import jakarta.validation.Validator;
 import org.garden.com.entity.Category;
 import org.garden.com.entity.Product;
 import org.garden.com.exceptions.ProductNotFoundException;
@@ -27,6 +28,9 @@ public class ProductServiceImplTest {
 
     @Mock
     private ProductJpaRepository repository;
+
+    @Mock
+    private Validator validator;
 
     public ProductServiceImplTest() {
         MockitoAnnotations.openMocks(this);
