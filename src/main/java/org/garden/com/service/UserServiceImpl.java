@@ -30,7 +30,6 @@ public class UserServiceImpl implements UserService {
     public List<User> getAllUsers() {
 
         log.info("Fetching users");
-        //??
         return repository.findAll();
     }
 

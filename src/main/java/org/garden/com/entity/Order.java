@@ -37,6 +37,8 @@ public class Order {
     @Column(name = "delivery_method")
     private String deliveryMethod;
 
+    @Enumerated(EnumType.STRING)
+    @Column(name = "status")
     private OrderStatus status;
 
     @NotNull(message = "Updated at timestamp is required")
