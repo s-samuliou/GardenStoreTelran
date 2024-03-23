@@ -1,6 +1,7 @@
 package org.garden.com.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.garden.com.converter.UserMapper;
 import org.garden.com.dto.CreateUserDto;
 import org.garden.com.dto.EditUserDto;
 import org.garden.com.entity.User;
@@ -24,6 +25,7 @@ import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+
 @RunWith(SpringRunner.class)
 @WebMvcTest(UserController.class)
 public class UserControllerTests {
@@ -33,6 +35,9 @@ public class UserControllerTests {
 
     @MockBean
     private UserServiceImpl userService;
+
+    @MockBean
+    private UserMapper userMapper;
 
     @Test
     public void testCreateUser() throws Exception {
@@ -50,7 +55,7 @@ public class UserControllerTests {
 
     @Test
     public void testGetAllUsers() throws Exception {
-        // Определяем поведение мок-сервиса
+
         List<User> users = new ArrayList<>();
         when(userService.getAllUsers())
                 .thenReturn(users);

@@ -30,7 +30,6 @@ public class UserServiceImplTest {
     @Mock
     private UserJpaRepository repository;
 
-
     public UserServiceImplTest() {
         MockitoAnnotations.openMocks(this);
     }
@@ -50,6 +49,19 @@ public class UserServiceImplTest {
         assertNotNull(createdUser);
         assertEquals(user, createdUser);
         verify(repository, times(1)).save(user);
+    }
+
+    @Test
+    public void createUser_InvalidUser_ThrowsException() {
+        User invalidUser = new User();
+        invalidUser.setName(null);
+        invalidUser.setEmail("www.google.com");
+        invalidUser.setPassword("123");
+        invalidUser.setPhoneNumber("1117744");
+
+        when(repository.save(any(User.class))).thenThrow(new IllegalArgumentException());
+
+        assertThrows(IllegalArgumentException.class, () -> userService.createUser(invalidUser));
     }
 
     @Test
