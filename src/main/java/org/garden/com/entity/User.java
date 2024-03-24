@@ -44,10 +44,11 @@ public class User {
     public User() {
     }
 
-    public User(long id, String name, String email, String phoneNumber, Role role) {
+    public User(long id, String name, String email, String password, String phoneNumber, Role role) {
         this.id = id;
         this.name = name;
         this.email = email;
+        this.password = password;
         this.phoneNumber = phoneNumber;
         this.role = role;
     }

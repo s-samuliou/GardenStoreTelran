@@ -30,7 +30,6 @@ public class UserController {
 
     @Autowired
     private UserMapper mapper;
-
     private static final Logger log = LoggerFactory.getLogger(UserController.class);
 
     @Operation(
@@ -43,6 +42,7 @@ public class UserController {
             }
     )
     @PostMapping()
+    @ResponseStatus(HttpStatus.CREATED)
     public CreateUserDto createUser(@RequestBody CreateUserDto createUserDto) {
         log.info("Received request to create user: {}", createUserDto);
         User user = mapper.createUserDtoToUser(createUserDto);

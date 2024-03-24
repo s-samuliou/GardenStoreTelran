@@ -12,9 +12,11 @@ public class CreateUserDto {
     @Schema(description = "The phone number of the user", example = "01759999999")
     private String phoneNumber;
 
-    public CreateUserDto(String name, String email, String phoneNumber) {
+
+    public CreateUserDto(String name, String email, String password, String phoneNumber) {
         this.name = name;
         this.email = email;
+        this.password = password;
         this.phoneNumber = phoneNumber;
     }
 
