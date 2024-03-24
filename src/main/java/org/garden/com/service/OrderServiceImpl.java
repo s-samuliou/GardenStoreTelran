@@ -32,7 +32,8 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public Order findById(long id) {
         log.info("Find the order by ID : {}", id);
-        return repository.findById(id).orElse(null);
+        return repository.findById(id)
+                .orElseThrow(() -> new OrderNotFoundException("Order with id " + id + " not found"));
     }
 
     @Override

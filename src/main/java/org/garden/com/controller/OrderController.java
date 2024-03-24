@@ -18,11 +18,14 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Tag(name = "Order Controller", description = "Handles operations related to orders")
 @RestController
+//@WebMvcTest
 @RequestMapping("/v1/orders")
 public class OrderController {
 
@@ -34,7 +37,7 @@ public class OrderController {
 
     private static final Logger log = LoggerFactory.getLogger(OrderController.class);
 
-    public OrderController(OrderService orderService) {
+    public OrderController(OrderService orderService, OrderMapper orderMapperMock) {
         this.orderService = orderService;
     }
 
@@ -62,12 +65,13 @@ public class OrderController {
             summary = "Create a new order",
             description = "Creates a new order based on the provided data",
             responses = {
-                    @ApiResponse(responseCode = "200", description = "Successfully created order"),
+                    @ApiResponse(responseCode = "201", description = "Successfully created order"),
                     @ApiResponse(responseCode = "404", description = "Not found")
             }
     )
 
     @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
     public OrderCreateDto createOrder(@RequestBody OrderCreateDto dto) {
         log.info("Received request to create order: {}", dto);
 
@@ -114,17 +118,19 @@ public class OrderController {
     )
 
     @DeleteMapping("/{id}")
-    public Order deleteById(@PathVariable(name = "id") int id) {
+    public void deleteById(@PathVariable(name = "id") int id) {
         log.info("Received request to delete product with ID: {} ", id);
-        return orderService.deleteById(id);
+        orderService.deleteById(id);
     }
 
     @ExceptionHandler({OrderInvalidArgumentException.class, OrderNotFoundException.class})
 
-    public ResponseEntity<String> handleProductException(Exception exception) {
+    public ResponseEntity<Object> handleProductException(Exception exception) {
         HttpStatus status = (exception instanceof OrderInvalidArgumentException) ?
                 HttpStatus.BAD_REQUEST : HttpStatus.NOT_FOUND;
         log.error("Error occurred: {}", exception.getMessage());
-        return ResponseEntity.status(status).body(exception.getMessage());
+        Map<String, String> responseBody = new HashMap<>();
+        responseBody.put("message", exception.getMessage());
+        return ResponseEntity.status(status).body(responseBody);
     }
 }

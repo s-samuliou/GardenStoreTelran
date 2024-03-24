@@ -75,4 +75,35 @@
             <column name="updated_at" value="2024-03-20T16:18:00"/>
         </insert>
     </changeSet>
+
+    <changeSet id="3" author="s_l">
+        <comment>Made changes in DeliveryType and OrderStatus as ENUMS</comment>
+        <addColumn tableName="orders">
+            <column name="new_status" type="VARCHAR(50)">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+
+        <comment>Update new_status column with existing data</comment>
+        <sql>UPDATE orders SET new_status = status</sql>
+        <comment>Drop the old status column</comment>
+        <dropColumn tableName="orders" columnName="status"/>
+
+        <comment>Rename new_status column to status</comment>
+        <renameColumn tableName="orders" oldColumnName="new_status" newColumnName="status" columnDataType="VARCHAR(50)"/>
+
+        <addColumn tableName="orders">
+            <column name="new_delivery_method" type="VARCHAR(50)">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+
+        <comment>Update new_delivery_method column with existing data</comment>
+        <sql>UPDATE orders SET new_delivery_method = delivery_method</sql>
+        <comment>Drop the old delivery_method column</comment>
+        <dropColumn tableName="orders" columnName="delivery_method"/>
+
+        <comment>Rename new_delivery_method column to delivery_method</comment>
+        <renameColumn tableName="orders" oldColumnName="new_delivery_method" newColumnName="delivery_method" columnDataType="VARCHAR(50)"/>
+    </changeSet>
 </databaseChangeLog>
