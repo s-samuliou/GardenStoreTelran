@@ -40,7 +40,6 @@ public class ProductCategoryConnectionTest {
         product.setImageUrl("TestImageUrl");
         product = productRepository.save(product);
 
-        // Take product from DB and check if category is correct
         Product retrievedProduct = productRepository.findById(product.getId()).orElse(null);
         assertNotNull(retrievedProduct);
         assertNotNull(retrievedProduct.getCategory());
