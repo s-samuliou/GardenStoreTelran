@@ -10,7 +10,6 @@ import org.mapstruct.Mapping;
 @Mapper(componentModel = "spring")
 public interface CategoryMapper {
 
-    @Mapping(source = "id", target = "id")
     @Mapping(source = "name", target = "name")
     CategoryDto categoryToCategoryDto(Category category);
 
@@ -21,7 +20,6 @@ public interface CategoryMapper {
     @Mapping(source = "name", target = "name")
     Category createCategoryDtoToCategory(CategoryCreateDto categoryCreateDto);
 
-    @Mapping(source = "id", target = "id")
     @Mapping(source = "name", target = "name")
     Category editCategoryDtoToCategory(EditCategoryDto editCategoryDto);
 
