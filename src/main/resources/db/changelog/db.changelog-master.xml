@@ -12,4 +12,9 @@
     <include file="db/changelog/changelogs/product-changelock.xml"/>
     <include file="db/changelog/changelogs/order-changelock.xml"/>
 
+    <include file="db/changelog/changelogs/favorites-changelock.xml"/>
+    <include file="db/changelog/changelogs/order-item-changelock.xml"/>
+    <include file="db/changelog/changelogs/cart-changelock.xml"/>
+    <include file="db/changelog/changelogs/cart-item-changelock.xml"/>
+
 </databaseChangeLog>
