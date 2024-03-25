@@ -5,7 +5,6 @@ import jakarta.validation.Validator;
 import org.garden.com.entity.Category;
 import org.garden.com.exceptions.CategoryNotFoundException;
 import org.garden.com.exceptions.InvalidCategoryArgumentException;
-import org.garden.com.exceptions.ProductInvalidArgumentException;
 import org.garden.com.repository.CategoryJpaRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
