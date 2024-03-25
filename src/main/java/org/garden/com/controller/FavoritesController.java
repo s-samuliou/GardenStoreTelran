@@ -4,12 +4,11 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.garden.com.converter.FavoritesMapper;
+import org.garden.com.dto.FavoriteCreateDto;
 import org.garden.com.dto.FavoritesDto;
 import org.garden.com.entity.Favorites;
 import org.garden.com.exceptions.FavoriteInvalidArgumentException;
 import org.garden.com.exceptions.FavoriteNotFoundException;
-import org.garden.com.exceptions.ProductInvalidArgumentException;
-import org.garden.com.exceptions.ProductNotFoundException;
 import org.garden.com.service.FavoritesServiceImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -44,11 +43,11 @@ public class FavoritesController {
             }
     )
     @PostMapping()
-    public ResponseEntity<FavoritesDto> createProduct(@RequestBody FavoritesDto FavoritesDto) {
-        log.info("Received request to create favorite product: {}", FavoritesDto);
-        Favorites favorite = mapper.favoritesDtoToFavorites(FavoritesDto);
+    public ResponseEntity<FavoriteCreateDto> createProduct(@RequestBody FavoriteCreateDto favoriteCreateDto) {
+        log.info("Received request to create favorite product: {}", favoriteCreateDto);
+        Favorites favorite = mapper.favoritesCreateDtoToFavorites(favoriteCreateDto);
         Favorites createdFavorite = service.addFavoriteProduct(favorite);
-        FavoritesDto createdFavoriteDto = mapper.favoritesToFavoritesDto(createdFavorite);
+        FavoriteCreateDto createdFavoriteDto = mapper.favoritesToFavoriteCreateDto(createdFavorite);
         log.info("Favorite product created: {}", createdFavoriteDto);
         return ResponseEntity.status(HttpStatus.CREATED).body(createdFavoriteDto);
     }

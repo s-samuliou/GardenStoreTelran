@@ -4,18 +4,22 @@ import io.swagger.v3.oas.annotations.media.Schema;
 
 public class FavoritesDto {
 
+    @Schema(description = "The ID of the favorite", example = "1")
+    private long favoriteId;
+
     @Schema(description = "The ID of the user", example = "1")
     private long userId;
 
-    @Schema(description = "The ID of the favorite product", example = "1")
-    private long productId;
+    @Schema(description = "The favorite productDto", example = "1")
+    private ProductDto products;
 
     public FavoritesDto() {
     }
 
-    public FavoritesDto(long userId, long productId) {
+    public FavoritesDto(long favoriteId, long userId, ProductDto products) {
+        this.favoriteId = favoriteId;
         this.userId = userId;
-        this.productId = productId;
+        this.products = products;
     }
 
     public long getUserId() {
@@ -26,11 +30,19 @@ public class FavoritesDto {
         this.userId = userId;
     }
 
-    public long getProductId() {
-        return productId;
+    public ProductDto getProducts() {
+        return products;
     }
 
-    public void setProductId(long productId) {
-        this.productId = productId;
+    public void setProducts(ProductDto products) {
+        this.products = products;
+    }
+
+    public long getFavoriteId() {
+        return favoriteId;
+    }
+
+    public void setFavoriteId(long favoriteId) {
+        this.favoriteId = favoriteId;
     }
 }
