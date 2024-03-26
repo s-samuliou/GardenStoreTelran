@@ -7,7 +7,6 @@ import org.garden.com.entity.User;
 import org.garden.com.exceptions.FavoriteNotFoundException;
 import org.garden.com.repository.FavoritesJpaRepository;
 import org.junit.Test;
-import org.junit.jupiter.api.BeforeEach;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
