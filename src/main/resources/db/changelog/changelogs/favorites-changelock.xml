@@ -8,4 +8,53 @@
         https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
 
 
+    <changeSet id="1" author="s_samuliou">
+        <comment>Create table favorites</comment>
+        <createTable tableName="favorites">
+            <column name="id" autoIncrement="true" type="BIGINT">
+                <constraints primaryKey="true" nullable="false" primaryKeyName="favorites_pk"/>
+            </column>
+            <column name="user_id" type="BIGINT">
+                <constraints nullable="false" foreignKeyName="user_fk"/>
+            </column>
+            <column name="product_id" type="BIGINT">
+                <constraints nullable="false" foreignKeyName="product_fk"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="2" author="s_samuliou">
+        <comment>Add foreign key constraint to favorites table</comment>
+        <addForeignKeyConstraint baseTableName="favorites"
+                                 baseColumnNames="user_id"
+                                 constraintName="user_fk"
+                                 referencedTableName="users"
+                                 referencedColumnNames="id"
+                                 onDelete="CASCADE"
+                                 onUpdate="CASCADE"/>
+
+        <addForeignKeyConstraint baseTableName="favorites"
+                                 baseColumnNames="product_id"
+                                 constraintName="product_fk"
+                                 referencedTableName="products"
+                                 referencedColumnNames="id"
+                                 onDelete="CASCADE"
+                                 onUpdate="CASCADE"/>
+    </changeSet>
+
+    <changeSet id="3" author="s_samuliou">
+        <comment>Inserting values into favorites table</comment>
+        <insert tableName="favorites">
+            <column name="user_id" value="1"/>
+            <column name="product_id" value="2"/>
+        </insert>
+        <insert tableName="favorites">
+            <column name="user_id" value="2"/>
+            <column name="product_id" value="1"/>
+        </insert>
+        <insert tableName="favorites">
+            <column name="user_id" value="2"/>
+            <column name="product_id" value="2"/>
+        </insert>
+    </changeSet>
 </databaseChangeLog>
