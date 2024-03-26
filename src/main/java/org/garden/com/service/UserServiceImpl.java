@@ -1,5 +1,6 @@
 package org.garden.com.service;
 
+import org.garden.com.entity.Cart;
 import org.garden.com.entity.User;
 import org.garden.com.exceptions.UserNotFoundException;
 import org.garden.com.repository.UserJpaRepository;
@@ -20,9 +21,12 @@ public class UserServiceImpl implements UserService {
 
     private static final Logger log = LoggerFactory.getLogger(UserServiceImpl.class);
 
+
+
     @Override
     public User createUser(User user) {
         log.info("Creating user: {}", user);
+ //       user.setCart(new Cart());
         return repository.save(user);
     }
 

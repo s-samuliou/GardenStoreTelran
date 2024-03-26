@@ -7,5 +7,34 @@
         http://www.liquibase.org/xml/ns/dbchangelog-ext
         https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
 
-
+    <changeSet id="1" author="Balagurchyk">
+        <comment>Created Cart table</comment>
+        <createTable tableName="cart">
+            <column name="id" autoIncrement="true" type="BIGINT">
+                <constraints primaryKey="true" nullable="false" primaryKeyName="cart_pk"/>
+            </column>
+            <column name="user_id" type="BIGINT">
+                <constraints foreignKeyName="cart_fk"/>
+            </column>
+        </createTable>
+        <addForeignKeyConstraint baseTableName="cart" baseColumnNames="user_id"
+                                 constraintName="cart_fk" referencedTableName="users"
+                                 referencedColumnNames="id" onDelete="CASCADE"
+                                 onUpdate="CASCADE"/>
+    </changeSet>
+    <changeSet id="2" author="Balagurchyk">
+        <comment>Initializing the cart table</comment>
+        <insert tableName="cart">
+            <column name="user_id" value="1"/>
+        </insert>
+        <insert tableName="cart">
+            <column name="user_id" value="2"/>
+        </insert>
+        <insert tableName="cart">
+            <column name="user_id" value="3"/>
+        </insert>
+        <insert tableName="cart">
+            <column name="user_id" value="4"/>
+        </insert>
+    </changeSet>
 </databaseChangeLog>
