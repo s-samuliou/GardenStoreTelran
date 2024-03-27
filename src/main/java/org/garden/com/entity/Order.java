@@ -1,8 +1,6 @@
 package org.garden.com.entity;
 
 import jakarta.persistence.*;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import org.garden.com.enums.DeliveryType;
@@ -33,8 +31,8 @@ public class Order {
     @Column(name = "contact_phone")
     private String contactPhone;
 
-    @NotBlank(message = "Delivery method is required")
-    @Length(max = 255, message = "Delivery method must be less than 255 characters")
+    //@NotBlank(message = "Delivery method is required")
+    //@Length(max = 255, message = "Delivery method must be less than 255 characters")
     @Column(name = "delivery_method")
     @Enumerated(EnumType.STRING)
     private DeliveryType deliveryMethod;
