@@ -2,6 +2,9 @@ package org.garden.com.entity;
 
 import jakarta.persistence.*;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Entity
 @Table(name = "cart")
 public class Cart {
@@ -14,9 +17,8 @@ public class Cart {
     @JoinColumn(name = "user_id", referencedColumnName = "id")
     private User user;
 
-//        потом раскомментирую:
-//    @OneToMany(mappedBy = "cart")
-//    private List<CartItems> cartItemsList;
+    @OneToMany(mappedBy = "cart")
+    private List<CartItem> cartItemsList = new ArrayList<>();
 
 
     public Cart() {
@@ -41,6 +43,14 @@ public class Cart {
 
     public void setUser(User user) {
         this.user = user;
+    }
+
+    public List<CartItem> getCartItemsList() {
+        return cartItemsList;
+    }
+
+    public void setCartItemsList(List<CartItem> cartItemsList) {
+        this.cartItemsList = cartItemsList;
     }
 }
 

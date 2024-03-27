@@ -7,5 +7,46 @@
         http://www.liquibase.org/xml/ns/dbchangelog-ext
         https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
 
+    <changeSet id="1" author="AnKukl">
+        <comment>Create Cart items table</comment>
+        <createTable tableName="cart_items">
 
+            <column name="id" autoIncrement="true" type="BIGINT">
+                <constraints primaryKey="true" nullable="false" primaryKeyName="cartItems_pk"/>
+            </column>
+            <column name="cart_id" type="BIGINT">
+                <constraints nullable="false" foreignKeyName="cartItems_fk"/>
+            </column>
+            <column name="product_id" type="BIGINT">
+                <constraints nullable="false" foreignKeyName="items_fk"/>
+            </column>
+            <column name="quantity" type="BIGINT"/>
+        </createTable>
+
+        <addForeignKeyConstraint baseTableName="cart_items"
+                                 baseColumnNames="cart_id"
+                                 constraintName="cart_items_fk"
+                                 referencedTableName="cart"
+                                 referencedColumnNames="id"
+                                 onDelete="CASCADE"
+                                 onUpdate="CASCADE"/>
+
+        <addForeignKeyConstraint baseTableName="cart_items"
+                                 baseColumnNames="product_id"
+                                 constraintName="items_fk"
+                                 referencedTableName="products"
+                                 referencedColumnNames="id"
+                                 onDelete="CASCADE"
+                                 onUpdate="CASCADE"/>
+
+    </changeSet>
+
+    <changeSet id="2" author="AnKukl">
+    <comment>Add new cart item</comment>
+    <insert tableName="cart_items">
+        <column name="cart_id" value="1"/>
+        <column name="product_id" value="1"/>
+        <column name="quantity" value="1"/>
+    </insert>
+    </changeSet>
 </databaseChangeLog>
