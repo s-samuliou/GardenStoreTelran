@@ -25,7 +25,6 @@ import java.util.stream.Collectors;
 
 @Tag(name = "Order Controller", description = "Handles operations related to orders")
 @RestController
-//@WebMvcTest
 @RequestMapping("/v1/orders")
 public class OrderController {
 
@@ -125,7 +124,7 @@ public class OrderController {
 
     @ExceptionHandler({OrderInvalidArgumentException.class, OrderNotFoundException.class})
 
-    public ResponseEntity<Object> handleProductException(Exception exception) {
+    public ResponseEntity<Object> handleOrderException(Exception exception) {
         HttpStatus status = (exception instanceof OrderInvalidArgumentException) ?
                 HttpStatus.BAD_REQUEST : HttpStatus.NOT_FOUND;
         log.error("Error occurred: {}", exception.getMessage());

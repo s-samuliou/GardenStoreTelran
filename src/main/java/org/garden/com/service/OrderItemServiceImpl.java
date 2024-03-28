@@ -33,7 +33,6 @@ public class OrderItemServiceImpl implements OrderItemService {
         return orderItemList;
     }
 
-
     @Override
     public OrderItem findById(long id) {
         log.info("Find the orderItem by ID : {}", id);
