@@ -1,10 +1,12 @@
 package org.garden.com.service;
 
 import jakarta.validation.Validator;
-import org.garden.com.entity.Category;
-import org.garden.com.entity.Product;
+import org.garden.com.entity.*;
 import org.garden.com.exceptions.ProductNotFoundException;
+import org.garden.com.repository.CartItemsJpaRepository;
+import org.garden.com.repository.CartJpaRepository;
 import org.garden.com.repository.ProductJpaRepository;
+import org.garden.com.repository.UserJpaRepository;
 import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -25,6 +27,15 @@ public class ProductServiceImplTest {
 
     @InjectMocks
     private ProductServiceImpl productService;
+
+    @Mock
+    private UserJpaRepository userJpaRepository;
+
+    @Mock
+    private CartItemsJpaRepository itemsJpaRepository;
+
+    @Mock
+    private CartJpaRepository cartJpaRepository;
 
     @Mock
     private ProductJpaRepository repository;
@@ -98,6 +109,37 @@ public class ProductServiceImplTest {
         assertNotNull(result);
         assertEquals(product, result);
         verify(repository, times(1)).findById(id);
+    }
+
+    @Test
+    public void testAddProductToCart() {
+
+        Product product = new Product();
+        product.setId(1L);
+        product.setName("Test Product");
+        Long quantity = 2L;
+        Long userId = 100L;
+
+        User user = new User();
+        user.setId(userId);
+        user.setCart(new Cart());
+        Optional<User> optionalUser = Optional.of(user);
+        when(userJpaRepository.findById(anyLong())).thenReturn(optionalUser);
+
+        CartItem savedCartItem = new CartItem();
+        savedCartItem.setId(1L);
+        savedCartItem.setProduct(product);
+        savedCartItem.setQuantity(quantity);
+        savedCartItem.setCart(user.getCart());
+        when(itemsJpaRepository.save(any(CartItem.class))).thenReturn(savedCartItem);
+
+        CartItem addedCartItem = productService.addProductToCart(product, quantity, userId);
+
+        assertEquals(savedCartItem, addedCartItem);
+
+        verify(userJpaRepository).findById(userId);
+        verify(itemsJpaRepository).save(any(CartItem.class));
+        verify(cartJpaRepository).save(user.getCart());
     }
 
     @Test

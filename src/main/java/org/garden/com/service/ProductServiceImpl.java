@@ -4,16 +4,16 @@ import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Validator;
 import org.garden.com.entity.Cart;
 import org.garden.com.entity.CartItem;
+import org.garden.com.entity.Product;
 import org.garden.com.entity.User;
+import org.garden.com.exceptions.ProductInvalidArgumentException;
+import org.garden.com.exceptions.ProductNotFoundException;
 import org.garden.com.repository.CartItemsJpaRepository;
 import org.garden.com.repository.CartJpaRepository;
+import org.garden.com.repository.ProductJpaRepository;
 import org.garden.com.repository.UserJpaRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.garden.com.entity.Product;
-import org.garden.com.exceptions.ProductInvalidArgumentException;
-import org.garden.com.exceptions.ProductNotFoundException;
-import org.garden.com.repository.ProductJpaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -22,6 +22,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 @Service
@@ -104,35 +105,34 @@ public class ProductServiceImpl implements ProductService {
     public CartItem addProductToCart(Product product, long quantity, Long userId) {
         log.info("Addition the product with ID: {} to user's cart(user ID: {})", product, userId);
         validateProduct(product);
-        User user = userJpaRepository.findById(userId).get();
-        if (!cartJpaRepository.findById(user.getCart().getId()).isPresent()){
-            Cart cart = new Cart();
-            log.info("Creating a new cart with ID: {}", cart.getId());
 
-            cart.setUser(userJpaRepository.findById(userId).get());
+        Optional<User> optionalUser = userJpaRepository.findById(userId);
+        if (optionalUser.isEmpty()){
+            log.error("User with ID {} not found", userId);
+            return null;
+        }
+
+        User user = optionalUser.get();
+        Cart cart = user.getCart();
+
+        if (cart == null) {
+            log.info("Creating a new cart for user with ID: {}", userId);
+            cart = new Cart();
+            cart.setUser(user);
             cart.setCartItemsList(new ArrayList<>());
+            user.setCart(cart);
+        }
             CartItem cartItem = new CartItem();
             cartItem.setProduct(product);
             cartItem.setQuantity(quantity);
             cartItem.setCart(cart);
+
             CartItem saved = itemsJpaRepository.save(cartItem);
-            cart.getCartItemsList().add(cartItem);
+            cart.getCartItemsList().add(saved);
             cartJpaRepository.save(cart);
 
             log.info("Product with ID: {} added to cart", saved.getProduct().getId());
             return saved;
-        }
-
-        Cart userCart = user.getCart();
-        CartItem item = new CartItem();
-        item.setProduct(product);
-        item.setCart(userCart);
-        item.setQuantity(quantity);
-        CartItem saved = itemsJpaRepository.save(item);
-        userCart.getCartItemsList().add(item);
-
-        log.info("Product with ID: {} added to cart", saved.getProduct().getId());
-        return saved;
 
     }
 
