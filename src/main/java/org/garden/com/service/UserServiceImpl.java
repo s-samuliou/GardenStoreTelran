@@ -2,6 +2,7 @@ package org.garden.com.service;
 
 import org.garden.com.entity.Cart;
 import org.garden.com.entity.User;
+import org.garden.com.enums.Role;
 import org.garden.com.exceptions.UserNotFoundException;
 import org.garden.com.repository.UserJpaRepository;
 import org.slf4j.Logger;
@@ -28,6 +29,7 @@ public class UserServiceImpl implements UserService {
         Cart cart = new Cart();
         cart.setUser(user);
         user.setCart(cart);
+        user.setRole(Role.CUSTOMER);
         return repository.save(user);
     }
 
