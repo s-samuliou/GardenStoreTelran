@@ -22,11 +22,12 @@ public class UserServiceImpl implements UserService {
     private static final Logger log = LoggerFactory.getLogger(UserServiceImpl.class);
 
 
-
     @Override
     public User createUser(User user) {
         log.info("Creating user: {}", user);
- //       user.setCart(new Cart());
+        Cart cart = new Cart();
+        cart.setUser(user);
+        user.setCart(cart);
         return repository.save(user);
     }
 
@@ -70,4 +71,12 @@ public class UserServiceImpl implements UserService {
             throw new UserNotFoundException("User not found with id: " + id);
         }
     }
+
+//    раскомменчу после Security
+//    @Override
+//    public User getCurrentUser() {
+//        String userName = SecurityContextHolder.getContext().getAuthentication().getName();
+//
+//        return getByLogin(userName);
+//    }
 }

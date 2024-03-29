@@ -13,4 +13,6 @@ public interface OrderService {
     Order findById(long id);
 
     Order deleteById(long id);
+
+    List<Order> getOrderHistoryByUserId(long userId);
 }

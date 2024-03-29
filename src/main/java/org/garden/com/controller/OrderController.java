@@ -7,9 +7,12 @@ import org.garden.com.converter.OrderMapper;
 import org.garden.com.dto.OrderCreateDto;
 import org.garden.com.dto.OrderDto;
 import org.garden.com.entity.Order;
+import org.garden.com.entity.User;
 import org.garden.com.exceptions.OrderInvalidArgumentException;
 import org.garden.com.exceptions.OrderNotFoundException;
+import org.garden.com.exceptions.UserNotFoundException;
 import org.garden.com.service.OrderService;
+import org.garden.com.service.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,6 +33,9 @@ public class OrderController {
 
     @Autowired
     private OrderService orderService;
+
+    @Autowired
+    private UserService userService;
 
     @Autowired
     private OrderMapper orderMapper;
@@ -122,12 +128,50 @@ public class OrderController {
         orderService.deleteById(id);
     }
 
+    @Operation(
+            summary = "Get order history by user ID",
+            description = "Retrieves the order history of a user by their ID",
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "Order history received successfully"),
+                    @ApiResponse(responseCode = "404", description = "User not found")
+            }
+    )
+    @GetMapping("/history/{userId}")
+    public List<OrderDto> getOrderHistoryByUserId(@PathVariable(name = "userId") long userId) {
+        log.info("Received request to get order history for user with ID: {}", userId);
+
+        User user = userService.findUserById(userId);
+        if (user == null) {
+            throw new UserNotFoundException("User with ID " + userId + " not found");
+        }
+
+        List<Order> orderHistory = orderService.getOrderHistoryByUserId(userId);
+        if (orderHistory.isEmpty()) {
+            throw new OrderNotFoundException("User with ID " + userId + " has no order history");
+        }
+
+        List<OrderDto> orderHistoryDto = orderHistory.stream()
+                .map(order -> orderMapper.orderToOrderDto(order))
+                .collect(Collectors.toList());
+
+        return orderHistoryDto;
+    }
+
     @ExceptionHandler({OrderInvalidArgumentException.class, OrderNotFoundException.class})
 
     public ResponseEntity<Object> handleOrderException(Exception exception) {
         HttpStatus status = (exception instanceof OrderInvalidArgumentException) ?
                 HttpStatus.BAD_REQUEST : HttpStatus.NOT_FOUND;
         log.error("Error occurred: {}", exception.getMessage());
+        Map<String, String> responseBody = new HashMap<>();
+        responseBody.put("message", exception.getMessage());
+        return ResponseEntity.status(status).body(responseBody);
+    }
+
+    @ExceptionHandler(UserNotFoundException.class)
+    public ResponseEntity<Object> handleUserNotFoundException(UserNotFoundException exception) {
+        HttpStatus status = HttpStatus.NOT_FOUND;
+        log.error("User not found: {}", exception.getMessage());
         Map<String, String> responseBody = new HashMap<>();
         responseBody.put("message", exception.getMessage());
         return ResponseEntity.status(status).body(responseBody);

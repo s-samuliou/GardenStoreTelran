@@ -45,4 +45,9 @@ public class OrderServiceImpl implements OrderService {
         log.info("Order with ID : {} deleted", id);
         return order;
     }
+
+    @Override
+    public List<Order> getOrderHistoryByUserId(long userId) {
+        return repository.findOrdersByUserId(userId);
+    }
 }
