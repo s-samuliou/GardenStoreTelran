@@ -2,6 +2,7 @@ package org.garden.com.service;
 
 import org.garden.com.entity.Cart;
 import org.garden.com.entity.User;
+import org.garden.com.enums.Role;
 import org.garden.com.exceptions.UserNotFoundException;
 import org.garden.com.repository.UserJpaRepository;
 import org.slf4j.Logger;
@@ -22,11 +23,13 @@ public class UserServiceImpl implements UserService {
     private static final Logger log = LoggerFactory.getLogger(UserServiceImpl.class);
 
 
-
     @Override
     public User createUser(User user) {
         log.info("Creating user: {}", user);
- //       user.setCart(new Cart());
+        Cart cart = new Cart();
+        cart.setUser(user);
+        user.setCart(cart);
+        user.setRole(Role.CUSTOMER);
         return repository.save(user);
     }
 
@@ -70,4 +73,12 @@ public class UserServiceImpl implements UserService {
             throw new UserNotFoundException("User not found with id: " + id);
         }
     }
+
+//    раскомменчу после Security
+//    @Override
+//    public User getCurrentUser() {
+//        String userName = SecurityContextHolder.getContext().getAuthentication().getName();
+//
+//        return getByLogin(userName);
+//    }
 }

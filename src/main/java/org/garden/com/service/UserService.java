@@ -16,4 +16,6 @@ public interface UserService {
     User findUserById(long id);
 
     ResponseEntity<Void> deleteUser(long id);
+
+//    User getCurrentUser();
 }
