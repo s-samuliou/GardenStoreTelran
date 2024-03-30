@@ -3,11 +3,8 @@ package org.garden.com.service;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Validator;
 import org.garden.com.entity.Favorites;
-import org.garden.com.entity.Product;
 import org.garden.com.exceptions.FavoriteInvalidArgumentException;
 import org.garden.com.exceptions.FavoriteNotFoundException;
-import org.garden.com.exceptions.ProductInvalidArgumentException;
-import org.garden.com.exceptions.ProductNotFoundException;
 import org.garden.com.repository.FavoritesJpaRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,7 +28,7 @@ public class FavoritesServiceImpl implements FavoritesService {
     private static final Logger log = LoggerFactory.getLogger(ProductServiceImpl.class);
 
     @Override
-    public Favorites addFavoriteProduct(Favorites favorite) {
+    public Favorites addFavorite(Favorites favorite) {
         log.info("Creating favorite product: {}", favorite);
         validateProduct(favorite);
         Favorites createdFavoriteProduct = repository.save(favorite);
@@ -40,7 +37,7 @@ public class FavoritesServiceImpl implements FavoritesService {
     }
 
     @Override
-    public List<Favorites> getAllFavorites() {
+    public List<Favorites> getAll() {
         log.info("Fetching favorites products");
         List<Favorites> favoriteProducts = repository.findAll();
         log.info("Found {} filtered products", favoriteProducts.size());
@@ -48,7 +45,7 @@ public class FavoritesServiceImpl implements FavoritesService {
     }
 
     @Override
-    public ResponseEntity<Void> deleteFavorite(Long id) {
+    public ResponseEntity<Void> delete(Long id) {
         log.info("Deleting favorite product with ID: {}", id);
         if (repository.existsById(id)) {
             repository.deleteById(id);

@@ -50,7 +50,7 @@ public class FavoritesControllerTests {
         createdFavorite.setId(1L);
 
         when(mapper.favoritesCreateDtoToFavorites(any())).thenReturn(new Favorites());
-        when(favoritesService.addFavoriteProduct(any())).thenReturn(createdFavorite);
+        when(favoritesService.addFavorite(any())).thenReturn(createdFavorite);
 
         mockMvc.perform(post("/v1/favorites")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -70,7 +70,7 @@ public class FavoritesControllerTests {
         FavoritesDto favoritesDto2 = new FavoritesDto();
         favoritesDto2.setFavoriteId(2L);
 
-        when(favoritesService.getAllFavorites()).thenReturn(Arrays.asList(favorites1, favorites2));
+        when(favoritesService.getAll()).thenReturn(Arrays.asList(favorites1, favorites2));
         when(mapper.favoritesToFavoritesDto(favorites1)).thenReturn(favoritesDto1);
         when(mapper.favoritesToFavoritesDto(favorites2)).thenReturn(favoritesDto2);
 
@@ -83,7 +83,7 @@ public class FavoritesControllerTests {
 
     @Test
     public void deleteFavoriteProduct_ExistingProduct_ReturnsNoContent() throws Exception {
-        when(favoritesService.deleteFavorite(anyLong())).thenReturn(ResponseEntity.noContent().build());
+        when(favoritesService.delete(anyLong())).thenReturn(ResponseEntity.noContent().build());
 
         mockMvc.perform(delete("/v1/favorites/{id}", 1))
                 .andExpect(status().isNoContent());
@@ -93,7 +93,7 @@ public class FavoritesControllerTests {
     public void handleFavoriteException_FavoriteNotFoundException_ReturnsNotFound() throws Exception {
         FavoriteNotFoundException exception = new FavoriteNotFoundException("Favorite product not found");
 
-        when(favoritesService.deleteFavorite(anyLong())).thenThrow(exception);
+        when(favoritesService.delete(anyLong())).thenThrow(exception);
 
         mockMvc.perform(delete("/v1/favorites/{id}", 1))
                 .andExpect(status().isNotFound())
@@ -104,7 +104,7 @@ public class FavoritesControllerTests {
     public void handleFavoriteException_FavoriteInvalidArgumentException_ReturnsBadRequest() throws Exception {
         FavoriteInvalidArgumentException exception = new FavoriteInvalidArgumentException("Invalid favorite product data");
 
-        when(favoritesService.deleteFavorite(anyLong())).thenThrow(exception);
+        when(favoritesService.delete(anyLong())).thenThrow(exception);
 
         mockMvc.perform(delete("/v1/favorites/{id}", 1))
                 .andExpect(status().isBadRequest())

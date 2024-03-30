@@ -47,7 +47,7 @@ public class ProductController {
     public ResponseEntity<CreateProductDto> createProduct(@RequestBody CreateProductDto createProductDto) {
         log.info("Received request to create product: {}", createProductDto);
         Product product = mapper.createProductDtoToProduct(createProductDto);
-        Product createdProduct = service.createProduct(product);
+        Product createdProduct = service.create(product);
         CreateProductDto createdProductDto = mapper.productToCreateProductDto(createdProduct);
         log.info("Product created: {}", createdProductDto);
         return ResponseEntity.status(HttpStatus.CREATED).body(createdProductDto);
@@ -68,7 +68,7 @@ public class ProductController {
             @RequestParam(required = false) String sort) {
 
         log.info("Received request to get all products. CategoryId: {}, MinPrice: {}, MaxPrice: {}, Discount: {}, Sort: {}", categoryId, minPrice, maxPrice, discount, sort);
-        List<Product> products = service.getFilteredProducts(categoryId, minPrice, maxPrice, discount, sort);
+        List<Product> products = service.getFiltered(categoryId, minPrice, maxPrice, discount, sort);
         List<ProductDto> productDtos = products.stream()
                 .map(product -> mapper.productToProductDto(product))
                 .collect(Collectors.toList());
@@ -90,7 +90,7 @@ public class ProductController {
     public EditProductDto updateProductById(@PathVariable("id") long id, @RequestBody EditProductDto editProductDto) {
         log.info("Received request to update product with ID {}: {}", id, editProductDto);
         Product product = mapper.editProductDtoToProduct(editProductDto);
-        service.editProduct(id, product);
+        service.edit(id, product);
         EditProductDto updatedProductDto = mapper.productToEditProductDto(product);
         log.info("Product updated: {}", updatedProductDto);
         return updatedProductDto;
@@ -108,7 +108,7 @@ public class ProductController {
     @GetMapping("/{id}")
     public ProductDto getProductById(@PathVariable("id") long id) {
         log.info("Received request to get product with ID: {}", id);
-        Product product = service.findProductById(id);
+        Product product = service.findById(id);
         ProductDto productDto = mapper.productToProductDto(product);
         log.info("Found product: {}", productDto);
         return productDto;
@@ -126,7 +126,7 @@ public class ProductController {
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteProductById(@PathVariable("id") long id) {
         log.info("Received request to delete product with ID: {}", id);
-        return service.deleteProduct(id);
+        return service.delete(id);
     }
 
     @ExceptionHandler({ProductInvalidArgumentException.class, ProductNotFoundException.class})

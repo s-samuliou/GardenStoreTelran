@@ -50,7 +50,7 @@ public class FavoritesServiceImplTest {
         favorite.setProduct(product);
 
         when(repository.save(favorite)).thenReturn(favorite);
-        Favorites createdFavorite = favoritesService.addFavoriteProduct(favorite);
+        Favorites createdFavorite = favoritesService.addFavorite(favorite);
 
         assertNotNull(createdFavorite);
         assertEquals(favorite, createdFavorite);
@@ -65,7 +65,7 @@ public class FavoritesServiceImplTest {
 
         when(repository.findAll()).thenReturn(favoriteList);
 
-        List<Favorites> retrievedFavorites = favoritesService.getAllFavorites();
+        List<Favorites> retrievedFavorites = favoritesService.getAll();
 
         assertNotNull(retrievedFavorites);
         assertEquals(2, retrievedFavorites.size());
@@ -77,7 +77,7 @@ public class FavoritesServiceImplTest {
         long id = 1L;
         when(repository.existsById(id)).thenReturn(true);
 
-        ResponseEntity<Void> result = favoritesService.deleteFavorite(id);
+        ResponseEntity<Void> result = favoritesService.delete(id);
 
         assertNotNull(result);
         assertEquals(ResponseEntity.status(HttpStatus.OK).build(), result);
@@ -90,7 +90,7 @@ public class FavoritesServiceImplTest {
         long id = 1L;
         when(repository.existsById(id)).thenReturn(false);
 
-        assertThrows(FavoriteNotFoundException.class, () -> favoritesService.deleteFavorite(id));
+        assertThrows(FavoriteNotFoundException.class, () -> favoritesService.delete(id));
         verify(repository, times(1)).existsById(id);
         verify(repository, never()).deleteById(id);
     }

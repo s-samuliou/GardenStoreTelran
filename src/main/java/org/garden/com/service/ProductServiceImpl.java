@@ -29,7 +29,7 @@ public class ProductServiceImpl implements ProductService {
     private static final Logger log = LoggerFactory.getLogger(ProductServiceImpl.class);
 
     @Override
-    public Product createProduct(Product product) {
+    public Product create(Product product) {
         log.info("Creating product: {}", product);
         validateProduct(product);
         Product createdProduct = repository.save(product);
@@ -38,15 +38,15 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public List<Product> getFilteredProducts(Long categoryId, Double minPrice, Double maxPrice, Boolean discount, String sort) {
+    public List<Product> getFiltered(Long categoryId, Double minPrice, Double maxPrice, Boolean discount, String sort) {
         log.info("Fetching filtered products. CategoryId: {}, MinPrice: {}, MaxPrice: {}, Discount: {}, Sort: {}", categoryId, minPrice, maxPrice, discount, sort);
-        List<Product> products = repository.findFilteredProducts(categoryId, minPrice, maxPrice, discount, sort);
+        List<Product> products = repository.findFiltered(categoryId, minPrice, maxPrice, discount, sort);
         log.info("Found {} filtered products", products.size());
         return products;
     }
 
     @Override
-    public Product editProduct(long id, Product product) {
+    public Product edit(long id, Product product) {
         log.info("Editing product with ID {}: {}", id, product);
         validateProduct(product);
         Product existingProduct = repository.findById(id).orElseThrow(() -> new ProductNotFoundException("Product not found with id: " + id));
@@ -64,7 +64,7 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public Product findProductById(long id) {
+    public Product findById(long id) {
         log.info("Fetching product with ID: {}", id);
         Product product = repository.findById(id).orElseThrow(() -> new ProductNotFoundException("Product not found with id: " + id));
         log.info("Found product: {}", product);
@@ -72,7 +72,7 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public ResponseEntity<Void> deleteProduct(long id) {
+    public ResponseEntity<Void> delete(long id) {
         log.info("Deleting product with ID: {}", id);
         if (repository.existsById(id)) {
             repository.deleteById(id);

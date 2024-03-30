@@ -7,9 +7,9 @@ import java.util.List;
 
 public interface FavoritesService {
 
-    Favorites addFavoriteProduct(Favorites favorite);
+    Favorites addFavorite(Favorites favorite);
 
-    List<Favorites> getAllFavorites();
+    List<Favorites> getAll();
 
-    ResponseEntity<Void> deleteFavorite(Long id);
+    ResponseEntity<Void> delete(Long id);
 }

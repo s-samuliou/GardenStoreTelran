@@ -47,7 +47,7 @@ public class ProductServiceImplTest {
 
         when(repository.save(product)).thenReturn(product);
 
-        Product createdProduct = productService.createProduct(product);
+        Product createdProduct = productService.create(product);
 
         assertNotNull(createdProduct);
         assertEquals(product, createdProduct);
@@ -62,13 +62,13 @@ public class ProductServiceImplTest {
         Boolean discount = true;
         String sort = "name";
         List<Product> productList = new ArrayList<>();
-        when(repository.findFilteredProducts(categoryId, minPrice, maxPrice, discount, sort)).thenReturn(productList);
+        when(repository.findFiltered(categoryId, minPrice, maxPrice, discount, sort)).thenReturn(productList);
 
-        List<Product> filteredProducts = productService.getFilteredProducts(categoryId, minPrice, maxPrice, discount, sort);
+        List<Product> filteredProducts = productService.getFiltered(categoryId, minPrice, maxPrice, discount, sort);
 
         assertNotNull(filteredProducts);
         assertEquals(productList, filteredProducts);
-        verify(repository, times(1)).findFilteredProducts(categoryId, minPrice, maxPrice, discount, sort);
+        verify(repository, times(1)).findFiltered(categoryId, minPrice, maxPrice, discount, sort);
     }
 
     @Test
@@ -79,7 +79,7 @@ public class ProductServiceImplTest {
         when(repository.findById(id)).thenReturn(Optional.of(existingProduct));
         when(repository.save(existingProduct)).thenReturn(updatedProduct);
 
-        Product result = productService.editProduct(id, existingProduct);
+        Product result = productService.edit(id, existingProduct);
 
         assertNotNull(result);
         assertEquals(updatedProduct, result);
@@ -93,7 +93,7 @@ public class ProductServiceImplTest {
         Product product = new Product();
         when(repository.findById(id)).thenReturn(Optional.of(product));
 
-        Product result = productService.findProductById(id);
+        Product result = productService.findById(id);
 
         assertNotNull(result);
         assertEquals(product, result);
@@ -105,7 +105,7 @@ public class ProductServiceImplTest {
         long id = 1L;
         when(repository.existsById(id)).thenReturn(true);
 
-        ResponseEntity<Void> result = productService.deleteProduct(id);
+        ResponseEntity<Void> result = productService.delete(id);
 
         assertNotNull(result);
         assertEquals(ResponseEntity.status(HttpStatus.OK).build(), result);
@@ -118,7 +118,7 @@ public class ProductServiceImplTest {
         long id = 1L;
         when(repository.existsById(id)).thenReturn(false);
 
-        assertThrows(ProductNotFoundException.class, () -> productService.deleteProduct(id));
+        assertThrows(ProductNotFoundException.class, () -> productService.delete(id));
         verify(repository, times(1)).existsById(id);
         verify(repository, never()).deleteById(id);
     }

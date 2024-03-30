@@ -16,7 +16,7 @@ public interface ProductJpaRepository extends JpaRepository<Product, Long> {
             " AND (:maxPrice IS NULL OR p.price <= :maxPrice)" +
             " AND (:discount IS NULL OR (p.discountPrice > 0 AND :discount = true) OR (:discount = false))" +
             " ORDER BY CASE WHEN :sort = 'asc' THEN p.price END ASC, CASE WHEN :sort = 'desc' THEN p.price END DESC")
-    List<Product> findFilteredProducts(
+    List<Product> findFiltered(
             @Param("categoryId") Long categoryId,
             @Param("minPrice") Double minPrice,
             @Param("maxPrice") Double maxPrice,

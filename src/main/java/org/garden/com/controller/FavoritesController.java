@@ -46,7 +46,7 @@ public class FavoritesController {
     public ResponseEntity<FavoriteCreateDto> createProduct(@RequestBody FavoriteCreateDto favoriteCreateDto) {
         log.info("Received request to create favorite product: {}", favoriteCreateDto);
         Favorites favorite = mapper.favoritesCreateDtoToFavorites(favoriteCreateDto);
-        Favorites createdFavorite = service.addFavoriteProduct(favorite);
+        Favorites createdFavorite = service.addFavorite(favorite);
         FavoriteCreateDto createdFavoriteDto = mapper.favoritesToFavoriteCreateDto(createdFavorite);
         log.info("Favorite product created: {}", createdFavoriteDto);
         return ResponseEntity.status(HttpStatus.CREATED).body(createdFavoriteDto);
@@ -63,7 +63,7 @@ public class FavoritesController {
     @GetMapping
     public List<FavoritesDto> getListFavorites() {
         log.info("Received request to get all favorite products");
-        List<Favorites> favoritesProducts = service.getAllFavorites();
+        List<Favorites> favoritesProducts = service.getAll();
         List<FavoritesDto> favoritesProductsDto = favoritesProducts.stream()
                 .map(product -> mapper.favoritesToFavoritesDto(product))
                 .collect(Collectors.toList());
@@ -83,7 +83,7 @@ public class FavoritesController {
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteProductById(@PathVariable("id") long id) {
         log.info("Received request to delete favorite product with ID: {}", id);
-        return service.deleteFavorite(id);
+        return service.delete(id);
     }
 
     @ExceptionHandler({FavoriteInvalidArgumentException.class, FavoriteNotFoundException.class})
