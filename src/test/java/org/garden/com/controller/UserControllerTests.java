@@ -5,6 +5,7 @@ import org.garden.com.converter.UserMapper;
 import org.garden.com.dto.CreateUserDto;
 import org.garden.com.dto.EditUserDto;
 import org.garden.com.entity.User;
+import org.garden.com.service.UserService;
 import org.garden.com.service.UserServiceImpl;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -34,30 +35,30 @@ public class UserControllerTests {
     private MockMvc mockMvc;
 
     @MockBean
-    private UserServiceImpl userService;
+    private UserService service;
 
     @MockBean
     private UserMapper userMapper;
 
     @Test
-    public void testCreateUser() throws Exception {
+    public void testCreate() throws Exception {
         CreateUserDto createUserDto = new CreateUserDto("Test User", "Test Email",
                 "11223344", "7775533");
 
         User createdUser = new User();
-        when(userService.createUser(any(User.class))).thenReturn(createdUser);
+        when(service.create(any(User.class))).thenReturn(createdUser);
 
-        mockMvc.perform(post("/v1/users")
+        mockMvc.perform(post("/v1/users/register")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(asJsonString(createUserDto)))
                 .andExpect(status().isCreated());
     }
 
     @Test
-    public void testGetAllUsers() throws Exception {
+    public void testGetAll() throws Exception {
 
         List<User> users = new ArrayList<>();
-        when(userService.getAllUsers())
+        when(service.getAll())
                 .thenReturn(users);
 
         mockMvc.perform(get("/v1/users"))
@@ -65,11 +66,11 @@ public class UserControllerTests {
     }
 
     @Test
-    public void testUpdateUserById() throws Exception {
+    public void testUpdateById() throws Exception {
         EditUserDto editUserDto = new EditUserDto("New Name", "New number");
 
         User updatedUser = new User();
-        when(userService.editUser(anyLong(), any(User.class))).thenReturn(updatedUser);
+        when(service.edit(anyLong(), any(User.class))).thenReturn(updatedUser);
 
         mockMvc.perform(put("/v1/users/{id}", 1)
                         .contentType(MediaType.APPLICATION_JSON)
@@ -78,18 +79,18 @@ public class UserControllerTests {
     }
 
     @Test
-    public void testGetUserById() throws Exception {
+    public void testGetById() throws Exception {
         User user = new User();
-        when(userService.findUserById(anyLong())).thenReturn(user);
+        when(service.findById(anyLong())).thenReturn(user);
 
         mockMvc.perform(get("/v1/users/{id}", 1))
                 .andExpect(status().isOk());
     }
 
     @Test
-    public void testDeleteUserById() throws Exception {
+    public void testDeleteById() throws Exception {
         ResponseEntity<Void> responseEntity = ResponseEntity.ok().build();
-        when(userService.deleteUser(anyLong())).thenReturn(responseEntity);
+        when(service.delete(anyLong())).thenReturn(responseEntity);
 
         mockMvc.perform(delete("/v1/users/{id}", 1))
                 .andExpect(status().isOk());

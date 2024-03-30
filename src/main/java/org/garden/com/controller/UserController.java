@@ -10,7 +10,7 @@ import org.garden.com.dto.UserDto;
 import org.garden.com.entity.User;
 import org.garden.com.exceptions.UserInvalidArgumentException;
 import org.garden.com.exceptions.UserNotFoundException;
-import org.garden.com.service.UserServiceImpl;
+import org.garden.com.service.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,7 +26,7 @@ import java.util.stream.Collectors;
 public class UserController {
 
     @Autowired
-    private UserServiceImpl service;
+    private UserService service;
 
     @Autowired
     private UserMapper mapper;
@@ -43,10 +43,10 @@ public class UserController {
     )
     @PostMapping("/register")
     @ResponseStatus(HttpStatus.CREATED)
-    public CreateUserDto createUser(@RequestBody CreateUserDto createUserDto) {
+    public CreateUserDto create(@RequestBody CreateUserDto createUserDto) {
         log.info("Received request to create user: {}", createUserDto);
         User user = mapper.createUserDtoToUser(createUserDto);
-        User createdUser = service.createUser(user);
+        User createdUser = service.create(user);
         CreateUserDto createdUserDto = mapper.userToCreateUserDto(createdUser);
         log.info("User created: {}", createdUserDto);
         return createdUserDto;
@@ -61,9 +61,9 @@ public class UserController {
             }
     )
     @GetMapping()
-    public List<UserDto> getAllUsers() {
+    public List<UserDto> getAll() {
         log.info("Received request to get all users");
-        List<User> users = service.getAllUsers();
+        List<User> users = service.getAll();
         List<UserDto> userDtos = users.stream()
                 .map(user -> mapper.userToUserDto(user))
                 .collect(Collectors.toList());
@@ -82,10 +82,10 @@ public class UserController {
             }
     )
     @PutMapping("/{id}")
-    public EditUserDto updateUserById(@PathVariable("id") long id, @RequestBody EditUserDto editUserDto) {
+    public EditUserDto updateById(@PathVariable("id") long id, @RequestBody EditUserDto editUserDto) {
         log.info("Received request to update user with ID {}: {}", id, editUserDto);
         User user = mapper.editUserDtoToUser(editUserDto);
-        service.editUser(id, user);
+        service.edit(id, user);
         EditUserDto updatedUserDto = mapper.userToEditUserDto(user);
         log.info("User updated: {}", updatedUserDto);
         return updatedUserDto;
@@ -101,9 +101,9 @@ public class UserController {
             }
     )
     @GetMapping("/{id}")
-    public UserDto getUserById(@PathVariable("id") long id) {
+    public UserDto getById(@PathVariable("id") long id) {
         log.info("Received request to get user with ID: {}", id);
-        User user = service.findUserById(id);
+        User user = service.findById(id);
        UserDto userDto = mapper.userToUserDto(user);
         log.info("Found user: {}", userDto);
         return userDto;
@@ -118,9 +118,9 @@ public class UserController {
             }
     )
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteUserById(@PathVariable("id") long id) {
+    public ResponseEntity<Void> deleteById(@PathVariable("id") long id) {
         log.info("Received request to delete user with ID: {}", id);
-        return service.deleteUser(id);
+        return service.delete(id);
     }
 
     @ExceptionHandler({UserInvalidArgumentException.class, UserNotFoundException.class})

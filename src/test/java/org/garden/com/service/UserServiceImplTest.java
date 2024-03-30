@@ -35,7 +35,7 @@ public class UserServiceImplTest {
     }
 
     @Test
-    public void createUser_ValidUser_ReturnsCreatedUser() {
+    public void create_ValidUser_ReturnsCreatedUser() {
         User user = new User();
         user.setName("Test User");
         user.setEmail("Test Email");
@@ -44,7 +44,7 @@ public class UserServiceImplTest {
 
         when(repository.save(user)).thenReturn(user);
 
-        User createdUser = userService.createUser(user);
+        User createdUser = userService.create(user);
 
         assertNotNull(createdUser);
         assertEquals(user, createdUser);
@@ -61,11 +61,11 @@ public class UserServiceImplTest {
 
         when(repository.save(any(User.class))).thenThrow(new IllegalArgumentException());
 
-        assertThrows(IllegalArgumentException.class, () -> userService.createUser(invalidUser));
+        assertThrows(IllegalArgumentException.class, () -> userService.create(invalidUser));
     }
 
     @Test
-    public void testGetAllUsers() {
+    public void testGetAll() {
         User user1 = new User();
         User user2 = new User();
         user1.setName("Name User1");
@@ -79,7 +79,7 @@ public class UserServiceImplTest {
         List<User> userList = Arrays.asList(user1, user2);
         when(repository.findAll()).thenReturn(userList);
 
-        List<User> result = userService.getAllUsers();
+        List<User> result = userService.getAll();
 
         assertEquals(userList, result);
         verify(repository, times(1)).findAll();
@@ -93,7 +93,7 @@ public class UserServiceImplTest {
         when(repository.findById(id)).thenReturn(Optional.of(existingUser));
         when(repository.save(existingUser)).thenReturn(updatedUser);
 
-        User result = userService.editUser(id, existingUser);
+        User result = userService.edit(id, existingUser);
 
         assertNotNull(result);
         assertEquals(updatedUser, result);
@@ -106,7 +106,7 @@ public class UserServiceImplTest {
         User user = new User(1L, "User Name", "user@example.com", "qwerty55", "5558822", Role.CUSTOMER);
         when(repository.findById(1L)).thenReturn(Optional.of(user));
 
-        User foundUser = userService.findUserById(1L);
+        User foundUser = userService.findById(1L);
 
         assertEquals(user, foundUser);
         verify(repository, times(1)).findById(1L);
@@ -118,7 +118,7 @@ public class UserServiceImplTest {
         User user = new User(1L, "User Name", "user@example.com", "qwerty777", "3332222", Role.ADMIN);
         when(repository.findById(1L)).thenReturn(Optional.of(user));
 
-        ResponseEntity<Void> response = userService.deleteUser(1L);
+        ResponseEntity<Void> response = userService.delete(1L);
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
         verify(repository, times(1)).findById(1L);
@@ -129,7 +129,7 @@ public class UserServiceImplTest {
     public void deleteUser_NonExistingUser_ThrowsUserNotFoundException() {
         when(repository.findById(1L)).thenReturn(Optional.empty());
 
-        assertThrows(UserNotFoundException.class, () -> userService.deleteUser(1L));
+        assertThrows(UserNotFoundException.class, () -> userService.delete(1L));
 
         verify(repository, times(1)).findById(1L);
         verify(repository, never()).deleteById(1L);
