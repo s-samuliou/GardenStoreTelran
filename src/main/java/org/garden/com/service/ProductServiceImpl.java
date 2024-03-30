@@ -8,7 +8,7 @@ import org.garden.com.entity.Product;
 import org.garden.com.entity.User;
 import org.garden.com.exceptions.ProductInvalidArgumentException;
 import org.garden.com.exceptions.ProductNotFoundException;
-import org.garden.com.repository.CartItemsJpaRepository;
+import org.garden.com.repository.CartItemJpaRepository;
 import org.garden.com.repository.CartJpaRepository;
 import org.garden.com.repository.ProductJpaRepository;
 import org.garden.com.repository.UserJpaRepository;
@@ -35,7 +35,7 @@ public class ProductServiceImpl implements ProductService {
     private CartJpaRepository cartJpaRepository;
 
     @Autowired
-    private CartItemsJpaRepository itemsJpaRepository;
+    private CartItemJpaRepository itemJpaRepository;
 
     @Autowired
     private UserJpaRepository userJpaRepository;
@@ -102,7 +102,7 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public CartItem addProductToCart(Product product, long quantity, Long userId) {
+    public CartItem addToCart(Product product, long quantity, Long userId) {
         log.info("Addition the product with ID: {} to user's cart(user ID: {})", product, userId);
         validateProduct(product);
 
@@ -127,13 +127,12 @@ public class ProductServiceImpl implements ProductService {
             cartItem.setQuantity(quantity);
             cartItem.setCart(cart);
 
-            CartItem saved = itemsJpaRepository.save(cartItem);
+            CartItem saved = itemJpaRepository.save(cartItem);
             cart.getCartItemsList().add(saved);
             cartJpaRepository.save(cart);
 
             log.info("Product with ID: {} added to cart", saved.getProduct().getId());
             return saved;
-
     }
 
 
