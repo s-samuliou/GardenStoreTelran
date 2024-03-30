@@ -41,7 +41,7 @@ public class UserController {
                     @ApiResponse(responseCode = "500", description = "Internal server error")
             }
     )
-    @PostMapping()
+    @PostMapping("/register")
     @ResponseStatus(HttpStatus.CREATED)
     public CreateUserDto createUser(@RequestBody CreateUserDto createUserDto) {
         log.info("Received request to create user: {}", createUserDto);

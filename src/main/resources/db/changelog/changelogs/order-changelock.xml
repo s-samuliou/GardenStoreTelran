@@ -14,7 +14,7 @@
                 <constraints primaryKey="true" nullable="false" primaryKeyName="orders_pk"/>
             </column>
             <column name="user_id" type="BIGINT">
-                <constraints  foreignKeyName="orders_fk"/>
+                <constraints foreignKeyName="orders_fk"/>
             </column>
             <column name="contact_phone" type="VARCHAR(255)">
                 <constraints nullable="false"/>
@@ -105,5 +105,56 @@
 
         <comment>Rename new_delivery_method column to delivery_method</comment>
         <renameColumn tableName="orders" oldColumnName="new_delivery_method" newColumnName="delivery_method" columnDataType="VARCHAR(50)"/>
+    </changeSet>
+
+    <changeSet id="4" author="s_l">
+        <comment>Created OrderItems table</comment>
+        <createTable tableName="order_item">
+            <column name="id" autoIncrement="true" type="BIGINT">
+                <constraints primaryKey="true" nullable="false" primaryKeyName="order_item_pk"/>
+            </column>
+            <column name="order_id" type="BIGINT">
+                <constraints foreignKeyName="orders_new_fk"/>
+            </column>
+            <column name="product_id" type="BIGINT">
+                <constraints foreignKeyName="products_fk"/>
+            </column>
+            <column name="quantity" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="price_at_purchase" type="DECIMAL">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <addForeignKeyConstraint baseTableName="order_item" baseColumnNames="order_id"
+                                 constraintName="orders_new_fk" referencedTableName="orders"
+                                 referencedColumnNames="id" onDelete="CASCADE"
+                                 onUpdate="CASCADE"/>
+    </changeSet>
+
+    <changeSet id="5" author="s_l">
+        <comment>Initializing the orderItems table</comment>
+        <insert tableName="order_item">
+            <column name="id" value="1"/>
+            <column name="order_id" value="1"/>
+            <column name="product_id" value="2"/>
+            <column name="quantity" value="10"/>
+            <column name="price_at_purchase" value="100"/>
+        </insert>
+        <insert tableName="order_item">
+            <column name="id" value="2"/>
+            <column name="order_id" value="2"/>
+            <column name="product_id" value="1"/>
+            <column name="quantity" value="3"/>
+            <column name="price_at_purchase" value="30"/>
+        </insert>
+        <insert tableName="order_item">
+            <column name="id" value="3"/>
+            <column name="order_id" value="3"/>
+            <column name="product_id" value="8"/>
+            <column name="quantity" value="10"/>
+            <column name="price_at_purchase" value="150"/>
+        </insert>
+
     </changeSet>
 </databaseChangeLog>
