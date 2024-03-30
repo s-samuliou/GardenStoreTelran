@@ -4,7 +4,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 
 public class CartItemDto {
 
-    @Schema(description = "Unique identifier of the cartItems")
+    @Schema(description = "Unique identifier of the cartItem", example = "1")
     private long id;
 
     @Schema(description = "The ID of the cart to which the item belongs")

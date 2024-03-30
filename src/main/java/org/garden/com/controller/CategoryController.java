@@ -10,7 +10,7 @@ import org.garden.com.dto.EditCategoryDto;
 import org.garden.com.entity.Category;
 import org.garden.com.exceptions.CategoryNotFoundException;
 import org.garden.com.exceptions.InvalidCategoryArgumentException;
-import org.garden.com.service.CategoryServiceImpl;
+import org.garden.com.service.CategoryService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,13 +27,12 @@ import java.util.stream.Collectors;
 public class CategoryController {
 
     @Autowired
-    private CategoryServiceImpl categoryService;
+    private CategoryService categoryService;
 
     @Autowired
     private CategoryMapper mapper;
 
     private static final Logger log = LoggerFactory.getLogger(CategoryController.class);
-
 
     @Operation(
             summary = "Get all categories",
@@ -44,17 +43,15 @@ public class CategoryController {
             }
     )
     @GetMapping
-    public List<CategoryDto> getAllCategories() {
+    public List<CategoryDto> getAll() {
         log.info("Received request to get all categories");
-        List<Category> categories = categoryService.getAllCategories();
+        List<Category> categories = categoryService.getAll();
         List<CategoryDto> categoryDtoList = categories.stream()
                 .map(category -> mapper.categoryToCategoryDto(category))
                 .collect(Collectors.toList());
         log.info("Found {} categories", categories.size());
         return categoryDtoList;
-
     }
-
 
     @Operation(
             summary = "Create a new category",
@@ -66,10 +63,10 @@ public class CategoryController {
             }
     )
     @PostMapping()
-    public ResponseEntity<CategoryCreateDto> createCategory(@RequestBody CategoryCreateDto categoryCreateDto) {
+    public ResponseEntity<CategoryCreateDto> create(@RequestBody CategoryCreateDto categoryCreateDto) {
         log.info("Received request to create category: {}", categoryCreateDto);
         Category category = mapper.createCategoryDtoToCategory(categoryCreateDto);
-        Category createdCategory = categoryService.createCategory(category);
+        Category createdCategory = categoryService.create(category);
         CategoryCreateDto createdCategoryDto = mapper.categoryToCreateCategoryDto(createdCategory);
         log.info("Category created: {}", createdCategory);
         return ResponseEntity.status(HttpStatus.CREATED).body(createdCategoryDto);
@@ -86,10 +83,10 @@ public class CategoryController {
             }
     )
     @PutMapping("/{id}")
-    public EditCategoryDto editCategory(@PathVariable(name = "id") long id, @RequestBody EditCategoryDto editCategoryDto) {
+    public EditCategoryDto edit(@PathVariable(name = "id") long id, @RequestBody EditCategoryDto editCategoryDto) {
         log.info("Received request to update a category with ID {}: {}", id, editCategoryDto);
         Category category = mapper.editCategoryDtoToCategory(editCategoryDto);
-        Category editedCategory = categoryService.editCategory(id, category);
+        Category editedCategory = categoryService.edit(id, category);
         EditCategoryDto editedCategoryDto = mapper.categoryToEditCategoryDto(editedCategory);
         log.info("Category updated: {}", editedCategoryDto);
         return editedCategoryDto;
@@ -105,9 +102,9 @@ public class CategoryController {
             }
     )
     @DeleteMapping("/{id}")
-    public void deleteCategoryById(@PathVariable(name = "id") long id) {
+    public void deleteById(@PathVariable(name = "id") long id) {
         log.info("Received request to delete category with ID: {}", id);
-        categoryService.deleteCategoryById(id);
+        categoryService.deleteById(id);
     }
 
     @ExceptionHandler({InvalidCategoryArgumentException.class, CategoryNotFoundException.class})
@@ -115,5 +112,4 @@ public class CategoryController {
         HttpStatus status = (exception instanceof InvalidCategoryArgumentException) ? HttpStatus.BAD_REQUEST : HttpStatus.NOT_FOUND;
         return ResponseEntity.status(status).body(exception.getMessage());
     }
-
 }

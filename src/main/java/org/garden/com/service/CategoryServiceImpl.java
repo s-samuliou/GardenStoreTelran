@@ -28,7 +28,7 @@ public class CategoryServiceImpl implements CategoryService {
     private static final Logger log = LoggerFactory.getLogger(CategoryServiceImpl.class);
 
     @Override
-    public Category createCategory(Category category) {
+    public Category create(Category category) {
         log.info("Creating category: {}", category);
         validateCategory(category);
         Category createdCategory = repository.save(category);
@@ -37,7 +37,7 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public List<Category> getAllCategories() {
+    public List<Category> getAll() {
         log.info("Fetching list of categories");
         List<Category> categoryList = repository.findAll();
         log.info("Found {} categories", categoryList.size());
@@ -45,7 +45,7 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public Category editCategory(long id, Category category) {
+    public Category edit(long id, Category category) {
         log.info("Editing category with ID {}: {}", id, category);
         validateCategory(category);
         Category newCategory = repository.findById(id).orElseThrow(() -> new CategoryNotFoundException("Category with id " + id + " not found"));
@@ -56,17 +56,16 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public ResponseEntity<Void> deleteCategoryById(long id) {
+    public ResponseEntity<Void> deleteById(long id) {
         log.info("Deleting category with ID: {}", id);
-        if (repository.existsById(id)){
+        if (repository.existsById(id)) {
             repository.deleteById(id);
             log.info("Category with ID {} deleted", id);
             return ResponseEntity.status(HttpStatus.OK).build();
-        }else {
+        } else {
             log.warn("Category not deleted: {}", id);
             throw new CategoryNotFoundException("Category not found with id: " + id);
         }
-
     }
 
     private void validateCategory(Category category) {

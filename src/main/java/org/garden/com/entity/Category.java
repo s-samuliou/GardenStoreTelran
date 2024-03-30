@@ -30,7 +30,6 @@ public class Category {
     }
 
     public Category() {
-
     }
 
     public long getId() {

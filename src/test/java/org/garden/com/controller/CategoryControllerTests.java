@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.garden.com.converter.CategoryMapper;
 import org.garden.com.dto.EditCategoryDto;
 import org.garden.com.entity.Category;
-import org.garden.com.service.CategoryServiceImpl;
+import org.garden.com.service.CategoryService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,7 +32,7 @@ public class CategoryControllerTests {
     private MockMvc mockMvc;
 
     @MockBean
-    private CategoryServiceImpl categoryService;
+    private CategoryService categoryService;
 
     @MockBean
     private CategoryMapper mapper;
@@ -40,7 +40,7 @@ public class CategoryControllerTests {
     @Test
     public void testCreateCategory() throws Exception {
         Category createdCategory = new Category();
-        when(categoryService.createCategory(any(Category.class))).thenReturn(createdCategory);
+        when(categoryService.create(any(Category.class))).thenReturn(createdCategory);
 
         mockMvc.perform(post("/v1/categories")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -51,7 +51,7 @@ public class CategoryControllerTests {
     @Test
     public void testGetAllCategories() throws Exception {
         List<Category> categories = new ArrayList<>();
-        when(categoryService.getAllCategories()).thenReturn(categories);
+        when(categoryService.getAll()).thenReturn(categories);
 
         mockMvc.perform(get("/v1/categories"))
                 .andExpect(status().isOk());
@@ -62,7 +62,7 @@ public class CategoryControllerTests {
         EditCategoryDto editCategoryDto = new EditCategoryDto();
 
         Category updatedCategory = new Category();
-        when(categoryService.editCategory(anyLong(), any(Category.class))).thenReturn(updatedCategory);
+        when(categoryService.edit(anyLong(), any(Category.class))).thenReturn(updatedCategory);
 
         mockMvc.perform(put("/v1/categories/{id}", 1)
                         .contentType(MediaType.APPLICATION_JSON)
@@ -70,11 +70,10 @@ public class CategoryControllerTests {
                 .andExpect(status().isOk());
     }
 
-
     @Test
     public void testDeleteCategoryById() throws Exception {
         ResponseEntity<Void> responseEntity = ResponseEntity.ok().build();
-        when(categoryService.deleteCategoryById(anyLong())).thenReturn(responseEntity);
+        when(categoryService.deleteById(anyLong())).thenReturn(responseEntity);
 
         mockMvc.perform(delete("/v1/categories/{id}", 1))
                 .andExpect(status().isOk());

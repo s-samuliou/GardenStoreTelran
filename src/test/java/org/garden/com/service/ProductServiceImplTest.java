@@ -3,7 +3,7 @@ package org.garden.com.service;
 import jakarta.validation.Validator;
 import org.garden.com.entity.*;
 import org.garden.com.exceptions.ProductNotFoundException;
-import org.garden.com.repository.CartItemsJpaRepository;
+import org.garden.com.repository.CartItemJpaRepository;
 import org.garden.com.repository.CartJpaRepository;
 import org.garden.com.repository.ProductJpaRepository;
 import org.garden.com.repository.UserJpaRepository;
@@ -32,7 +32,7 @@ public class ProductServiceImplTest {
     private UserJpaRepository userJpaRepository;
 
     @Mock
-    private CartItemsJpaRepository itemsJpaRepository;
+    private CartItemJpaRepository itemsJpaRepository;
 
     @Mock
     private CartJpaRepository cartJpaRepository;
@@ -133,7 +133,7 @@ public class ProductServiceImplTest {
         savedCartItem.setCart(user.getCart());
         when(itemsJpaRepository.save(any(CartItem.class))).thenReturn(savedCartItem);
 
-        CartItem addedCartItem = productService.addProductToCart(product, quantity, userId);
+        CartItem addedCartItem = productService.addToCart(product, quantity, userId);
 
         assertEquals(savedCartItem, addedCartItem);
 

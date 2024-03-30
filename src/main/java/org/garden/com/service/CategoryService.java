@@ -7,12 +7,11 @@ import java.util.List;
 
 public interface CategoryService {
 
-    Category createCategory(Category category);
+    Category create(Category category);
 
-    List<Category> getAllCategories();
+    List<Category> getAll();
 
-    Category editCategory(long id, Category category);
+    Category edit(long id, Category category);
 
-    ResponseEntity<Void> deleteCategoryById(long id);
-
+    ResponseEntity<Void> deleteById(long id);
 }

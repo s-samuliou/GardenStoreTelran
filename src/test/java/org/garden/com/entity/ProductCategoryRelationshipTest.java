@@ -31,7 +31,6 @@ public class ProductCategoryRelationshipTest {
 
         when(categoryRepository.save(category)).thenReturn(category);
 
-
         Product product = new Product();
         product.setName("Test Product");
         product.setCategory(category);

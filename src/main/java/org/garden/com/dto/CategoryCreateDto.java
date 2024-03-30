@@ -6,6 +6,7 @@ public class CategoryCreateDto {
 
     @Schema(description = "The unique identifier of the category", example = "1")
     private long id;
+
     @Schema(description = "The name of category", example = "Table")
     private String name;
 

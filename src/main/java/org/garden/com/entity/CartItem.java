@@ -7,7 +7,6 @@ import jakarta.validation.constraints.NotNull;
 @Table(name = "cart_items")
 public class CartItem {
 
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
@@ -23,9 +22,9 @@ public class CartItem {
 
     @NotNull(message = "Quantity of products is required")
     @Column(name = "quantity")
-    private long quantity;
+    private Long quantity;
 
-    public CartItem(long id, Cart cart, Product product, long quantity) {
+    public CartItem(long id, Cart cart, Product product, Long quantity) {
         this.id = id;
         this.cart = cart;
         this.product = product;
@@ -35,12 +34,9 @@ public class CartItem {
     public CartItem() {
     }
 
-
-
     public void setId(long id) {
         this.id = id;
     }
-
 
     public long getId() {
         return id;
@@ -62,11 +58,11 @@ public class CartItem {
         this.product = product;
     }
 
-    public long getQuantity() {
+    public Long getQuantity() {
         return quantity;
     }
 
-    public void setQuantity(long quantity) {
+    public void setQuantity(Long quantity) {
         this.quantity = quantity;
     }
 
