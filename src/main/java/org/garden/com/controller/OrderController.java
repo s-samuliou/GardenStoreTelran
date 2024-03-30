@@ -140,7 +140,7 @@ public class OrderController {
     public List<OrderDto> getOrderHistoryByUserId(@PathVariable(name = "userId") long userId) {
         log.info("Received request to get order history for user with ID: {}", userId);
 
-        User user = userService.findById(userId);
+        User user = userService.getById(userId);
         if (user == null) {
             throw new UserNotFoundException("User with ID " + userId + " not found");
         }

@@ -6,7 +6,6 @@ import org.garden.com.dto.CreateUserDto;
 import org.garden.com.dto.EditUserDto;
 import org.garden.com.entity.User;
 import org.garden.com.service.UserService;
-import org.garden.com.service.UserServiceImpl;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -66,7 +65,7 @@ public class UserControllerTests {
     }
 
     @Test
-    public void testUpdateById() throws Exception {
+    public void testEditById() throws Exception {
         EditUserDto editUserDto = new EditUserDto("New Name", "New number");
 
         User updatedUser = new User();
@@ -81,7 +80,7 @@ public class UserControllerTests {
     @Test
     public void testGetById() throws Exception {
         User user = new User();
-        when(service.findById(anyLong())).thenReturn(user);
+        when(service.getById(anyLong())).thenReturn(user);
 
         mockMvc.perform(get("/v1/users/{id}", 1))
                 .andExpect(status().isOk());

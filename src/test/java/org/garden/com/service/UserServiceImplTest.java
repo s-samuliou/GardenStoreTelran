@@ -52,7 +52,7 @@ public class UserServiceImplTest {
     }
 
     @Test
-    public void createUser_InvalidUser_ThrowsException() {
+    public void create_InvalidUser_ThrowsException() {
         User invalidUser = new User();
         invalidUser.setName(null);
         invalidUser.setEmail("www.google.com");
@@ -102,18 +102,18 @@ public class UserServiceImplTest {
     }
 
     @Test
-    public void findUserById() {
+    public void getById() {
         User user = new User(1L, "User Name", "user@example.com", "qwerty55", "5558822", Role.CUSTOMER);
         when(repository.findById(1L)).thenReturn(Optional.of(user));
 
-        User foundUser = userService.findById(1L);
+        User foundUser = userService.getById(1L);
 
         assertEquals(user, foundUser);
         verify(repository, times(1)).findById(1L);
     }
 
     @Test
-    public void deleteUser_ExistingUser_ReturnsOkResponse() {
+    public void delete_ExistingUser_ReturnsOkResponse() {
 
         User user = new User(1L, "User Name", "user@example.com", "qwerty777", "3332222", Role.ADMIN);
         when(repository.findById(1L)).thenReturn(Optional.of(user));
@@ -126,7 +126,7 @@ public class UserServiceImplTest {
     }
 
     @Test
-    public void deleteUser_NonExistingUser_ThrowsUserNotFoundException() {
+    public void delete_NonExistingUser_ThrowsUserNotFoundException() {
         when(repository.findById(1L)).thenReturn(Optional.empty());
 
         assertThrows(UserNotFoundException.class, () -> userService.delete(1L));

@@ -82,7 +82,7 @@ public class UserController {
             }
     )
     @PutMapping("/{id}")
-    public EditUserDto updateById(@PathVariable("id") long id, @RequestBody EditUserDto editUserDto) {
+    public EditUserDto editById(@PathVariable("id") long id, @RequestBody EditUserDto editUserDto) {
         log.info("Received request to update user with ID {}: {}", id, editUserDto);
         User user = mapper.editUserDtoToUser(editUserDto);
         service.edit(id, user);
@@ -103,7 +103,7 @@ public class UserController {
     @GetMapping("/{id}")
     public UserDto getById(@PathVariable("id") long id) {
         log.info("Received request to get user with ID: {}", id);
-        User user = service.findById(id);
+        User user = service.getById(id);
        UserDto userDto = mapper.userToUserDto(user);
         log.info("Found user: {}", userDto);
         return userDto;

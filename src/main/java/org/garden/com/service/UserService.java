@@ -13,7 +13,7 @@ public interface UserService {
 
     User edit(long id, User user);
 
-    User findById(long id);
+    User getById(long id);
 
     ResponseEntity<Void> delete(long id);
 
