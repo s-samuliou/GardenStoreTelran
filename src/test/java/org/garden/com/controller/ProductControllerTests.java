@@ -47,7 +47,7 @@ public class ProductControllerTests {
         createProductDto.setImageUrl("test_image.jpg");
 
         Product createdProduct = new Product();
-        when(productService.createProduct(any(Product.class))).thenReturn(createdProduct);
+        when(productService.create(any(Product.class))).thenReturn(createdProduct);
 
         mockMvc.perform(post("/v1/products")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -59,7 +59,7 @@ public class ProductControllerTests {
     public void testGetAllProducts() throws Exception {
         // Определяем поведение мок-сервиса
         List<Product> products = new ArrayList<>();
-        when(productService.getFilteredProducts(anyLong(), anyDouble(), anyDouble(), anyBoolean(), anyString()))
+        when(productService.getFiltered(anyLong(), anyDouble(), anyDouble(), anyBoolean(), anyString()))
                 .thenReturn(products);
 
         mockMvc.perform(get("/v1/products"))
@@ -71,7 +71,7 @@ public class ProductControllerTests {
         EditProductDto editProductDto = new EditProductDto();
 
         Product updatedProduct = new Product();
-        when(productService.editProduct(anyLong(), any(Product.class))).thenReturn(updatedProduct);
+        when(productService.editById(anyLong(), any(Product.class))).thenReturn(updatedProduct);
 
         mockMvc.perform(put("/v1/products/{id}", 1)
                         .contentType(MediaType.APPLICATION_JSON)
@@ -82,7 +82,7 @@ public class ProductControllerTests {
     @Test
     public void testGetProductById() throws Exception {
         Product product = new Product();
-        when(productService.findProductById(anyLong())).thenReturn(product);
+        when(productService.findById(anyLong())).thenReturn(product);
 
         mockMvc.perform(get("/v1/products/{id}", 1))
                 .andExpect(status().isOk());
@@ -91,7 +91,7 @@ public class ProductControllerTests {
     @Test
     public void testDeleteProductById() throws Exception {
         ResponseEntity<Void> responseEntity = ResponseEntity.ok().build();
-        when(productService.deleteProduct(anyLong())).thenReturn(responseEntity);
+        when(productService.deleteById(anyLong())).thenReturn(responseEntity);
 
         mockMvc.perform(delete("/v1/products/{id}", 1))
                 .andExpect(status().isOk());

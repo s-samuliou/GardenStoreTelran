@@ -10,7 +10,7 @@ import org.garden.com.dto.ProductDto;
 import org.garden.com.entity.Product;
 import org.garden.com.exceptions.ProductInvalidArgumentException;
 import org.garden.com.exceptions.ProductNotFoundException;
-import org.garden.com.service.ProductServiceImpl;
+import org.garden.com.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -27,7 +27,7 @@ import java.util.stream.Collectors;
 public class ProductController {
 
     @Autowired
-    private ProductServiceImpl service;
+    private ProductService service;
 
     @Autowired
     private ProductMapper mapper;
@@ -44,10 +44,10 @@ public class ProductController {
             }
     )
     @PostMapping()
-    public ResponseEntity<CreateProductDto> createProduct(@RequestBody CreateProductDto createProductDto) {
+    public ResponseEntity<CreateProductDto> create(@RequestBody CreateProductDto createProductDto) {
         log.info("Received request to create product: {}", createProductDto);
         Product product = mapper.createProductDtoToProduct(createProductDto);
-        Product createdProduct = service.createProduct(product);
+        Product createdProduct = service.create(product);
         CreateProductDto createdProductDto = mapper.productToCreateProductDto(createdProduct);
         log.info("Product created: {}", createdProductDto);
         return ResponseEntity.status(HttpStatus.CREATED).body(createdProductDto);
@@ -62,13 +62,13 @@ public class ProductController {
             }
     )
     @GetMapping()
-    public List<ProductDto> getAllProducts(
+    public List<ProductDto> getAll(
             @RequestParam(required = false) Long categoryId, @RequestParam(required = false) Double minPrice,
             @RequestParam(required = false) Double maxPrice, @RequestParam(required = false) Boolean discount,
             @RequestParam(required = false) String sort) {
 
         log.info("Received request to get all products. CategoryId: {}, MinPrice: {}, MaxPrice: {}, Discount: {}, Sort: {}", categoryId, minPrice, maxPrice, discount, sort);
-        List<Product> products = service.getFilteredProducts(categoryId, minPrice, maxPrice, discount, sort);
+        List<Product> products = service.getFiltered(categoryId, minPrice, maxPrice, discount, sort);
         List<ProductDto> productDtos = products.stream()
                 .map(product -> mapper.productToProductDto(product))
                 .collect(Collectors.toList());
@@ -87,10 +87,10 @@ public class ProductController {
             }
     )
     @PutMapping("/{id}")
-    public EditProductDto updateProductById(@PathVariable("id") long id, @RequestBody EditProductDto editProductDto) {
+    public EditProductDto editById(@PathVariable("id") long id, @RequestBody EditProductDto editProductDto) {
         log.info("Received request to update product with ID {}: {}", id, editProductDto);
         Product product = mapper.editProductDtoToProduct(editProductDto);
-        service.editProduct(id, product);
+        service.editById(id, product);
         EditProductDto updatedProductDto = mapper.productToEditProductDto(product);
         log.info("Product updated: {}", updatedProductDto);
         return updatedProductDto;
@@ -106,9 +106,9 @@ public class ProductController {
             }
     )
     @GetMapping("/{id}")
-    public ProductDto getProductById(@PathVariable("id") long id) {
+    public ProductDto getById(@PathVariable("id") long id) {
         log.info("Received request to get product with ID: {}", id);
-        Product product = service.findProductById(id);
+        Product product = service.findById(id);
         ProductDto productDto = mapper.productToProductDto(product);
         log.info("Found product: {}", productDto);
         return productDto;
@@ -124,9 +124,9 @@ public class ProductController {
             }
     )
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteProductById(@PathVariable("id") long id) {
+    public ResponseEntity<Void> deleteById(@PathVariable("id") long id) {
         log.info("Received request to delete product with ID: {}", id);
-        return service.deleteProduct(id);
+        return service.deleteById(id);
     }
 
     @ExceptionHandler({ProductInvalidArgumentException.class, ProductNotFoundException.class})

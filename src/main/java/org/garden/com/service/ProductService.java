@@ -8,15 +8,15 @@ import java.util.List;
 
 public interface ProductService {
 
-    Product createProduct(Product product);
+    Product create(Product product);
 
-    List<Product> getFilteredProducts(Long categoryId, Double minPrice, Double maxPrice, Boolean discount, String sort);
+    List<Product> getFiltered(Long categoryId, Double minPrice, Double maxPrice, Boolean discount, String sort);
 
-    Product editProduct(long id, Product product);
+    Product editById(long id, Product product);
 
-    Product findProductById(long id);
+    Product findById(long id);
 
-    ResponseEntity<Void> deleteProduct(long id);
+    ResponseEntity<Void> deleteById(long id);
 
     CartItem addToCart(Product product, long quantity, Long userId);
 }
