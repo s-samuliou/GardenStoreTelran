@@ -79,7 +79,7 @@ public class ProductServiceImplTest {
         when(repository.findById(id)).thenReturn(Optional.of(existingProduct));
         when(repository.save(existingProduct)).thenReturn(updatedProduct);
 
-        Product result = productService.edit(id, existingProduct);
+        Product result = productService.editById(id, existingProduct);
 
         assertNotNull(result);
         assertEquals(updatedProduct, result);
@@ -105,7 +105,7 @@ public class ProductServiceImplTest {
         long id = 1L;
         when(repository.existsById(id)).thenReturn(true);
 
-        ResponseEntity<Void> result = productService.delete(id);
+        ResponseEntity<Void> result = productService.deleteById(id);
 
         assertNotNull(result);
         assertEquals(ResponseEntity.status(HttpStatus.OK).build(), result);
@@ -118,7 +118,7 @@ public class ProductServiceImplTest {
         long id = 1L;
         when(repository.existsById(id)).thenReturn(false);
 
-        assertThrows(ProductNotFoundException.class, () -> productService.delete(id));
+        assertThrows(ProductNotFoundException.class, () -> productService.deleteById(id));
         verify(repository, times(1)).existsById(id);
         verify(repository, never()).deleteById(id);
     }

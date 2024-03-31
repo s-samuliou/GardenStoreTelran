@@ -9,7 +9,7 @@ import org.garden.com.dto.FavoritesDto;
 import org.garden.com.entity.Favorites;
 import org.garden.com.exceptions.FavoriteInvalidArgumentException;
 import org.garden.com.exceptions.FavoriteNotFoundException;
-import org.garden.com.service.FavoritesServiceImpl;
+import org.garden.com.service.FavoritesService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,7 +26,7 @@ import java.util.stream.Collectors;
 public class FavoritesController {
 
     @Autowired
-    FavoritesServiceImpl service;
+    FavoritesService service;
 
     @Autowired
     FavoritesMapper mapper;
@@ -43,7 +43,7 @@ public class FavoritesController {
             }
     )
     @PostMapping()
-    public ResponseEntity<FavoriteCreateDto> createProduct(@RequestBody FavoriteCreateDto favoriteCreateDto) {
+    public ResponseEntity<FavoriteCreateDto> create(@RequestBody FavoriteCreateDto favoriteCreateDto) {
         log.info("Received request to create favorite product: {}", favoriteCreateDto);
         Favorites favorite = mapper.favoritesCreateDtoToFavorites(favoriteCreateDto);
         Favorites createdFavorite = service.addFavorite(favorite);
@@ -81,9 +81,9 @@ public class FavoritesController {
             }
     )
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteProductById(@PathVariable("id") long id) {
+    public ResponseEntity<Void> deleteById(@PathVariable("id") long id) {
         log.info("Received request to delete favorite product with ID: {}", id);
-        return service.delete(id);
+        return service.deleteById(id);
     }
 
     @ExceptionHandler({FavoriteInvalidArgumentException.class, FavoriteNotFoundException.class})

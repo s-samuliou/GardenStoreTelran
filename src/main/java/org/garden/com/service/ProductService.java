@@ -11,9 +11,9 @@ public interface ProductService {
 
     List<Product> getFiltered(Long categoryId, Double minPrice, Double maxPrice, Boolean discount, String sort);
 
-    Product edit(long id, Product product);
+    Product editById(long id, Product product);
 
     Product findById(long id);
 
-    ResponseEntity<Void> delete(long id);
+    ResponseEntity<Void> deleteById(long id);
 }

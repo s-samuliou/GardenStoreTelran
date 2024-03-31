@@ -45,7 +45,7 @@ public class FavoritesServiceImpl implements FavoritesService {
     }
 
     @Override
-    public ResponseEntity<Void> delete(Long id) {
+    public ResponseEntity<Void> deleteById(Long id) {
         log.info("Deleting favorite product with ID: {}", id);
         if (repository.existsById(id)) {
             repository.deleteById(id);

@@ -83,7 +83,7 @@ public class FavoritesControllerTests {
 
     @Test
     public void deleteFavoriteProduct_ExistingProduct_ReturnsNoContent() throws Exception {
-        when(favoritesService.delete(anyLong())).thenReturn(ResponseEntity.noContent().build());
+        when(favoritesService.deleteById(anyLong())).thenReturn(ResponseEntity.noContent().build());
 
         mockMvc.perform(delete("/v1/favorites/{id}", 1))
                 .andExpect(status().isNoContent());
@@ -93,7 +93,7 @@ public class FavoritesControllerTests {
     public void handleFavoriteException_FavoriteNotFoundException_ReturnsNotFound() throws Exception {
         FavoriteNotFoundException exception = new FavoriteNotFoundException("Favorite product not found");
 
-        when(favoritesService.delete(anyLong())).thenThrow(exception);
+        when(favoritesService.deleteById(anyLong())).thenThrow(exception);
 
         mockMvc.perform(delete("/v1/favorites/{id}", 1))
                 .andExpect(status().isNotFound())
@@ -104,7 +104,7 @@ public class FavoritesControllerTests {
     public void handleFavoriteException_FavoriteInvalidArgumentException_ReturnsBadRequest() throws Exception {
         FavoriteInvalidArgumentException exception = new FavoriteInvalidArgumentException("Invalid favorite product data");
 
-        when(favoritesService.delete(anyLong())).thenThrow(exception);
+        when(favoritesService.deleteById(anyLong())).thenThrow(exception);
 
         mockMvc.perform(delete("/v1/favorites/{id}", 1))
                 .andExpect(status().isBadRequest())

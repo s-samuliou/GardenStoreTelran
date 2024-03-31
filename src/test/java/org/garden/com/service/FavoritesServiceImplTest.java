@@ -77,7 +77,7 @@ public class FavoritesServiceImplTest {
         long id = 1L;
         when(repository.existsById(id)).thenReturn(true);
 
-        ResponseEntity<Void> result = favoritesService.delete(id);
+        ResponseEntity<Void> result = favoritesService.deleteById(id);
 
         assertNotNull(result);
         assertEquals(ResponseEntity.status(HttpStatus.OK).build(), result);
@@ -90,7 +90,7 @@ public class FavoritesServiceImplTest {
         long id = 1L;
         when(repository.existsById(id)).thenReturn(false);
 
-        assertThrows(FavoriteNotFoundException.class, () -> favoritesService.delete(id));
+        assertThrows(FavoriteNotFoundException.class, () -> favoritesService.deleteById(id));
         verify(repository, times(1)).existsById(id);
         verify(repository, never()).deleteById(id);
     }

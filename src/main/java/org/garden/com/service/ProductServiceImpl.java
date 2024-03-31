@@ -46,7 +46,7 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public Product edit(long id, Product product) {
+    public Product editById(long id, Product product) {
         log.info("Editing product with ID {}: {}", id, product);
         validateProduct(product);
         Product existingProduct = repository.findById(id).orElseThrow(() -> new ProductNotFoundException("Product not found with id: " + id));
@@ -72,7 +72,7 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public ResponseEntity<Void> delete(long id) {
+    public ResponseEntity<Void> deleteById(long id) {
         log.info("Deleting product with ID: {}", id);
         if (repository.existsById(id)) {
             repository.deleteById(id);

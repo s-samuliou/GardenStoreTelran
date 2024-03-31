@@ -71,7 +71,7 @@ public class ProductControllerTests {
         EditProductDto editProductDto = new EditProductDto();
 
         Product updatedProduct = new Product();
-        when(productService.edit(anyLong(), any(Product.class))).thenReturn(updatedProduct);
+        when(productService.editById(anyLong(), any(Product.class))).thenReturn(updatedProduct);
 
         mockMvc.perform(put("/v1/products/{id}", 1)
                         .contentType(MediaType.APPLICATION_JSON)
@@ -91,7 +91,7 @@ public class ProductControllerTests {
     @Test
     public void testDeleteProductById() throws Exception {
         ResponseEntity<Void> responseEntity = ResponseEntity.ok().build();
-        when(productService.delete(anyLong())).thenReturn(responseEntity);
+        when(productService.deleteById(anyLong())).thenReturn(responseEntity);
 
         mockMvc.perform(delete("/v1/products/{id}", 1))
                 .andExpect(status().isOk());
