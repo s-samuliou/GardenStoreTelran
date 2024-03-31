@@ -65,7 +65,7 @@ public class CartController {
     @PostMapping("/{userId}")
     public ResponseEntity<CreateCartItemDto> add(@PathVariable long userId, @RequestBody CreateCartItemDto createCartItemDto) {
         log.info("Received request to add product with id {} into the cart", createCartItemDto.getProduct_id());
-        Product product = productService.findProductById(createCartItemDto.getProduct_id());
+        Product product = productService.findById(createCartItemDto.getProduct_id());
         CartItem added = productService.addToCart(product, createCartItemDto.getQuantity(), userId);
         CreateCartItemDto savedCartItemDto = cartMapper.cartItemToCreateCartItemDto(added);
         log.info("Product {} added into cart ", savedCartItemDto.getProduct_id());

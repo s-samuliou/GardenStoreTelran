@@ -63,7 +63,7 @@ public class CartControllerTest {
         cartItem.setProduct(product);
         cartItem.setQuantity(createCartItemDto.getQuantity());
 
-        when(productService.findProductById(1L)).thenReturn(product);
+        when(productService.findById(1L)).thenReturn(product);
 
         when(cartItemMapper.createCartItemDtoToCartItem(createCartItemDto)).thenReturn(cartItem);
 
