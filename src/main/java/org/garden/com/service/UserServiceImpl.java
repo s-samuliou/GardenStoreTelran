@@ -24,7 +24,7 @@ public class UserServiceImpl implements UserService {
 
 
     @Override
-    public User createUser(User user) {
+    public User create(User user) {
         log.info("Creating user: {}", user);
         Cart cart = new Cart();
         cart.setUser(user);
@@ -34,14 +34,14 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<User> getAllUsers() {
+    public List<User> getAll() {
 
         log.info("Fetching users");
         return repository.findAll();
     }
 
     @Override
-    public User editUser(long id, User user) {
+    public User edit(long id, User user) {
         log.info("Editing user with ID {}: {}", id, user);
         User existingUser = repository.findById(id).orElseThrow(() -> new UserNotFoundException("User not found with id " + id));
 
@@ -54,7 +54,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User findUserById(long id) {
+    public User getById(long id) {
         log.info("Fetching user with ID: {}", id);
         User user = repository.findById(id).orElseThrow(() -> new UserNotFoundException("User not found with id: " + id));
         log.info("Found user: {}", user);
@@ -62,7 +62,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public ResponseEntity<Void> deleteUser(long id) {
+    public ResponseEntity<Void> delete(long id) {
         log.info("Deleting user with ID: {}", id);
         if (repository.findById(id).isPresent()) {
             repository.deleteById(id);

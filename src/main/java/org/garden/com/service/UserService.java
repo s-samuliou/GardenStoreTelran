@@ -7,15 +7,15 @@ import java.util.List;
 
 public interface UserService {
 
-    User createUser(User user);
+    User create(User user);
 
-    List<User> getAllUsers();
+    List<User> getAll();
 
-    User editUser(long id, User user);
+    User edit(long id, User user);
 
-    User findUserById(long id);
+    User getById(long id);
 
-    ResponseEntity<Void> deleteUser(long id);
+    ResponseEntity<Void> delete(long id);
 
 //    User getCurrentUser();
 }
