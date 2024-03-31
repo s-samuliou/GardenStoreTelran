@@ -39,7 +39,7 @@ public class CategoryController {
             summary = "Get all categories",
             description = "Retrieves a list of all categories",
             responses = {
-                    @ApiResponse(responseCode = "201", description = "Successfully retrieved categories"),
+                    @ApiResponse(responseCode = "200", description = "Successfully retrieved categories"),
                     @ApiResponse(responseCode = "500", description = "Internal server error")
             }
     )
@@ -67,7 +67,7 @@ public class CategoryController {
     )
     @PostMapping()
     public ResponseEntity<CategoryCreateDto> createCategory(@RequestBody CategoryCreateDto categoryCreateDto) {
-        log.info("Received request to create product: {}", categoryCreateDto);
+        log.info("Received request to create category: {}", categoryCreateDto);
         Category category = mapper.createCategoryDtoToCategory(categoryCreateDto);
         Category createdCategory = categoryService.createCategory(category);
         CategoryCreateDto createdCategoryDto = mapper.categoryToCreateCategoryDto(createdCategory);
@@ -79,7 +79,7 @@ public class CategoryController {
             summary = "Update a category",
             description = "Updates an existing category with the provided ID",
             responses = {
-                    @ApiResponse(responseCode = "201", description = "Successfully updated category"),
+                    @ApiResponse(responseCode = "200", description = "Successfully updated category"),
                     @ApiResponse(responseCode = "400", description = "Bad request"),
                     @ApiResponse(responseCode = "404", description = "Category not found"),
                     @ApiResponse(responseCode = "500", description = "Internal server error")
