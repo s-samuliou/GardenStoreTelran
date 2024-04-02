@@ -7,12 +7,10 @@ import org.garden.com.converter.OrderMapper;
 import org.garden.com.dto.OrderCreateDto;
 import org.garden.com.dto.OrderDto;
 import org.garden.com.entity.Order;
-import org.garden.com.entity.User;
 import org.garden.com.exceptions.OrderInvalidArgumentException;
 import org.garden.com.exceptions.OrderNotFoundException;
 import org.garden.com.exceptions.UserNotFoundException;
 import org.garden.com.service.OrderService;
-import org.garden.com.service.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,8 +32,8 @@ public class OrderController {
     @Autowired
     private OrderService orderService;
 
-    @Autowired
-    private UserService userService;
+//    @Autowired
+//    private UserService userService;
 
     @Autowired
     private OrderMapper orderMapper;
@@ -101,7 +99,7 @@ public class OrderController {
     )
 
     @GetMapping("/{id}")
-    public OrderDto getById(@PathVariable(name = "id") int id) {
+    public OrderDto getById(@PathVariable(name = "id") long id) {
         log.info("Received request to get the order with ID: {} ", id);
 
         Order order = orderService.findById(id);
@@ -123,7 +121,7 @@ public class OrderController {
     )
 
     @DeleteMapping("/{id}")
-    public void deleteById(@PathVariable(name = "id") int id) {
+    public void deleteById(@PathVariable(name = "id") long id) {
         log.info("Received request to delete product with ID: {} ", id);
         orderService.deleteById(id);
     }
@@ -139,11 +137,6 @@ public class OrderController {
     @GetMapping("/history/{userId}")
     public List<OrderDto> getOrderHistoryByUserId(@PathVariable(name = "userId") long userId) {
         log.info("Received request to get order history for user with ID: {}", userId);
-
-        User user = userService.getById(userId);
-        if (user == null) {
-            throw new UserNotFoundException("User with ID " + userId + " not found");
-        }
 
         List<Order> orderHistory = orderService.getOrderHistoryByUserId(userId);
         if (orderHistory.isEmpty()) {

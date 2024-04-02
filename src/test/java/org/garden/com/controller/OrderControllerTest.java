@@ -6,6 +6,8 @@ import org.garden.com.dto.OrderDto;
 import org.garden.com.entity.Order;
 import org.garden.com.enums.DeliveryType;
 import org.garden.com.enums.OrderStatus;
+import org.garden.com.exceptions.OrderNotFoundException;
+import org.garden.com.exceptions.UserNotFoundException;
 import org.garden.com.service.OrderServiceImpl;
 import org.junit.Test;
 import org.junit.jupiter.api.BeforeEach;
@@ -25,7 +27,9 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -120,5 +124,37 @@ public class OrderControllerTest {
         mockMvc.perform(get("/v1/orders/{id}", orderId))
                 .andExpect(status().isNotFound()) // Expects HTTP 404 Not Found
                 .andExpect(jsonPath("$.message").value("Order not found with id: " + orderId)); // Expects the correct error message
+    }
+    @Test
+    public void shouldReturnOrderHistoryByUserId() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders.get("/v1/orders/history/1")
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(MockMvcResultMatchers.status().isNotFound())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.message").value("User with ID 1 has no order history"));
+    }
+
+
+    @Test
+    public void shouldThrowUserNotFoundExceptionWhenUserDoesNotExist() throws Exception {
+        doThrow(new UserNotFoundException("User with ID " + 1L + " not found"))
+                .when(orderService).getOrderHistoryByUserId(1L);
+
+        mockMvc.perform(get("/v1/orders/history/1")
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNotFound())
+                .andExpect(result -> assertThat(result.getResolvedException()).isInstanceOf(UserNotFoundException.class))
+                .andExpect(result -> assertThat(result.getResolvedException().getMessage()).isEqualTo("User with ID 1 not found"));
+    }
+
+    @Test
+    public void shouldThrowOrderNotFoundExceptionWhenNoOrderHistoryForUser() throws Exception {
+        doThrow(new OrderNotFoundException("User with ID " + 1L + " has no order history"))
+                .when(orderService).getOrderHistoryByUserId(1L);
+
+        mockMvc.perform(get("/v1/orders/history/1")
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNotFound())
+                .andExpect(result -> assertThat(result.getResolvedException()).isInstanceOf(OrderNotFoundException.class))
+                .andExpect(result -> assertThat(result.getResolvedException().getMessage()).isEqualTo("User with ID 1 has no order history"));
     }
 }
