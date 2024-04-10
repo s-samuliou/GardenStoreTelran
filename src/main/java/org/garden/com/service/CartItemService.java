@@ -9,5 +9,5 @@ public interface CartItemService {
 
     List<CartItem> getAll(Long cartId);
 
-    ResponseEntity<Void> deleteById(long id);
+    void deleteById(long id);
 }

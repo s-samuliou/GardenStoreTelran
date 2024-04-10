@@ -58,8 +58,9 @@ public class CartItemServiceImplTest {
 
         when(repository.existsById(cartItemId)).thenReturn(true);
 
-        assertDoesNotThrow(() -> service.deleteById(cartItemId));
+        service.deleteById(cartItemId);
 
+        verify(repository, times(1)).existsById(cartItemId);
         verify(repository, times(1)).deleteById(cartItemId);
     }
 
@@ -74,6 +75,7 @@ public class CartItemServiceImplTest {
 
         assertEquals("Cart item with id: {} not found" + cartItemId, exception.getMessage());
 
+        verify(repository, times(1)).existsById(cartItemId);
         verify(repository, never()).deleteById(cartItemId);
     }
 }

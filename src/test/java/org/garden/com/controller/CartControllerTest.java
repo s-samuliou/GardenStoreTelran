@@ -32,18 +32,18 @@ public class CartControllerTest {
     private MockMvc mockMvc;
 
     @MockBean
-    private CartItemService cartItemService;
+    private CartItemService itemService;
 
     @MockBean
     private ProductService productService;
 
     @MockBean
-    private CartItemMapper cartItemMapper;
+    private CartItemMapper mapper;
 
     @Test
     public void testGetAllItemsFromCart() throws Exception {
         List<CartItem> itemList = new ArrayList<>();
-        when(cartItemService.getAll(anyLong())).thenReturn(itemList);
+        when(itemService.getAll(anyLong())).thenReturn(itemList);
 
         mockMvc.perform(get("/v1/cart/{cartId}", 1L))
                 .andExpect(status().isOk());
@@ -65,11 +65,11 @@ public class CartControllerTest {
 
         when(productService.findById(1L)).thenReturn(product);
 
-        when(cartItemMapper.createCartItemDtoToCartItem(createCartItemDto)).thenReturn(cartItem);
+        when(mapper.createCartItemDtoToCartItem(createCartItemDto)).thenReturn(cartItem);
 
         when(productService.addToCart(product, cartItem.getQuantity(), 1L)).thenReturn(cartItem);
 
-        when(cartItemMapper.cartItemToCreateCartItemDto(cartItem)).thenReturn(createCartItemDto);
+        when(mapper.cartItemToCreateCartItemDto(cartItem)).thenReturn(createCartItemDto);
 
         mockMvc.perform(post("/v1/cart/{userId}", 1L)
                         .contentType(MediaType.APPLICATION_JSON)
