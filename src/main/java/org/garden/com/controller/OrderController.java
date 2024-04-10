@@ -30,18 +30,15 @@ import java.util.stream.Collectors;
 public class OrderController {
 
     @Autowired
-    private OrderService orderService;
-
-//    @Autowired
-//    private UserService userService;
+    private OrderService service;
 
     @Autowired
-    private OrderMapper orderMapper;
+    private OrderMapper mapper;
 
     private static final Logger log = LoggerFactory.getLogger(OrderController.class);
 
-    public OrderController(OrderService orderService, OrderMapper orderMapperMock) {
-        this.orderService = orderService;
+    public OrderController(OrderService service, OrderMapper orderMapperMock) {
+        this.service = service;
     }
 
     @Operation(
@@ -54,14 +51,14 @@ public class OrderController {
     )
 
     @GetMapping
-    public List<OrderDto> getAll() {
-        log.info("Received request to get all orders");
+    public ResponseEntity<List<OrderDto>> getAll() {
+        log.debug("Received request to get all orders");
 
-        List<Order> orders = orderService.getAll();
+        List<Order> orders = service.getAll();
         List<OrderDto> orderDto = orders.stream()
-                .map(order -> orderMapper.orderToOrderDto(order))
+                .map(order -> mapper.orderToOrderDto(order))
                 .collect(Collectors.toList());
-        return orderDto;
+        return ResponseEntity.status(HttpStatus.OK).body(orderDto);
     }
 
     @Operation(
@@ -75,17 +72,17 @@ public class OrderController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public OrderCreateDto createOrder(@RequestBody OrderCreateDto dto) {
-        log.info("Received request to create order: {}", dto);
+    public ResponseEntity <OrderCreateDto> create(@RequestBody OrderCreateDto dto) {
+        log.debug("Received request to create order: {}", dto);
 
         dto.setCreatedAt(LocalDateTime.now());
         dto.setUpdatedAt(LocalDateTime.now());
 
-        Order order = orderMapper.createOrderDtoToOrder(dto);
-        orderService.create(order);
-        OrderCreateDto createdOrderDto = orderMapper.orderToOrderCreateDto(order);
+        Order order = mapper.createOrderDtoToOrder(dto);
+        service.create(order);
+        OrderCreateDto createdOrderDto = mapper.orderToOrderCreateDto(order);
         log.info("Order created: {}", dto);
-        return createdOrderDto;
+        return ResponseEntity.status(HttpStatus.OK).body(createdOrderDto);
     }
 
     @Operation(
@@ -99,15 +96,15 @@ public class OrderController {
     )
 
     @GetMapping("/{id}")
-    public OrderDto getById(@PathVariable(name = "id") long id) {
-        log.info("Received request to get the order with ID: {} ", id);
+    public ResponseEntity <OrderDto> getById(@PathVariable(name = "id") long id) {
+        log.debug("Received request to get the order with ID: {} ", id);
 
-        Order order = orderService.findById(id);
+        Order order = service.findById(id);
         if (order == null) {
             throw new OrderNotFoundException("Order not found with id: " + id);
         }
-        OrderDto orderDto = orderMapper.orderToOrderDto(order);
-        return orderDto;
+        OrderDto orderDto = mapper.orderToOrderDto(order);
+        return ResponseEntity.status(HttpStatus.OK).body(orderDto);
     }
 
     @Operation(
@@ -121,9 +118,10 @@ public class OrderController {
     )
 
     @DeleteMapping("/{id}")
-    public void deleteById(@PathVariable(name = "id") long id) {
-        log.info("Received request to delete product with ID: {} ", id);
-        orderService.deleteById(id);
+    public ResponseEntity<Void> deleteById(@PathVariable(name = "id") long id) {
+        log.debug("Received request to delete product with ID: {} ", id);
+        service.deleteById(id);
+        return ResponseEntity.status(HttpStatus.OK).build();
     }
 
     @Operation(
@@ -135,19 +133,19 @@ public class OrderController {
             }
     )
     @GetMapping("/history/{userId}")
-    public List<OrderDto> getOrderHistoryByUserId(@PathVariable(name = "userId") long userId) {
-        log.info("Received request to get order history for user with ID: {}", userId);
+    public ResponseEntity <List<OrderDto>> getHistoryByUserId(@PathVariable(name = "userId") long userId) {
+        log.debug("Received request to get order history for user with ID: {}", userId);
 
-        List<Order> orderHistory = orderService.getOrderHistoryByUserId(userId);
+        List<Order> orderHistory = service.getOrderHistoryByUserId(userId);
         if (orderHistory.isEmpty()) {
             throw new OrderNotFoundException("User with ID " + userId + " has no order history");
         }
 
         List<OrderDto> orderHistoryDto = orderHistory.stream()
-                .map(order -> orderMapper.orderToOrderDto(order))
+                .map(order -> mapper.orderToOrderDto(order))
                 .collect(Collectors.toList());
 
-        return orderHistoryDto;
+        return ResponseEntity.status(HttpStatus.OK).body(orderHistoryDto);
     }
 
     @ExceptionHandler({OrderInvalidArgumentException.class, OrderNotFoundException.class})
@@ -155,7 +153,7 @@ public class OrderController {
     public ResponseEntity<Object> handleOrderException(Exception exception) {
         HttpStatus status = (exception instanceof OrderInvalidArgumentException) ?
                 HttpStatus.BAD_REQUEST : HttpStatus.NOT_FOUND;
-        log.error("Error occurred: {}", exception.getMessage());
+        log.debug("Error occurred: {}", exception.getMessage());
         Map<String, String> responseBody = new HashMap<>();
         responseBody.put("message", exception.getMessage());
         return ResponseEntity.status(status).body(responseBody);
@@ -164,7 +162,7 @@ public class OrderController {
     @ExceptionHandler(UserNotFoundException.class)
     public ResponseEntity<Object> handleUserNotFoundException(UserNotFoundException exception) {
         HttpStatus status = HttpStatus.NOT_FOUND;
-        log.error("User not found: {}", exception.getMessage());
+        log.debug("User not found: {}", exception.getMessage());
         Map<String, String> responseBody = new HashMap<>();
         responseBody.put("message", exception.getMessage());
         return ResponseEntity.status(status).body(responseBody);
