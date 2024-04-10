@@ -27,13 +27,13 @@ import java.util.List;
 public class CartController {
 
     @Autowired
-    private CartItemService cartItemService;
+    private CartItemService itemService;
 
     @Autowired
     private ProductService productService;
 
     @Autowired
-    private CartItemMapper cartMapper;
+    private CartItemMapper mapper;
 
     private static final Logger log = LoggerFactory.getLogger(CartController.class);
 
@@ -46,12 +46,12 @@ public class CartController {
             }
     )
     @GetMapping("/{cartId}")
-    public List<CartItemDto> getAll(@PathVariable Long cartId) {
-        log.info("Received request to get all cart items");
-        List<CartItem> itemList = cartItemService.getAll(cartId);
-        List<CartItemDto> itemDtoList = itemList.stream().map(item -> cartMapper.cartItemToCartItemDto(item)).toList();
-        log.info("Found {} items", itemDtoList.size());
-        return itemDtoList;
+    public ResponseEntity<List<CartItemDto>> getAll(@PathVariable Long cartId) {
+        log.debug("Received request to get all cart items");
+        List<CartItem> itemList = itemService.getAll(cartId);
+        List<CartItemDto> itemDtoList = itemList.stream().map(item -> mapper.cartItemToCartItemDto(item)).toList();
+        log.debug("Found {} items", itemDtoList.size());
+        return ResponseEntity.status(HttpStatus.OK).body(itemDtoList);
     }
 
     @Operation(
@@ -64,11 +64,11 @@ public class CartController {
     )
     @PostMapping("/{userId}")
     public ResponseEntity<CreateCartItemDto> add(@PathVariable long userId, @RequestBody CreateCartItemDto createCartItemDto) {
-        log.info("Received request to add product with id {} into the cart", createCartItemDto.getProduct_id());
+        log.debug("Received request to add product with id {} into the cart", createCartItemDto.getProduct_id());
         Product product = productService.findById(createCartItemDto.getProduct_id());
         CartItem added = productService.addToCart(product, createCartItemDto.getQuantity(), userId);
-        CreateCartItemDto savedCartItemDto = cartMapper.cartItemToCreateCartItemDto(added);
-        log.info("Product {} added into cart ", savedCartItemDto.getProduct_id());
+        CreateCartItemDto savedCartItemDto = mapper.cartItemToCreateCartItemDto(added);
+        log.debug("Product {} added into cart ", savedCartItemDto.getProduct_id());
         return ResponseEntity.status(HttpStatus.OK).body(savedCartItemDto);
     }
 
@@ -82,9 +82,10 @@ public class CartController {
             }
     )
     @DeleteMapping("/{id}")
-    public void deleteById(@PathVariable(name = "id") long id) {
-        log.info("Received request to delete cart item with ID: {}", id);
-        cartItemService.deleteById(id);
+    public ResponseEntity<Void> deleteById(@PathVariable(name = "id") long id) {
+        log.debug("Received request to delete cart item with ID: {}", id);
+        itemService.deleteById(id);
+        return ResponseEntity.status(HttpStatus.OK).build();
     }
 
     @ExceptionHandler({InvalidCartItemException.class, CartItemNotFoundException.class})

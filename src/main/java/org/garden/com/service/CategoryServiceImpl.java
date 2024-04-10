@@ -9,8 +9,6 @@ import org.garden.com.repository.CategoryJpaRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -29,10 +27,10 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public Category create(Category category) {
-        log.info("Creating category: {}", category);
+        log.debug("Creating category: {}", category);
         validateCategory(category);
         Category createdCategory = repository.save(category);
-        log.info("Category created: {}", createdCategory);
+        log.debug("Category created: {}", createdCategory);
         return createdCategory;
     }
 
@@ -40,36 +38,35 @@ public class CategoryServiceImpl implements CategoryService {
     public List<Category> getAll() {
         log.info("Fetching list of categories");
         List<Category> categoryList = repository.findAll();
-        log.info("Found {} categories", categoryList.size());
+        log.debug("Found {} categories", categoryList.size());
         return categoryList;
     }
 
     @Override
     public Category edit(long id, Category category) {
-        log.info("Editing category with ID {}: {}", id, category);
+        log.debug("Editing category with ID {}: {}", id, category);
         validateCategory(category);
         Category newCategory = repository.findById(id).orElseThrow(() -> new CategoryNotFoundException("Category with id " + id + " not found"));
         newCategory.setName(category.getName());
         Category savedCategory = repository.save(newCategory);
-        log.info("Category updated: {}", savedCategory);
+        log.debug("Category updated: {}", savedCategory);
         return savedCategory;
     }
 
     @Override
-    public ResponseEntity<Void> deleteById(long id) {
-        log.info("Deleting category with ID: {}", id);
+    public void deleteById(long id) {
+        log.debug("Deleting category with ID: {}", id);
         if (repository.existsById(id)) {
             repository.deleteById(id);
-            log.info("Category with ID {} deleted", id);
-            return ResponseEntity.status(HttpStatus.OK).build();
+            log.debug("Category with ID {} deleted", id);
         } else {
-            log.warn("Category not deleted: {}", id);
+            log.info("Category not deleted: {}", id);
             throw new CategoryNotFoundException("Category not found with id: " + id);
         }
     }
 
     private void validateCategory(Category category) {
-        log.info("Validating category: {}", category);
+        log.debug("Validating category: {}", category);
         Set<ConstraintViolation<Category>> violations = validator.validate(category);
         if (!violations.isEmpty()) {
             log.warn("Validation exception: {}", category);

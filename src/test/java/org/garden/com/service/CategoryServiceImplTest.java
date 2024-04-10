@@ -10,8 +10,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.ArrayList;
@@ -29,10 +27,10 @@ import static org.mockito.Mockito.*;
 public class CategoryServiceImplTest {
 
     @InjectMocks
-    private CategoryServiceImpl categoryService;
+    private CategoryServiceImpl service;
 
     @Mock
-    private CategoryJpaRepository categoryRepository;
+    private CategoryJpaRepository repository;
 
     @Mock
     private Validator validator;
@@ -47,13 +45,13 @@ public class CategoryServiceImplTest {
         category.setId(1);
         category.setName("Shovels");
 
-        when(categoryRepository.save(category)).thenReturn(category);
+        when(repository.save(category)).thenReturn(category);
 
-        Category createdCategory = categoryService.create(category);
+        Category createdCategory = service.create(category);
 
         assertNotNull(createdCategory);
         assertEquals(category, createdCategory);
-        verify(categoryRepository, times(1)).save(category);
+        verify(repository, times(1)).save(category);
     }
 
     @Test
@@ -61,28 +59,28 @@ public class CategoryServiceImplTest {
         long categoryId = 1L;
         Category existingCategory = new Category();
         Category updatedCategory = new Category();
-        when(categoryRepository.findById(categoryId)).thenReturn(Optional.of(existingCategory));
-        when(categoryRepository.save(existingCategory)).thenReturn(updatedCategory);
+        when(repository.findById(categoryId)).thenReturn(Optional.of(existingCategory));
+        when(repository.save(existingCategory)).thenReturn(updatedCategory);
 
-        Category result = categoryService.edit(categoryId, existingCategory);
+        Category result = service.edit(categoryId, existingCategory);
 
         assertNotNull(result);
         assertEquals(updatedCategory, result);
-        verify(categoryRepository, times(1)).findById(categoryId);
-        verify(categoryRepository, times(1)).save(existingCategory);
+        verify(repository, times(1)).findById(categoryId);
+        verify(repository, times(1)).save(existingCategory);
     }
 
     @Test
     public void testEditCategory_NotFoundException() {
         Category nonExistingCategory = new Category(1L, "Non Existing Category");
 
-        when(categoryRepository.findById(1L)).thenReturn(Optional.empty());
+        when(repository.findById(1L)).thenReturn(Optional.empty());
 
         assertThrows(CategoryNotFoundException.class, () -> {
-            categoryService.edit(1L, nonExistingCategory);
+            service.edit(1L, nonExistingCategory);
         });
-        verify(categoryRepository, times(1)).findById(1L);
-        verify(categoryRepository, never()).save(any(Category.class));
+        verify(repository, times(1)).findById(1L);
+        verify(repository, never()).save(any(Category.class));
     }
 
     @Test
@@ -97,41 +95,41 @@ public class CategoryServiceImplTest {
             categories.add(category);
         }
 
-        when(categoryRepository.findAll()).thenReturn(categories);
+        when(repository.findAll()).thenReturn(categories);
 
-        List<Category> retrievedCategories = categoryService.getAll();
+        List<Category> retrievedCategories = service.getAll();
 
         assertEquals(categories.size(), retrievedCategories.size());
         assertTrue(retrievedCategories.containsAll(categories));
         for (int i = 0; i < categories.size(); i++) {
             assertEquals(categories.get(i), retrievedCategories.get(i));
         }
-        verify(categoryRepository, times(1)).findAll();
+        verify(repository, times(1)).findAll();
     }
 
     @Test
-    public void testDeleteCategoryById() {
-        long id = 1L;
-        when(categoryRepository.existsById(id)).thenReturn(true);
+    public void testDeleteById_SuccessfulDeletion() {
 
-        ResponseEntity<Void> result = categoryService.deleteById(id);
+        long categoryId = 123L;
 
-        assertNotNull(result);
-        assertEquals(ResponseEntity.status(HttpStatus.OK).build(), result);
-        verify(categoryRepository, times(1)).existsById(id);
-        verify(categoryRepository, times(1)).deleteById(id);
+        when(repository.existsById(categoryId)).thenReturn(true);
+
+        service.deleteById(categoryId);
+
+        verify(repository, times(1)).existsById(categoryId);
+        verify(repository, times(1)).deleteById(categoryId);
     }
 
     @Test
     public void testDeleteCategory_CategoryNotFoundException() {
         long id = 1L;
-        when(categoryRepository.findById(id)).thenReturn(Optional.empty());
+        when(repository.findById(id)).thenReturn(Optional.empty());
 
         assertThrows(CategoryNotFoundException.class, () -> {
-            categoryService.deleteById(id);
+            service.deleteById(id);
         });
-        verify(categoryRepository, times(1)).existsById(id);
-        verify(categoryRepository, never()).deleteById(id);
+        verify(repository, times(1)).existsById(id);
+        verify(repository, never()).deleteById(id);
     }
 
 

@@ -27,7 +27,7 @@ import java.util.stream.Collectors;
 public class CategoryController {
 
     @Autowired
-    private CategoryService categoryService;
+    private CategoryService service;
 
     @Autowired
     private CategoryMapper mapper;
@@ -43,14 +43,14 @@ public class CategoryController {
             }
     )
     @GetMapping
-    public List<CategoryDto> getAll() {
-        log.info("Received request to get all categories");
-        List<Category> categories = categoryService.getAll();
+    public ResponseEntity<List<CategoryDto>> getAll() {
+        log.debug("Received request to get all categories");
+        List<Category> categories = service.getAll();
         List<CategoryDto> categoryDtoList = categories.stream()
                 .map(category -> mapper.categoryToCategoryDto(category))
                 .collect(Collectors.toList());
-        log.info("Found {} categories", categories.size());
-        return categoryDtoList;
+        log.debug("Found {} categories", categories.size());
+        return ResponseEntity.status(HttpStatus.OK).body(categoryDtoList);
     }
 
     @Operation(
@@ -64,11 +64,11 @@ public class CategoryController {
     )
     @PostMapping()
     public ResponseEntity<CategoryCreateDto> create(@RequestBody CategoryCreateDto categoryCreateDto) {
-        log.info("Received request to create category: {}", categoryCreateDto);
+        log.debug("Received request to create category: {}", categoryCreateDto);
         Category category = mapper.createCategoryDtoToCategory(categoryCreateDto);
-        Category createdCategory = categoryService.create(category);
+        Category createdCategory = service.create(category);
         CategoryCreateDto createdCategoryDto = mapper.categoryToCreateCategoryDto(createdCategory);
-        log.info("Category created: {}", createdCategory);
+        log.debug("Category created: {}", createdCategory);
         return ResponseEntity.status(HttpStatus.CREATED).body(createdCategoryDto);
     }
 
@@ -83,13 +83,13 @@ public class CategoryController {
             }
     )
     @PutMapping("/{id}")
-    public EditCategoryDto edit(@PathVariable(name = "id") long id, @RequestBody EditCategoryDto editCategoryDto) {
-        log.info("Received request to update a category with ID {}: {}", id, editCategoryDto);
+    public ResponseEntity<EditCategoryDto> edit(@PathVariable(name = "id") long id, @RequestBody EditCategoryDto editCategoryDto) {
+        log.debug("Received request to update a category with ID {}: {}", id, editCategoryDto);
         Category category = mapper.editCategoryDtoToCategory(editCategoryDto);
-        Category editedCategory = categoryService.edit(id, category);
+        Category editedCategory = service.edit(id, category);
         EditCategoryDto editedCategoryDto = mapper.categoryToEditCategoryDto(editedCategory);
-        log.info("Category updated: {}", editedCategoryDto);
-        return editedCategoryDto;
+        log.debug("Category updated: {}", editedCategoryDto);
+        return ResponseEntity.status(HttpStatus.OK).body(editedCategoryDto);
     }
 
     @Operation(
@@ -102,9 +102,10 @@ public class CategoryController {
             }
     )
     @DeleteMapping("/{id}")
-    public void deleteById(@PathVariable(name = "id") long id) {
-        log.info("Received request to delete category with ID: {}", id);
-        categoryService.deleteById(id);
+    public ResponseEntity<Void> deleteById(@PathVariable(name = "id") long id) {
+        log.debug("Received request to delete category with ID: {}", id);
+        service.deleteById(id);
+        return ResponseEntity.status(HttpStatus.OK).build();
     }
 
     @ExceptionHandler({InvalidCategoryArgumentException.class, CategoryNotFoundException.class})

@@ -8,8 +8,6 @@ import org.garden.com.repository.CartJpaRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -27,22 +25,21 @@ public class CartItemServiceImpl implements CartItemService {
 
     @Override
     public List<CartItem> getAll(Long cartId) {
-        log.info("Fetching list of items from the cart");
+        log.debug("Fetching list of items from the cart");
         Cart cartById = cartJpaRepository.findById(cartId).get();
         List<CartItem> cartItems = cartById.getCartItemsList();
-        log.info("Found {} items", cartItems.size());
+        log.debug("Found {} items", cartItems.size());
         return cartItems;
     }
 
     @Override
-    public ResponseEntity<Void> deleteById(long id) {
-        log.info("Deleting cart item with ID: {}", id);
+    public void deleteById(long id) {
+        log.debug("Deleting cart item with ID: {}", id);
         if (repository.existsById(id)) {
             repository.deleteById(id);
-            log.info("Cart item with ID {} deleted", id);
-            return ResponseEntity.status(HttpStatus.OK).build();
+            log.debug("Cart item with ID {} deleted", id);
         } else {
-            log.warn("Cart item not deleted: {}", id);
+            log.info("Cart item not deleted: {}", id);
             throw new CartItemNotFoundException("Cart item with id: {} not found" + id);
         }
     }
