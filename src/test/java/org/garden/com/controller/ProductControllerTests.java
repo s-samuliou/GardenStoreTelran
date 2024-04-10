@@ -20,7 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.mockito.ArgumentMatchers.*;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -90,11 +90,10 @@ public class ProductControllerTests {
 
     @Test
     public void testDeleteProductById() throws Exception {
-        ResponseEntity<Void> responseEntity = ResponseEntity.ok().build();
-        when(productService.deleteById(anyLong())).thenReturn(responseEntity);
-
         mockMvc.perform(delete("/v1/products/{id}", 1))
                 .andExpect(status().isOk());
+
+        verify(productService, times(1)).deleteById(1L);
     }
 
     private String asJsonString(final Object obj) {

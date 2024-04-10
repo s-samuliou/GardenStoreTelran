@@ -32,7 +32,7 @@ public class FavoritesServiceImpl implements FavoritesService {
         log.info("Creating favorite product: {}", favorite);
         validateProduct(favorite);
         Favorites createdFavoriteProduct = repository.save(favorite);
-        log.info("Product created: {}", createdFavoriteProduct);
+        log.debug("Product created: {}", createdFavoriteProduct);
         return createdFavoriteProduct;
     }
 
@@ -40,17 +40,16 @@ public class FavoritesServiceImpl implements FavoritesService {
     public List<Favorites> getAll() {
         log.info("Fetching favorites products");
         List<Favorites> favoriteProducts = repository.findAll();
-        log.info("Found {} filtered products", favoriteProducts.size());
+        log.debug("Found {} filtered products", favoriteProducts.size());
         return favoriteProducts;
     }
 
     @Override
-    public ResponseEntity<Void> deleteById(Long id) {
+    public void deleteById(Long id) {
         log.info("Deleting favorite product with ID: {}", id);
         if (repository.existsById(id)) {
             repository.deleteById(id);
-            log.info("Favorite product with ID {} deleted", id);
-            return ResponseEntity.status(HttpStatus.OK).build();
+            log.debug("Favorite product with ID {} deleted", id);
         } else {
             log.warn("Favorite product not deleted: {}", id);
             throw new FavoriteNotFoundException("Favorite product not found with id: " + id);

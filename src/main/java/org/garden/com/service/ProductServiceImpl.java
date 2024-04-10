@@ -50,7 +50,7 @@ public class ProductServiceImpl implements ProductService {
         log.info("Creating product: {}", product);
         validateProduct(product);
         Product createdProduct = repository.save(product);
-        log.info("Product created: {}", createdProduct);
+        log.debug("Product created: {}", createdProduct);
         return createdProduct;
     }
 
@@ -58,7 +58,7 @@ public class ProductServiceImpl implements ProductService {
     public List<Product> getFiltered(Long categoryId, Double minPrice, Double maxPrice, Boolean discount, String sort) {
         log.info("Fetching filtered products. CategoryId: {}, MinPrice: {}, MaxPrice: {}, Discount: {}, Sort: {}", categoryId, minPrice, maxPrice, discount, sort);
         List<Product> products = repository.findFiltered(categoryId, minPrice, maxPrice, discount, sort);
-        log.info("Found {} filtered products", products.size());
+        log.debug("Found {} filtered products", products.size());
         return products;
     }
 
@@ -76,7 +76,7 @@ public class ProductServiceImpl implements ProductService {
         existingProduct.setUpdatedAt(LocalDateTime.now());
 
         Product updatedProduct = repository.save(existingProduct);
-        log.info("Product updated: {}", updatedProduct);
+        log.debug("Product updated: {}", updatedProduct);
         return updatedProduct;
     }
 
@@ -84,17 +84,16 @@ public class ProductServiceImpl implements ProductService {
     public Product findById(long id) {
         log.info("Fetching product with ID: {}", id);
         Product product = repository.findById(id).orElseThrow(() -> new ProductNotFoundException("Product not found with id: " + id));
-        log.info("Found product: {}", product);
+        log.debug("Found product: {}", product);
         return product;
     }
 
     @Override
-    public ResponseEntity<Void> deleteById(long id) {
+    public void deleteById(long id) {
         log.info("Deleting product with ID: {}", id);
         if (repository.existsById(id)) {
             repository.deleteById(id);
-            log.info("Product with ID {} deleted", id);
-            return ResponseEntity.status(HttpStatus.OK).build();
+            log.debug("Product with ID {} deleted", id);
         } else {
             log.warn("Product not deleted: {}", id);
             throw new ProductNotFoundException("Product not found with id: " + id);
@@ -131,7 +130,7 @@ public class ProductServiceImpl implements ProductService {
             cart.getCartItemsList().add(saved);
             cartJpaRepository.save(cart);
 
-            log.info("Product with ID: {} added to cart", saved.getProduct().getId());
+            log.debug("Product with ID: {} added to cart", saved.getProduct().getId());
             return saved;
     }
 

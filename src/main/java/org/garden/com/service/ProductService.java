@@ -16,7 +16,7 @@ public interface ProductService {
 
     Product findById(long id);
 
-    ResponseEntity<Void> deleteById(long id);
+    void deleteById(long id);
 
     CartItem addToCart(Product product, long quantity, Long userId);
 }
