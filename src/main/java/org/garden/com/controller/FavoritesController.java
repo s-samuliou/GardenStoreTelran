@@ -61,7 +61,7 @@ public class FavoritesController {
             }
     )
     @GetMapping
-    public List<FavoritesDto> getListFavorites() {
+    public List<FavoritesDto> getList() {
         log.info("Received request to get all favorite products");
         List<Favorites> favoritesProducts = service.getAll();
         List<FavoritesDto> favoritesProductsDto = favoritesProducts.stream()
@@ -81,9 +81,9 @@ public class FavoritesController {
             }
     )
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteById(@PathVariable("id") long id) {
+    public void deleteById(@PathVariable("id") long id) {
         log.info("Received request to delete favorite product with ID: {}", id);
-        return service.deleteById(id);
+        service.deleteById(id);
     }
 
     @ExceptionHandler({FavoriteInvalidArgumentException.class, FavoriteNotFoundException.class})

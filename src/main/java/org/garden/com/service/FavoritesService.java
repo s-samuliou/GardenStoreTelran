@@ -11,5 +11,5 @@ public interface FavoritesService {
 
     List<Favorites> getAll();
 
-    ResponseEntity<Void> deleteById(Long id);
+    void deleteById(Long id);
 }
