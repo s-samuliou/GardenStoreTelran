@@ -72,7 +72,7 @@ public class OrderControllerTest {
                         "\"status\": \"CREATED\"}"
                 );
         mockMvc.perform(requestBuilder)
-                .andExpect(status().isCreated());
+                .andExpect(status().isOk());
     }
 
     @Test

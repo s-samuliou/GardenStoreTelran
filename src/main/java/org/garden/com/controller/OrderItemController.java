@@ -28,10 +28,10 @@ import java.util.stream.Collectors;
 public class OrderItemController {
 
     @Autowired
-    private OrderItemService orderItemService;
+    private OrderItemService service;
 
     @Autowired
-    private OrderItemMapper orderItemMapper;
+    private OrderItemMapper mapper;
 
     private static final Logger log = LoggerFactory.getLogger(OrderItemController.class);
 
@@ -44,16 +44,16 @@ public class OrderItemController {
             }
     )
     @GetMapping
-    public List<OrderItemDto> getAll() {
-        log.info("Received request to get all orderItems");
+    public ResponseEntity <List<OrderItemDto>> getAll() {
+        log.debug("Received request to get all orderItems");
 
-        List<OrderItem> orderItems = orderItemService.getAll();
+        List<OrderItem> orderItems = service.getAll();
         List<OrderItemDto> orderItemDtos = orderItems.stream()
-                .map(orderItemMapper::orderItemToOrderItemDto)
+                .map(mapper::orderItemToOrderItemDto)
                 .collect(Collectors.toList());
 
         log.info("OrderItemController found {} of OrderItems", orderItemDtos.size());
-        return orderItemDtos;
+        return ResponseEntity.status(HttpStatus.OK).body(orderItemDtos);
     }
 
     @Operation(
@@ -66,14 +66,17 @@ public class OrderItemController {
     )
 
     @GetMapping("/{id}")
-    public OrderItemDto getById(@PathVariable(name = "id") long id) {
-        log.info("Received request to get the OrderItem with ID: {} ", id);
+    public ResponseEntity <OrderItemDto> getById(@PathVariable(name = "id") long id) {
+        log.debug("Received request to get the OrderItem with ID: {}", id);
 
-        OrderItem orderItem = orderItemService.findById(id);
+        OrderItem orderItem = service.findById(id);
         if (orderItem == null) {
             throw new OrderItemNotFoundException("OrderItem not found with id: " + id);
         }
-        return orderItemMapper.orderItemToOrderItemDto(orderItem);
+
+        OrderItemDto orderItemDto = mapper.orderItemToOrderItemDto(orderItem);
+
+        return ResponseEntity.status(HttpStatus.OK).body(orderItemDto);
     }
 
     @ExceptionHandler({OrderItemInvalidArgumentException.class, OrderItemNotFoundException.class})
@@ -81,7 +84,7 @@ public class OrderItemController {
     public ResponseEntity<Object> handleOrderItemException(Exception exception) {
         HttpStatus status = (exception instanceof OrderItemInvalidArgumentException) ?
                 HttpStatus.BAD_REQUEST : HttpStatus.NOT_FOUND;
-        log.error("Error occurred: {}", exception.getMessage());
+        log.debug("Error occurred: {}", exception.getMessage());
         Map<String, String> responseBody = new HashMap<>();
         responseBody.put("message", exception.getMessage());
         return ResponseEntity.status(status).body(responseBody);
