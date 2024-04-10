@@ -143,14 +143,12 @@ public class ProductServiceImplTest {
     }
 
     @Test
-    public void deleteProduct_ExistingProduct_ReturnsOkResponse() {
+    public void deleteProduct_ExistingProduct_DeletesProduct() {
         long id = 1L;
         when(repository.existsById(id)).thenReturn(true);
 
-        ResponseEntity<Void> result = productService.deleteById(id);
+        productService.deleteById(id);
 
-        assertNotNull(result);
-        assertEquals(ResponseEntity.status(HttpStatus.OK).build(), result);
         verify(repository, times(1)).existsById(id);
         verify(repository, times(1)).deleteById(id);
     }

@@ -23,7 +23,7 @@ import java.util.Arrays;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
 import static org.mockito.ArgumentMatchers.*;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -83,31 +83,35 @@ public class FavoritesControllerTests {
 
     @Test
     public void deleteFavoriteProduct_ExistingProduct_ReturnsNoContent() throws Exception {
-        when(favoritesService.deleteById(anyLong())).thenReturn(ResponseEntity.noContent().build());
+        mockMvc.perform(delete("/v1/favorites/{id}", 1L))
+                .andExpect(status().isOk());
 
-        mockMvc.perform(delete("/v1/favorites/{id}", 1))
-                .andExpect(status().isNoContent());
+        verify(favoritesService, times(1)).deleteById(1L);
     }
 
     @Test
     public void handleFavoriteException_FavoriteNotFoundException_ReturnsNotFound() throws Exception {
         FavoriteNotFoundException exception = new FavoriteNotFoundException("Favorite product not found");
 
-        when(favoritesService.deleteById(anyLong())).thenThrow(exception);
+        doThrow(exception).when(favoritesService).deleteById(anyLong());
 
-        mockMvc.perform(delete("/v1/favorites/{id}", 1))
+        mockMvc.perform(delete("/v1/favorites/{id}", 1L))
                 .andExpect(status().isNotFound())
                 .andExpect(content().string("Favorite product not found"));
+
+        verify(favoritesService, times(1)).deleteById(1L);
     }
 
     @Test
     public void handleFavoriteException_FavoriteInvalidArgumentException_ReturnsBadRequest() throws Exception {
         FavoriteInvalidArgumentException exception = new FavoriteInvalidArgumentException("Invalid favorite product data");
 
-        when(favoritesService.deleteById(anyLong())).thenThrow(exception);
+        doThrow(exception).when(favoritesService).deleteById(anyLong());
 
-        mockMvc.perform(delete("/v1/favorites/{id}", 1))
+        mockMvc.perform(delete("/v1/favorites/{id}", 1L))
                 .andExpect(status().isBadRequest())
                 .andExpect(content().string("Invalid favorite product data"));
+
+        verify(favoritesService, times(1)).deleteById(1L);
     }
 }

@@ -124,9 +124,10 @@ public class ProductController {
             }
     )
     @DeleteMapping("/{id}")
-    public void deleteById(@PathVariable("id") long id) {
+    public ResponseEntity<Void> deleteById(@PathVariable("id") long id) {
         log.info("Received request to delete product with ID: {}", id);
         service.deleteById(id);
+        return ResponseEntity.status(HttpStatus.OK).build();
     }
 
     @ExceptionHandler({ProductInvalidArgumentException.class, ProductNotFoundException.class})

@@ -81,9 +81,10 @@ public class FavoritesController {
             }
     )
     @DeleteMapping("/{id}")
-    public void deleteById(@PathVariable("id") long id) {
+    public ResponseEntity<Void> deleteById(@PathVariable("id") long id) {
         log.info("Received request to delete favorite product with ID: {}", id);
         service.deleteById(id);
+        return ResponseEntity.status(HttpStatus.OK).build();
     }
 
     @ExceptionHandler({FavoriteInvalidArgumentException.class, FavoriteNotFoundException.class})
