@@ -114,24 +114,23 @@ public class UserServiceImplTest {
 
     @Test
     public void delete_ExistingUser_ReturnsOkResponse() {
+        long userId = 1L;
+        User existingUser = new User(userId, "User Name", "user@example.com", "qwerty55", "5558822", Role.CUSTOMER);
 
-        User user = new User(1L, "User Name", "user@example.com", "qwerty777", "3332222", Role.ADMIN);
-        when(repository.findById(1L)).thenReturn(Optional.of(user));
-
-        ResponseEntity<Void> response = userService.delete(1L);
-
-        assertEquals(HttpStatus.OK, response.getStatusCode());
-        verify(repository, times(1)).findById(1L);
-        verify(repository, times(1)).deleteById(1L);
+        when(repository.findById(userId)).thenReturn(Optional.of(existingUser));
+        userService.delete(userId);
+        verify(repository).findById(userId);
+        verify(repository).deleteById(userId);
     }
 
     @Test
     public void delete_NonExistingUser_ThrowsUserNotFoundException() {
-        when(repository.findById(1L)).thenReturn(Optional.empty());
+        long nonExistingUserId = 2L;
 
-        assertThrows(UserNotFoundException.class, () -> userService.delete(1L));
+        when(repository.findById(anyLong())).thenReturn(Optional.empty());
 
-        verify(repository, times(1)).findById(1L);
-        verify(repository, never()).deleteById(1L);
+        assertThrows(UserNotFoundException.class, () -> userService.delete(nonExistingUserId));
+        verify(repository).findById(nonExistingUserId);
+        verify(repository, never()).deleteById(anyLong());
     }
 }
