@@ -44,7 +44,7 @@ public class CategoryController {
     )
     @GetMapping
     public ResponseEntity<List<CategoryDto>> getAll() {
-        log.debug("Received request to get all categories");
+        log.info("Received request to get all categories");
         List<Category> categories = service.getAll();
         List<CategoryDto> categoryDtoList = categories.stream()
                 .map(category -> mapper.categoryToCategoryDto(category))
@@ -64,7 +64,7 @@ public class CategoryController {
     )
     @PostMapping()
     public ResponseEntity<CategoryCreateDto> create(@RequestBody CategoryCreateDto categoryCreateDto) {
-        log.debug("Received request to create category: {}", categoryCreateDto);
+        log.info("Received request to create category: {}", categoryCreateDto);
         Category category = mapper.createCategoryDtoToCategory(categoryCreateDto);
         Category createdCategory = service.create(category);
         CategoryCreateDto createdCategoryDto = mapper.categoryToCreateCategoryDto(createdCategory);
@@ -84,7 +84,7 @@ public class CategoryController {
     )
     @PutMapping("/{id}")
     public ResponseEntity<EditCategoryDto> edit(@PathVariable(name = "id") long id, @RequestBody EditCategoryDto editCategoryDto) {
-        log.debug("Received request to update a category with ID {}: {}", id, editCategoryDto);
+        log.info("Received request to update a category with ID {}: {}", id, editCategoryDto);
         Category category = mapper.editCategoryDtoToCategory(editCategoryDto);
         Category editedCategory = service.edit(id, category);
         EditCategoryDto editedCategoryDto = mapper.categoryToEditCategoryDto(editedCategory);
@@ -103,7 +103,7 @@ public class CategoryController {
     )
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteById(@PathVariable(name = "id") long id) {
-        log.debug("Received request to delete category with ID: {}", id);
+        log.info("Received request to delete category with ID: {}", id);
         service.deleteById(id);
         return ResponseEntity.status(HttpStatus.OK).build();
     }

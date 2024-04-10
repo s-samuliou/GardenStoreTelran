@@ -27,7 +27,7 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public Category create(Category category) {
-        log.debug("Creating category: {}", category);
+        log.info("Creating category: {}", category);
         validateCategory(category);
         Category createdCategory = repository.save(category);
         log.debug("Category created: {}", createdCategory);
@@ -44,7 +44,7 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public Category edit(long id, Category category) {
-        log.debug("Editing category with ID {}: {}", id, category);
+        log.info("Editing category with ID {}: {}", id, category);
         validateCategory(category);
         Category newCategory = repository.findById(id).orElseThrow(() -> new CategoryNotFoundException("Category with id " + id + " not found"));
         newCategory.setName(category.getName());
@@ -55,18 +55,18 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public void deleteById(long id) {
-        log.debug("Deleting category with ID: {}", id);
+        log.info("Deleting category with ID: {}", id);
         if (repository.existsById(id)) {
             repository.deleteById(id);
             log.debug("Category with ID {} deleted", id);
         } else {
-            log.info("Category not deleted: {}", id);
+            log.warn("Category not deleted: {}", id);
             throw new CategoryNotFoundException("Category not found with id: " + id);
         }
     }
 
     private void validateCategory(Category category) {
-        log.debug("Validating category: {}", category);
+        log.info("Validating category: {}", category);
         Set<ConstraintViolation<Category>> violations = validator.validate(category);
         if (!violations.isEmpty()) {
             log.warn("Validation exception: {}", category);

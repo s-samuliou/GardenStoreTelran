@@ -47,7 +47,7 @@ public class CartController {
     )
     @GetMapping("/{cartId}")
     public ResponseEntity<List<CartItemDto>> getAll(@PathVariable Long cartId) {
-        log.debug("Received request to get all cart items");
+        log.info("Received request to get all cart items");
         List<CartItem> itemList = itemService.getAll(cartId);
         List<CartItemDto> itemDtoList = itemList.stream().map(item -> mapper.cartItemToCartItemDto(item)).toList();
         log.debug("Found {} items", itemDtoList.size());
@@ -64,7 +64,7 @@ public class CartController {
     )
     @PostMapping("/{userId}")
     public ResponseEntity<CreateCartItemDto> add(@PathVariable long userId, @RequestBody CreateCartItemDto createCartItemDto) {
-        log.debug("Received request to add product with id {} into the cart", createCartItemDto.getProduct_id());
+        log.info("Received request to add product with id {} into the cart", createCartItemDto.getProduct_id());
         Product product = productService.findById(createCartItemDto.getProduct_id());
         CartItem added = productService.addToCart(product, createCartItemDto.getQuantity(), userId);
         CreateCartItemDto savedCartItemDto = mapper.cartItemToCreateCartItemDto(added);
@@ -83,7 +83,7 @@ public class CartController {
     )
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteById(@PathVariable(name = "id") long id) {
-        log.debug("Received request to delete cart item with ID: {}", id);
+        log.info("Received request to delete cart item with ID: {}", id);
         itemService.deleteById(id);
         return ResponseEntity.status(HttpStatus.OK).build();
     }

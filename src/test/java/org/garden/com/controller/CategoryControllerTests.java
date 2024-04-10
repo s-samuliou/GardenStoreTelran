@@ -11,7 +11,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -20,7 +19,7 @@ import java.util.List;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -72,10 +71,11 @@ public class CategoryControllerTests {
 
     @Test
     public void testDeleteCategoryById() throws Exception {
-        ResponseEntity<Void> responseEntity = ResponseEntity.ok().build();
 
         mockMvc.perform(delete("/v1/categories/{id}", 1))
                 .andExpect(status().isOk());
+
+        verify(service, times(1)).deleteById(1L);
     }
 
     private String asJsonString(final Object obj) {

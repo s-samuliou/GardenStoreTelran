@@ -25,7 +25,7 @@ public class CartItemServiceImpl implements CartItemService {
 
     @Override
     public List<CartItem> getAll(Long cartId) {
-        log.debug("Fetching list of items from the cart");
+        log.info("Fetching list of items from the cart");
         Cart cartById = cartJpaRepository.findById(cartId).get();
         List<CartItem> cartItems = cartById.getCartItemsList();
         log.debug("Found {} items", cartItems.size());
@@ -34,12 +34,12 @@ public class CartItemServiceImpl implements CartItemService {
 
     @Override
     public void deleteById(long id) {
-        log.debug("Deleting cart item with ID: {}", id);
+        log.info("Deleting cart item with ID: {}", id);
         if (repository.existsById(id)) {
             repository.deleteById(id);
             log.debug("Cart item with ID {} deleted", id);
         } else {
-            log.info("Cart item not deleted: {}", id);
+            log.warn("Cart item not deleted: {}", id);
             throw new CartItemNotFoundException("Cart item with id: {} not found" + id);
         }
     }
