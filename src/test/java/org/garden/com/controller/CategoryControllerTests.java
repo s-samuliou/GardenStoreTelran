@@ -11,7 +11,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -20,7 +19,7 @@ import java.util.List;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -32,7 +31,7 @@ public class CategoryControllerTests {
     private MockMvc mockMvc;
 
     @MockBean
-    private CategoryService categoryService;
+    private CategoryService service;
 
     @MockBean
     private CategoryMapper mapper;
@@ -40,7 +39,7 @@ public class CategoryControllerTests {
     @Test
     public void testCreateCategory() throws Exception {
         Category createdCategory = new Category();
-        when(categoryService.create(any(Category.class))).thenReturn(createdCategory);
+        when(service.create(any(Category.class))).thenReturn(createdCategory);
 
         mockMvc.perform(post("/v1/categories")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -51,7 +50,7 @@ public class CategoryControllerTests {
     @Test
     public void testGetAllCategories() throws Exception {
         List<Category> categories = new ArrayList<>();
-        when(categoryService.getAll()).thenReturn(categories);
+        when(service.getAll()).thenReturn(categories);
 
         mockMvc.perform(get("/v1/categories"))
                 .andExpect(status().isOk());
@@ -62,7 +61,7 @@ public class CategoryControllerTests {
         EditCategoryDto editCategoryDto = new EditCategoryDto();
 
         Category updatedCategory = new Category();
-        when(categoryService.edit(anyLong(), any(Category.class))).thenReturn(updatedCategory);
+        when(service.edit(anyLong(), any(Category.class))).thenReturn(updatedCategory);
 
         mockMvc.perform(put("/v1/categories/{id}", 1)
                         .contentType(MediaType.APPLICATION_JSON)
@@ -72,11 +71,11 @@ public class CategoryControllerTests {
 
     @Test
     public void testDeleteCategoryById() throws Exception {
-        ResponseEntity<Void> responseEntity = ResponseEntity.ok().build();
-        when(categoryService.deleteById(anyLong())).thenReturn(responseEntity);
 
         mockMvc.perform(delete("/v1/categories/{id}", 1))
                 .andExpect(status().isOk());
+
+        verify(service, times(1)).deleteById(1L);
     }
 
     private String asJsonString(final Object obj) {

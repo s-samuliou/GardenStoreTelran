@@ -13,5 +13,5 @@ public interface CategoryService {
 
     Category edit(long id, Category category);
 
-    ResponseEntity<Void> deleteById(long id);
+    void deleteById(long id);
 }
