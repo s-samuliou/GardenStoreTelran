@@ -43,13 +43,13 @@ public class UserController {
     )
     @PostMapping("/register")
     @ResponseStatus(HttpStatus.CREATED)
-    public CreateUserDto create(@RequestBody CreateUserDto createUserDto) {
-        log.info("Received request to create user: {}", createUserDto);
+    public ResponseEntity<CreateUserDto> create(@RequestBody CreateUserDto createUserDto) {
+        log.debug("Received request to create user: {}", createUserDto);
         User user = mapper.createUserDtoToUser(createUserDto);
         User createdUser = service.create(user);
         CreateUserDto createdUserDto = mapper.userToCreateUserDto(createdUser);
-        log.info("User created: {}", createdUserDto);
-        return createdUserDto;
+        log.debug("User created: {}", createdUserDto);
+        return ResponseEntity.status(HttpStatus.CREATED).body(createdUserDto);
     }
 
     @Operation(
@@ -61,14 +61,14 @@ public class UserController {
             }
     )
     @GetMapping()
-    public List<UserDto> getAll() {
-        log.info("Received request to get all users");
+    public ResponseEntity<List<UserDto>> getAll() {
+        log.debug("Received request to get all users");
         List<User> users = service.getAll();
         List<UserDto> userDtos = users.stream()
                 .map(user -> mapper.userToUserDto(user))
                 .collect(Collectors.toList());
-        log.info("Found {} users", users.size());
-        return userDtos;
+        log.debug("Found {} users", users.size());
+        return ResponseEntity.status(HttpStatus.OK).body(userDtos);
     }
 
     @Operation(
@@ -82,13 +82,13 @@ public class UserController {
             }
     )
     @PutMapping("/{id}")
-    public EditUserDto editById(@PathVariable("id") long id, @RequestBody EditUserDto editUserDto) {
-        log.info("Received request to update user with ID {}: {}", id, editUserDto);
+    public ResponseEntity<EditUserDto> editById(@PathVariable("id") long id, @RequestBody EditUserDto editUserDto) {
+        log.debug("Received request to update user with ID {}: {}", id, editUserDto);
         User user = mapper.editUserDtoToUser(editUserDto);
         service.edit(id, user);
         EditUserDto updatedUserDto = mapper.userToEditUserDto(user);
-        log.info("User updated: {}", updatedUserDto);
-        return updatedUserDto;
+        log.debug("User updated: {}", updatedUserDto);
+        return ResponseEntity.status(HttpStatus.OK).body(updatedUserDto);
     }
 
     @Operation(
@@ -101,12 +101,12 @@ public class UserController {
             }
     )
     @GetMapping("/{id}")
-    public UserDto getById(@PathVariable("id") long id) {
-        log.info("Received request to get user with ID: {}", id);
+    public ResponseEntity<UserDto> getById(@PathVariable("id") long id) {
+        log.debug("Received request to get user with ID: {}", id);
         User user = service.getById(id);
        UserDto userDto = mapper.userToUserDto(user);
-        log.info("Found user: {}", userDto);
-        return userDto;
+        log.debug("Found user: {}", userDto);
+        return ResponseEntity.status(HttpStatus.OK).body(userDto);
     }
     @Operation(
             summary = "Delete a user by ID",
@@ -119,8 +119,9 @@ public class UserController {
     )
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteById(@PathVariable("id") long id) {
-        log.info("Received request to delete user with ID: {}", id);
-        return service.delete(id);
+        log.debug("Received request to delete user with ID: {}", id);
+        service.delete(id);
+        return ResponseEntity.status(HttpStatus.OK).build();
     }
 
     @ExceptionHandler({UserInvalidArgumentException.class, UserNotFoundException.class})

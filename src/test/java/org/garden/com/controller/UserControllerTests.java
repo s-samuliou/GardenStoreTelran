@@ -89,7 +89,6 @@ public class UserControllerTests {
     @Test
     public void testDeleteById() throws Exception {
         ResponseEntity<Void> responseEntity = ResponseEntity.ok().build();
-        when(service.delete(anyLong())).thenReturn(responseEntity);
 
         mockMvc.perform(delete("/v1/users/{id}", 1))
                 .andExpect(status().isOk());

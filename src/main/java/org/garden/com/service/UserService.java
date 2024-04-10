@@ -15,7 +15,7 @@ public interface UserService {
 
     User getById(long id);
 
-    ResponseEntity<Void> delete(long id);
+    void delete(long id);
 
 //    User getCurrentUser();
 }
