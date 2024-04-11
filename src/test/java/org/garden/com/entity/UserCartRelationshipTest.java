@@ -31,7 +31,7 @@ public class UserCartRelationshipTest {
     public void testUserCartRelationship(){
         User user = new User();
         user.setId(1);
-        user.setRole(Role.CUSTOMER);
+        user.setRole(Role.USER);
         user.setName("Vasya");
         user.setEmail("Vasya@228.com");
         user.setPassword("asdgee34");

@@ -38,21 +38,21 @@
             <column name="email" value="jimmy@yahoo.com"/>
             <column name="password" value="123456aA"/>
             <column name="phone_number" value="123-456"/>
-            <column name="role" value="CUSTOMER"/>
+            <column name="role" value="USER"/>
         </insert>
         <insert tableName="users">
             <column name="name" value="Frank"/>
             <column name="email" value="franky@google.com"/>
             <column name="password" value="9876511aA"/>
             <column name="phone_number" value="888-012"/>
-            <column name="role" value="CUSTOMER"/>
+            <column name="role" value="USER"/>
         </insert>
         <insert tableName="users">
             <column name="name" value="Eddy"/>
             <column name="email" value="eddy777@google.com"/>
             <column name="password" value="9gdte31aA"/>
             <column name="phone_number" value="3920449"/>
-            <column name="role" value="CUSTOMER"/>
+            <column name="role" value="USER"/>
         </insert>
         <insert tableName="users">
             <column name="name" value="Bob"/>

@@ -6,6 +6,7 @@ import org.garden.com.converter.OrderItemMapper;
 import org.garden.com.dto.OrderItemDto;
 import org.garden.com.entity.OrderItem;
 import org.garden.com.exceptions.OrderItemNotFoundException;
+import org.garden.com.security.JwtService;
 import org.garden.com.service.OrderItemServiceImpl;
 import org.junit.Test;
 import org.junit.jupiter.api.BeforeEach;
@@ -15,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
@@ -34,10 +36,14 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @RunWith(SpringRunner.class)
 @WebMvcTest(OrderItemController.class)
+@WithMockUser(username="admin",roles={"USER","ADMIN"})
 public class OrderItemControllerTests {
 
     @Autowired
     private MockMvc mockMvc;
+
+    @MockBean
+    private JwtService jwtService;
 
     @MockBean
     private OrderItemServiceImpl orderItemService;

@@ -3,6 +3,7 @@ package org.garden.com.service;
 import org.garden.com.entity.Order;
 import org.garden.com.exceptions.OrderNotFoundException;
 import org.garden.com.repository.OrderJpaRepository;
+import org.garden.com.security.JwtService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +22,9 @@ public class OrderServiceImplTest {
 
     @Autowired
     private OrderServiceImpl orderService;
+
+    @Autowired
+    private JwtService jwtService;
 
     @MockBean
     private OrderJpaRepository orderRepository;

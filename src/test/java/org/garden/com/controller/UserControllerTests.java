@@ -5,6 +5,7 @@ import org.garden.com.converter.UserMapper;
 import org.garden.com.dto.CreateUserDto;
 import org.garden.com.dto.EditUserDto;
 import org.garden.com.entity.User;
+import org.garden.com.security.JwtService;
 import org.garden.com.service.UserService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -13,6 +14,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -28,10 +30,14 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @RunWith(SpringRunner.class)
 @WebMvcTest(UserController.class)
+@WithMockUser(username="admin",roles={"USER","ADMIN"})
 public class UserControllerTests {
 
     @Autowired
     private MockMvc mockMvc;
+
+    @MockBean
+    private JwtService jwtService;
 
     @MockBean
     private UserService service;

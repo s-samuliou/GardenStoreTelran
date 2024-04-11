@@ -4,17 +4,26 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.garden.com.converter.CategoryMapper;
 import org.garden.com.dto.EditCategoryDto;
 import org.garden.com.entity.Category;
+import org.garden.com.security.JwtService;
 import org.garden.com.service.CategoryService;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import static org.mockito.ArgumentMatchers.any;
@@ -25,10 +34,14 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @RunWith(SpringRunner.class)
 @WebMvcTest(CategoryController.class)
+@WithMockUser(username = "admin", roles = {"USER", "ADMIN"})
 public class CategoryControllerTests {
 
     @Autowired
     private MockMvc mockMvc;
+
+    @MockBean
+    private JwtService jwtService;
 
     @MockBean
     private CategoryService service;
@@ -36,14 +49,28 @@ public class CategoryControllerTests {
     @MockBean
     private CategoryMapper mapper;
 
-    @Test
-    public void testCreateCategory() throws Exception {
-        Category createdCategory = new Category();
-        when(service.create(any(Category.class))).thenReturn(createdCategory);
+    @Before
+    public void setup() {
+        // Grant the "ADMIN" role to the user for testing purposes
+        SecurityContextHolder.getContext().setAuthentication(
+                new UsernamePasswordAuthenticationToken(
+                        "admin", // Username
+                        null, // No password needed for testing
+                        Collections.singleton(new SimpleGrantedAuthority("ROLE_ADMIN"))
+                )
+        );
+    }
 
-        mockMvc.perform(post("/v1/categories")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(asJsonString(createdCategory)))
+    @Test
+    @WithMockUser(roles = "ADMIN")
+    public void testCreateCategory() throws Exception {
+        MockHttpServletRequestBuilder requestBuilder = MockMvcRequestBuilders.
+                post("/v1/categories")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("{\"id\": \"4\"," +
+                        "\"name\": \"Scissors\"}"
+                );
+        mockMvc.perform(requestBuilder)
                 .andExpect(status().isCreated());
     }
 

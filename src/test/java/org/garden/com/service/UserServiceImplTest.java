@@ -9,8 +9,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.Arrays;
 import java.util.List;
@@ -29,6 +28,9 @@ public class UserServiceImplTest {
 
     @Mock
     private UserJpaRepository repository;
+
+    @Mock
+    private PasswordEncoder passwordEncoder;
 
     public UserServiceImplTest() {
         MockitoAnnotations.openMocks(this);
@@ -103,7 +105,7 @@ public class UserServiceImplTest {
 
     @Test
     public void getById() {
-        User user = new User(1L, "User Name", "user@example.com", "qwerty55", "5558822", Role.CUSTOMER);
+        User user = new User(1L, "User Name", "user@example.com", "qwerty55", "5558822", Role.USER);
         when(repository.findById(1L)).thenReturn(Optional.of(user));
 
         User foundUser = userService.getById(1L);
@@ -115,7 +117,7 @@ public class UserServiceImplTest {
     @Test
     public void delete_ExistingUser_ReturnsOkResponse() {
         long userId = 1L;
-        User existingUser = new User(userId, "User Name", "user@example.com", "qwerty55", "5558822", Role.CUSTOMER);
+        User existingUser = new User(userId, "User Name", "user@example.com", "qwerty55", "5558822", Role.USER);
 
         when(repository.findById(userId)).thenReturn(Optional.of(existingUser));
         userService.delete(userId);

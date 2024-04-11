@@ -8,14 +8,18 @@ import org.garden.com.enums.DeliveryType;
 import org.garden.com.enums.OrderStatus;
 import org.garden.com.exceptions.OrderNotFoundException;
 import org.garden.com.exceptions.UserNotFoundException;
+import org.garden.com.security.JwtService;
 import org.garden.com.service.OrderServiceImpl;
 import org.junit.Test;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.runner.RunWith;
+import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
@@ -38,10 +42,17 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @RunWith(SpringRunner.class)
 @WebMvcTest(OrderController.class)
+@WithMockUser(username="admin",roles={"USER","ADMIN"})
 public class OrderControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
+
+    @MockBean
+    private JwtService jwtService;
+
+    @Mock
+    private PasswordEncoder passwordEncoder;
 
     @MockBean
     private OrderServiceImpl orderService;

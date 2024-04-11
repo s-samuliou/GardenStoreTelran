@@ -66,6 +66,7 @@ public class CategoryController {
             }
     )
     @PostMapping()
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<CategoryCreateDto> create(@RequestBody CategoryCreateDto categoryCreateDto) {
         log.info("Received request to create category: {}", categoryCreateDto);
         Category category = mapper.createCategoryDtoToCategory(categoryCreateDto);

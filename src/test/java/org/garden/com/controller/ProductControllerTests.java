@@ -5,6 +5,7 @@ import org.garden.com.converter.ProductMapper;
 import org.garden.com.dto.CreateProductDto;
 import org.garden.com.dto.EditProductDto;
 import org.garden.com.entity.Product;
+import org.garden.com.security.JwtService;
 import org.garden.com.service.ProductServiceImpl;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -12,7 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -26,10 +27,14 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @RunWith(SpringRunner.class)
 @WebMvcTest(ProductController.class)
+@WithMockUser(username="admin",roles={"USER","ADMIN"})
 public class ProductControllerTests {
 
     @Autowired
     private MockMvc mockMvc;
+
+    @MockBean
+    private JwtService jwtService;
 
     @MockBean
     private ProductServiceImpl productService;
