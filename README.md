@@ -44,12 +44,30 @@ Gardenshop is a backend part of web application for an online store selling gard
 
 1. After successful startup, open a web browser and go to `http://localhost:8080`.
 2. Register if you are a new user, or log in if you are already registered.
-3. You can also use Postman to check all the necessary methods 
+3. You can also use Postman to check all the necessary methods with authorization by Bear Token:
+   1. Input this path in request field with POST method and use this pattern in Body field with datatype JSON:
+   ```
+   http://localhost:8080/v1/users/login
+   ```
 
-
+   ```
+   {
+   "login" : "{login}",
+   "password" : "{password}"
+   }
+   ```
+   2. Copy and paste received token in authorization field 
+   
 ## Technologies
 
 - Java
 - Spring Boot
 - Spring Security
 - Maven
+
+## Project Authors
+
+- Stsiapan Samuliou > https://github.com/s-samuliou
+- Sergei Lapidus > https://github.com/SparklerSoft
+- Anton Kuklinski > https://github.com/AnKukl
+- Viktor Balagurchyk > https://github.com/Balagurchyk
