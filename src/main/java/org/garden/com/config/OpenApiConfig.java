@@ -12,7 +12,7 @@ import io.swagger.v3.oas.annotations.security.SecurityScheme;
                 title = "Garden Shop api",
                 description = "Garden Shop", version = "1.0.0",
                 contact = @Contact(
-                        name = "Stsiapan Samuliou, Sergei Lapidus, Anton Kuklinsky, Viktor Balagurchik",
+                        name = "Stsiapan Samuliou, Sergei Lapidus, Anton Kuklinski, Viktor Balagurchyk",
                         url = "https://github.com/s-samuliou/GardenStoreTelran")
 
         )

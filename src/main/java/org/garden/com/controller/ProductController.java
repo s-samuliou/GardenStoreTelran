@@ -14,6 +14,7 @@ import org.garden.com.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -44,6 +45,7 @@ public class ProductController {
             }
     )
     @PostMapping()
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<CreateProductDto> create(@RequestBody CreateProductDto createProductDto) {
         log.info("Received request to create product: {}", createProductDto);
         Product product = mapper.createProductDtoToProduct(createProductDto);
@@ -87,6 +89,7 @@ public class ProductController {
             }
     )
     @PutMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     public EditProductDto editById(@PathVariable("id") long id, @RequestBody EditProductDto editProductDto) {
         log.info("Received request to update product with ID {}: {}", id, editProductDto);
         Product product = mapper.editProductDtoToProduct(editProductDto);
@@ -124,6 +127,7 @@ public class ProductController {
             }
     )
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Void> deleteById(@PathVariable("id") long id) {
         log.info("Received request to delete product with ID: {}", id);
         service.deleteById(id);

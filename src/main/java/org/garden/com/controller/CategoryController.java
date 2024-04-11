@@ -87,6 +87,7 @@ public class CategoryController {
             }
     )
     @PutMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<EditCategoryDto> edit(@PathVariable(name = "id") long id, @RequestBody EditCategoryDto editCategoryDto) {
         log.info("Received request to update a category with ID {}: {}", id, editCategoryDto);
         Category category = mapper.editCategoryDtoToCategory(editCategoryDto);
@@ -106,6 +107,7 @@ public class CategoryController {
             }
     )
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Void> deleteById(@PathVariable(name = "id") long id) {
         log.info("Received request to delete category with ID: {}", id);
         service.deleteById(id);
