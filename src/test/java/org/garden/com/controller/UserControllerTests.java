@@ -5,6 +5,7 @@ import org.garden.com.converter.UserMapper;
 import org.garden.com.dto.CreateUserDto;
 import org.garden.com.dto.EditUserDto;
 import org.garden.com.entity.User;
+import org.garden.com.security.AuthenticationService;
 import org.garden.com.security.JwtService;
 import org.garden.com.service.UserService;
 import org.junit.Before;
@@ -47,6 +48,9 @@ public class UserControllerTests {
 
     @MockBean
     private UserMapper userMapper;
+
+    @MockBean
+    private AuthenticationService authenticationService;
 
     @Autowired
     private WebApplicationContext webApplicationContext;

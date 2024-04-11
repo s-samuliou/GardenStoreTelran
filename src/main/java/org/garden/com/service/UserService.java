@@ -17,6 +17,4 @@ public interface UserService {
     void delete(long id);
 
     User getByLogin(String login);
-
-//    User getCurrentUser();
 }

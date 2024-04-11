@@ -19,6 +19,7 @@ import java.io.IOException;
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     private static final String BEARER = "Bearer ";
+
     private static final String HEADER = "Authorization";
 
     @Autowired
@@ -36,7 +37,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             return;
         }
 
-        //Bearer sdjfsdkjdhgkdfhgkdjghskfghdsfjgh
         String jwt = header.substring(BEARER.length());
         String userName = jwtService.extractUserName(jwt);
 
@@ -52,4 +52,3 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         }
     }
 }
-

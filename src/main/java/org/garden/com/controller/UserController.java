@@ -35,7 +35,7 @@ public class UserController {
     private UserMapper mapper;
 
     @Autowired
-    private AuthenticationService authenticationService; // couldn't add the FINAL - the error appears immediately
+    private AuthenticationService authenticationService;
 
     private static final Logger log = LoggerFactory.getLogger(UserController.class);
 
@@ -50,16 +50,16 @@ public class UserController {
     )
     @PostMapping("/register")
     @ResponseStatus(HttpStatus.CREATED)
-    public ResponseEntity<CreateUserDto> create(@RequestBody CreateUserDto createUserDto) {
+    public ResponseEntity<UserDto> create(@RequestBody CreateUserDto createUserDto) {
         log.debug("Received request to create user: {}", createUserDto);
         User user = mapper.createUserDtoToUser(createUserDto);
         User createdUser = service.create(user);
-        CreateUserDto createdUserDto = mapper.userToCreateUserDto(createdUser);
+        UserDto createdUserDto = mapper.userToUserDto(createdUser);
         log.debug("User created: {}", createdUserDto);
         return ResponseEntity.status(HttpStatus.CREATED).body(createdUserDto);
     }
 
-    @PostMapping("/login")//does the Swagger annotations and ApiResponses are needed there??
+    @PostMapping("/login")
     @ResponseBody
     public JwtAuthenticationResponse login(@RequestBody SignInRequest request) {
         return authenticationService.authenticate(request);

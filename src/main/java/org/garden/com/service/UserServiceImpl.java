@@ -83,12 +83,4 @@ public class UserServiceImpl implements UserService {
         return repository.findByName(login)
                 .orElseThrow(() -> new UserNotFoundException("User with login {} not found " + login));
     }
-
-//    раскомменчу после Security
-//    @Override
-//    public User getCurrentUser() {
-//        String userName = SecurityContextHolder.getContext().getAuthentication().getName();
-//
-//        return getByLogin(userName);
-//    }
 }

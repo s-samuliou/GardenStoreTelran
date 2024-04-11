@@ -8,16 +8,12 @@ public class UserDto {
     @Schema(description = "The email of the user", example = "example@gardenshop.com")
     private String email;
 
-    @Schema(description = "The password of the user")
-    private String password;
-
     @Schema(description = "The phone number of the user", example = "01759999999")
     private String phoneNumber;
 
-    public UserDto(String name, String email, String password, String phoneNumber) {
+    public UserDto(String name, String email, String phoneNumber) {
         this.name = name;
         this.email = email;
-        this.password = password;
         this.phoneNumber = phoneNumber;
     }
 

@@ -129,7 +129,7 @@ public class OrderController {
             description = "Retrieves the order history of a user by their ID",
             responses = {
                     @ApiResponse(responseCode = "200", description = "Order history received successfully"),
-                    @ApiResponse(responseCode = "404", description = "User not found")
+                    @ApiResponse(responseCode = "401", description = "Unauthorized user")
             }
     )
     @GetMapping("/history/{userId}")
@@ -149,7 +149,6 @@ public class OrderController {
     }
 
     @ExceptionHandler({OrderInvalidArgumentException.class, OrderNotFoundException.class})
-
     public ResponseEntity<Object> handleOrderException(Exception exception) {
         HttpStatus status = (exception instanceof OrderInvalidArgumentException) ?
                 HttpStatus.BAD_REQUEST : HttpStatus.NOT_FOUND;

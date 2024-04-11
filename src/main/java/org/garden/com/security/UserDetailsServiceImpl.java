@@ -1,6 +1,5 @@
 package org.garden.com.security;
 
-import org.garden.com.entity.User;
 import org.garden.com.exceptions.UserNotFoundException;
 import org.garden.com.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;

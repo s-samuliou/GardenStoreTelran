@@ -43,7 +43,7 @@ public class JwtService {
                 .subject(userDetails.getUsername())
                 .add(extraClaims)
                 .and()
-                .signWith(secretSigningKey) // resume JwtBuilder calls
+                .signWith(secretSigningKey)
                 .compact();
     }
 

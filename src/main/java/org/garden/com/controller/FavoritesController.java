@@ -57,6 +57,7 @@ public class FavoritesController {
             description = "Retrieves a list of all favorite products",
             responses = {
                     @ApiResponse(responseCode = "200", description = "Successfully retrieved favorite products"),
+                    @ApiResponse(responseCode = "401", description = "Unauthorized user"),
                     @ApiResponse(responseCode = "500", description = "Internal server error")
             }
     )
