@@ -1,7 +1,6 @@
 package org.garden.com.service;
 
 import org.garden.com.entity.User;
-import org.springframework.http.ResponseEntity;
 
 import java.util.List;
 
@@ -16,6 +15,8 @@ public interface UserService {
     User getById(long id);
 
     void delete(long id);
+
+    User getByLogin(String login);
 
 //    User getCurrentUser();
 }

@@ -8,18 +8,25 @@ import org.garden.com.repository.UserJpaRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+
 @Service
 public class UserServiceImpl implements UserService {
+
+    @Value("${GardenApp.user.default.userId}")
+    private Long defaultUserId;
 
     @Autowired
     private UserJpaRepository repository;
 
     private static final Logger log = LoggerFactory.getLogger(UserServiceImpl.class);
 
+    private PasswordEncoder passwordEncoder;
 
     @Override
     public User create(User user) {
@@ -27,7 +34,8 @@ public class UserServiceImpl implements UserService {
         Cart cart = new Cart();
         cart.setUser(user);
         user.setCart(cart);
-        user.setRole(Role.CUSTOMER);
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        user.setRole(Role.USER);
         return repository.save(user);
     }
 
@@ -68,6 +76,11 @@ public class UserServiceImpl implements UserService {
             log.info("User not deleted: {}", id);
             throw new UserNotFoundException("User not found with id: " + id);
         }
+    }
+
+    public User getByLogin(String login) {
+        return repository.findByName(login)
+                .orElseThrow(() -> new UserNotFoundException("User with login {} not found " + login));
     }
 
 //    раскомменчу после Security

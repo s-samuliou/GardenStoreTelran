@@ -1,6 +1,7 @@
 package org.garden.com.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.garden.com.converter.CategoryMapper;
@@ -16,6 +17,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -39,10 +41,11 @@ public class CategoryController {
             description = "Retrieves a list of all categories",
             responses = {
                     @ApiResponse(responseCode = "200", description = "Successfully retrieved categories"),
-                    @ApiResponse(responseCode = "500", description = "Internal server error")
+                    @ApiResponse(responseCode = "500", description = "Internal server error", content = @Content)
             }
     )
     @GetMapping
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<List<CategoryDto>> getAll() {
         log.info("Received request to get all categories");
         List<Category> categories = service.getAll();

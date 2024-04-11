@@ -10,6 +10,9 @@ import org.garden.com.dto.UserDto;
 import org.garden.com.entity.User;
 import org.garden.com.exceptions.UserInvalidArgumentException;
 import org.garden.com.exceptions.UserNotFoundException;
+import org.garden.com.security.model.JwtAuthenticationResponse;
+import org.garden.com.security.model.SignInRequest;
+import org.garden.com.security.AuthenticationService;
 import org.garden.com.service.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,6 +33,9 @@ public class UserController {
 
     @Autowired
     private UserMapper mapper;
+
+    private AuthenticationService authenticationService; // couldn't add the FINAL - the error appears immediately
+
     private static final Logger log = LoggerFactory.getLogger(UserController.class);
 
     @Operation(
@@ -50,6 +56,11 @@ public class UserController {
         CreateUserDto createdUserDto = mapper.userToCreateUserDto(createdUser);
         log.debug("User created: {}", createdUserDto);
         return ResponseEntity.status(HttpStatus.CREATED).body(createdUserDto);
+    }
+
+    @PostMapping("/login")//does the Swagger annotations and ApiResponses are needed there??
+    public JwtAuthenticationResponse login(@RequestBody SignInRequest request) {
+        return authenticationService.authenticate(request);
     }
 
     @Operation(
