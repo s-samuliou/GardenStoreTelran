@@ -34,6 +34,7 @@ public class UserController {
     @Autowired
     private UserMapper mapper;
 
+    @Autowired
     private AuthenticationService authenticationService; // couldn't add the FINAL - the error appears immediately
 
     private static final Logger log = LoggerFactory.getLogger(UserController.class);
@@ -59,6 +60,7 @@ public class UserController {
     }
 
     @PostMapping("/login")//does the Swagger annotations and ApiResponses are needed there??
+    @ResponseBody
     public JwtAuthenticationResponse login(@RequestBody SignInRequest request) {
         return authenticationService.authenticate(request);
     }
