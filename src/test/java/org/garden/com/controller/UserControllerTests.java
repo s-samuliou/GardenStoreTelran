@@ -7,6 +7,7 @@ import org.garden.com.dto.EditUserDto;
 import org.garden.com.entity.User;
 import org.garden.com.security.JwtService;
 import org.garden.com.service.UserService;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +18,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.web.context.WebApplicationContext;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,7 +33,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @RunWith(SpringRunner.class)
 @WebMvcTest(UserController.class)
-@WithMockUser(username="admin",roles={"USER","ADMIN"})
+@WithMockUser(username = "admin", roles = {"ADMIN"})
 public class UserControllerTests {
 
     @Autowired
@@ -44,6 +47,14 @@ public class UserControllerTests {
 
     @MockBean
     private UserMapper userMapper;
+
+    @Autowired
+    private WebApplicationContext webApplicationContext;
+
+    @Before()
+    public void setup() {
+        mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).build();
+    }
 
     @Test
     public void testCreate() throws Exception {
@@ -78,6 +89,7 @@ public class UserControllerTests {
         when(service.edit(anyLong(), any(User.class))).thenReturn(updatedUser);
 
         mockMvc.perform(put("/v1/users/{id}", 1)
+
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(asJsonString(editUserDto)))
                 .andExpect(status().isOk());

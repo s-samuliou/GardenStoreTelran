@@ -8,8 +8,8 @@ import org.garden.com.entity.OrderItem;
 import org.garden.com.exceptions.OrderItemNotFoundException;
 import org.garden.com.security.JwtService;
 import org.garden.com.service.OrderItemServiceImpl;
+import org.junit.Before;
 import org.junit.Test;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +23,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.web.context.WebApplicationContext;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -36,7 +37,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @RunWith(SpringRunner.class)
 @WebMvcTest(OrderItemController.class)
-@WithMockUser(username="admin",roles={"USER","ADMIN"})
+@WithMockUser(username = "admin", roles = {"USER", "ADMIN"})
 public class OrderItemControllerTests {
 
     @Autowired
@@ -57,11 +58,13 @@ public class OrderItemControllerTests {
     @Autowired
     private OrderItemController orderItemController;
 
-    @BeforeEach
-    public void setup() {
-        mockMvc = MockMvcBuilders.standaloneSetup(orderItemController).build();
-    }
+    @Autowired
+    private WebApplicationContext webApplicationContext;
 
+    @Before()
+    public void setup() {
+        mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).build();
+    }
 
     @Test
     public void testGetAllOrderItems() throws Exception {
