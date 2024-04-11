@@ -24,9 +24,10 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private UserJpaRepository repository;
 
-    private static final Logger log = LoggerFactory.getLogger(UserServiceImpl.class);
-
+    @Autowired
     private PasswordEncoder passwordEncoder;
+
+    private static final Logger log = LoggerFactory.getLogger(UserServiceImpl.class);
 
     @Override
     public User create(User user) {
