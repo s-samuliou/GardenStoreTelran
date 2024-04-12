@@ -73,7 +73,6 @@ public class ProductControllerTests {
 
     @Test
     public void testGetAllProducts() throws Exception {
-        // Определяем поведение мок-сервиса
         List<Product> products = new ArrayList<>();
         when(productService.getFiltered(anyLong(), anyDouble(), anyDouble(), anyBoolean(), anyString()))
                 .thenReturn(products);

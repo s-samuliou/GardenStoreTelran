@@ -31,40 +31,32 @@ public class OrderServiceImplTest {
 
     @Test
     public void testFindById_ExistingOrder() {
-        // Mock data
         Order expectedOrder = new Order();
         expectedOrder.setId(1L);
         Optional<Order> optionalOrder = Optional.of(expectedOrder);
         when(orderRepository.findById(1L)).thenReturn(optionalOrder);
 
-        // Call the service method
         Order actualOrder = orderService.findById(1L);
 
-        // Verify the result
         assertNotNull(actualOrder);
         assertEquals(expectedOrder, actualOrder);
     }
 
     @Test
     public void testFindById_NonExistingOrder() {
-        // Mock repository behavior to return empty optional
         when(orderRepository.findById(1L)).thenReturn(Optional.empty());
 
-        // Verify that OrderNotFoundException is thrown
         assertThrows(OrderNotFoundException.class, () -> orderService.findById(1L));
     }
 
     @Test
     public void testDeleteById_ExistingOrder() {
-        // Mock data
         Order expectedOrder = new Order();
         expectedOrder.setId(1L);
         when(orderRepository.findById(1L)).thenReturn(Optional.of(expectedOrder));
 
-        // Call the service method
         Order deletedOrder = orderService.deleteById(1);
 
-        // Verify the result
         assertNotNull(deletedOrder);
         assertEquals(expectedOrder, deletedOrder);
         verify(orderRepository, times(1)).delete(expectedOrder);
@@ -72,12 +64,9 @@ public class OrderServiceImplTest {
 
     @Test
     public void testDeleteById_NonExistingOrder() {
-        // Mock repository behavior to return empty optional
         when(orderRepository.findById(1L)).thenReturn(Optional.empty());
 
-        // Verify that OrderNotFoundException is thrown
         assertThrows(OrderNotFoundException.class, () -> orderService.deleteById(1));
-        // Verify that delete method is not called
         verify(orderRepository, never()).delete(any());
     }
 }

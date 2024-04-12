@@ -28,16 +28,13 @@ public class OrderItemServiceImplTest {
 
     @Test
     public void testGetAll() {
-        // Given
         OrderItem order1 = new OrderItem();
         OrderItem order2 = new OrderItem();
         List<OrderItem> expected = Arrays.asList(order1, order2);
 
-        // When
         when(repository.findAll()).thenReturn(expected);
         List<OrderItem> actual = orderItemService.getAll();
 
-        // Then
         assertEquals(expected, actual);
         verify(repository, times(1)).findAll();
     }
@@ -53,10 +50,6 @@ public class OrderItemServiceImplTest {
         Assertions.assertEquals(mockOrderItem, result, "The returned OrderItem should be the same as the mock OrderItem");
     }
 
-    /**
-     * Test the findById method in OrderItemServiceImpl class.
-     * Use case: No OrderItem is found.
-     */
     @Test
     public void testFindById_NotFound() {
         Long itemId = 1L;

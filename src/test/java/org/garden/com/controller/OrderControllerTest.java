@@ -108,37 +108,28 @@ public class OrderControllerTest {
     public void testGetOrderById() throws Exception {
         // Given
         int orderId = 4;
-        Order order = new Order(); // create a mock Order object
+        Order order = new Order();
         OrderDto orderDto = new OrderDto(1L, 1, LocalDateTime.now(), "Address_1", "123456789", DeliveryType.PICKUP, OrderStatus.PAID, LocalDateTime.now()); // create a mock OrderDto object
-        orderDto.setId(orderId); // set the ID in the OrderDto
+        orderDto.setId(orderId);
 
-        // Mocking orderService.findById to return the mock Order object
         when(orderService.findById(orderId)).thenReturn(order);
 
-        // Mocking orderMapper.orderToOrderDto to return the mock OrderDto object
-        when(orderService.findById(orderId)).thenReturn(order);
-
-        // Mocking orderMapper.orderToOrderDto to return the mock OrderDto object
         when(mapper.orderToOrderDto(order)).thenReturn(orderDto);
 
-        // When performing a GET request to /v1/orders/{id}
         mockMvc.perform(get("/v1/orders/{id}", orderId))
                 .andExpect(status().isOk())
                 .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$.id").value(orderId));  // Expects the returned JSON to have the correct ID
+                .andExpect(jsonPath("$.id").value(orderId));
     }
     @Test
     public void testGetOrderByIdNotFound() throws Exception {
-        // Given
         int orderId = 4;
 
-        // Mocking orderService.findById to return null, simulating OrderNotFoundException
         when(orderService.findById(orderId)).thenReturn(null);
 
-        // When performing a GET request to /v1/orders/{id}
         mockMvc.perform(get("/v1/orders/{id}", orderId))
-                .andExpect(status().isNotFound()) // Expects HTTP 404 Not Found
-                .andExpect(jsonPath("$.message").value("Order not found with id: " + orderId)); // Expects the correct error message
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.message").value("Order not found with id: " + orderId));
     }
     @Test
     public void shouldReturnOrderHistoryByUserId() throws Exception {

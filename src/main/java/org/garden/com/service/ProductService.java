@@ -2,7 +2,6 @@ package org.garden.com.service;
 
 import org.garden.com.entity.CartItem;
 import org.garden.com.entity.Product;
-import org.springframework.http.ResponseEntity;
 
 import java.util.List;
 

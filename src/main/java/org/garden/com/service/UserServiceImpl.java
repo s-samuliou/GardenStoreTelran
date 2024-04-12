@@ -18,8 +18,8 @@ import java.util.List;
 @Service
 public class UserServiceImpl implements UserService {
 
-    @Value("${GardenApp.user.default.userId}")
-    private Long defaultUserId;
+//    @Value("${GardenApp.user.default.userId}")
+//    private Long defaultUserId;
 
     @Autowired
     private UserJpaRepository repository;

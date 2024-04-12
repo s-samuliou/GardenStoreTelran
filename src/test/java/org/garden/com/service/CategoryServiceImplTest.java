@@ -131,6 +131,4 @@ public class CategoryServiceImplTest {
         verify(repository, times(1)).existsById(id);
         verify(repository, never()).deleteById(id);
     }
-
-
 }

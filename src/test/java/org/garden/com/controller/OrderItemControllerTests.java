@@ -104,26 +104,22 @@ public class OrderItemControllerTests {
         // Given
         int orderItemId = 4;
         Long OrderItemDtoId = 4L;
-        OrderItem orderItem = new OrderItem(); // create a mock Order object
+        OrderItem orderItem = new OrderItem();
         OrderItemDto orderItemDto = new OrderItemDto(1L, 1L, 2L, 2, 100);
 
 
-        orderItemDto.setId(OrderItemDtoId); // set the ID in the OrderDto
+        orderItemDto.setId(OrderItemDtoId);
 
-        // Mocking orderService.findById to return the mock Order object
         when(orderItemService.findById(orderItemId)).thenReturn(orderItem);
 
-        // Mocking orderMapper.orderToOrderDto to return the mock OrderDto object
         when(orderItemService.findById(orderItemId)).thenReturn(orderItem);
 
-        // Mocking orderMapper.orderToOrderDto to return the mock OrderDto object
         when(orderItemMapper.orderItemToOrderItemDto(orderItem)).thenReturn(orderItemDto);
 
-        // When performing a GET request to /v1/orders/{id}
         mockMvc.perform(get("/v1/orders/items/{id}", orderItemId))
                 .andExpect(status().isOk())
                 .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$.id").value(orderItemId));  // Expects the returned JSON to have the correct ID
+                .andExpect(jsonPath("$.id").value(orderItemId));
     }
 
     @Test

@@ -29,7 +29,6 @@ public class UserOrderRelationshipTest {
 
     @Test
     public void testUserOrderRelationship() {
-        // Create a user
         User user = new User();
         user.setName("Test User");
         user.setEmail("test@example.com");
@@ -38,7 +37,6 @@ public class UserOrderRelationshipTest {
         user.setRole(Role.ADMIN);
         userRepository.save(user);
 
-        // Create an order associated with the user
         Order order = new Order();
         order.setCreatedAt(LocalDateTime.now());
         order.setUpdatedAt(LocalDateTime.now());
@@ -49,7 +47,6 @@ public class UserOrderRelationshipTest {
         order.setUser(user);
         orderRepository.save(order);
 
-        // Retrieve the order from the database and check if the user is correct
         Order retrievedOrder = orderRepository.findById(order.getId()).orElse(order);
         assertNotNull(retrievedOrder);
         assertNotNull(retrievedOrder.getUser());
